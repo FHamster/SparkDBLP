@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    container_name: MongoDB
+    ports:
+      - "27017:27017"
+#    volumes:
+#      - "./mongodbData:/data/db"
+  mongoexpress:
+    image: mongo-express
+    restart: always
+    container_name: MongoExpress
+    depends_on:
+      - mongo
+    ports:
+      - "8081:8081"
+    links:
+      - mongo

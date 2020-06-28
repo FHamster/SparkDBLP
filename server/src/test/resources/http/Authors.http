@@ -1,0 +1,4 @@
+### GET request with parameter
+GET http://localhost:8080/authors/search?_VALUE=Chen
+Accept: application/json
+

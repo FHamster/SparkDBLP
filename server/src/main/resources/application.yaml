@@ -1,0 +1,8 @@
+#mongodb连接地址，集群用“;”隔开
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: SparkDBLPTest
+
