@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--<!DOCTYPE dblp SYSTEM "file:///root/SparkMathModel/src/main/resources/dblp.dtd">-->
+
+<!--This xml file was created for test if character like this &#174; can be display correctly -->
+<dblp>
+    <article mdate="&#174;&#38;2018-01-07" key="&#174;&#60;&#62;&#160;tr/meltdown/m18" publtype="informal">
+        <author>Moritz&#174; Lipp</author>
+        <author orcid="0000-0002-1551-7438">Fahad Khan</author>
+        <author aux="12asd">Michael Schwarz asd 0001</author>
+        <author>Michael Schwarz 0001</author>
+        <author>Daniel Gruss</author>
+        <author>Thomas Prescher 0002</author>
+        <author>Werner Haas</author>
+        <author>Stefan Mangard</author>
+        <author>Paul Kocher</author>
+        <author>Daniel Genkin</author>
+        <author>Yuval Yarom</author>
+        <author>Mike Hamburg</author>
+        <title bibtex="A Note on the Congruence $\left( \matrix \mathit{nd} \\ \mathit{md} \endmatrix \right)\equiv \left( \matrix n \\ m \endmatrix \right)(\text{mod}\, q)$.">A Note on the Congruence (nd md) = (n m) (mod q).</title>
+        <journal>meltdownattack.com</journal>
+        <ee>https://meltdownattack.com/meltdown.pdf</ee>
+        <year>2018&#174;</year>
+    </article>
+    <article mdate="2018-01-07" key="tr/meltdown/s18" publtype="informal">
+        <author>Paul Kocher</author>
+        <author>Daniel Genkin</author>
+        <author>Daniel Gruss</author>
+        <author>Werner Haas</author>
+        <author>Mike Hamburg</author>
+        <author>Moritz Lipp</author>
+        <author>Stefan Mangard</author>
+        <author>Thomas Prescher 0002</author>
+        <author>Michael Schwarz 0001</author>
+        <author>Yuval Yarom</author>
+        <title>The Many-Valued Theorem Prover<sub>3</sub>T<sup>A</sup>P.</title>
+        <journal>meltdownattack.com</journal>
+        <year>2018&#174;</year>
+        <ee>https://spectreattack.com/spectre.pdf</ee>
+    </article>
+
+    <article mdate="2017-06-08" key="tr/gte/TR-0263-08-94-165" publtype="informal">
+        <author>Frank Manola</author>
+        <title>An Evaluation of Object-Oriented DBMS Developments: 1994 Edition.</title>
+        <journal>GTE Laboratories Incorporated</journal>
+        <volume>TR-0263-08-94-165</volume>
+        <month>August</month>
+        <year>1994</year>
+        <url>db/labs/gte/index.html#TR-0263-08-94-165</url>
+    </article>
+    <article mdate="2019-05-27" key="tr/gte/TR-0222-10-92-165" publtype="informal">
+        <author>Michael L. Brodie</author>
+        <author>Micha&#174;el Stonebraker</author>
+        <title>The Many-Valued Theorem Prover
+            <sub>3</sub>T<sup>A</sup>P.</title> <journal>GTE Laboratories Incorporated</journal>
+        <volume>&#174;TR-0222-10-92-165</volume>
+        <month>March</month>
+        <year>1993</year>
+        <url>db/labs/gte/index.html#TR-0222-10-92-165</url>
+        <note>This report is also available as a Technical Memorandum of Electronics Research Laboratory, College of
+            Engineering, University of California, Berkeley.
+        </note>
+    </article>
+    <www mdate="2018-08-24" key="homepages/208/1496">
+        <author>Tamas Pilissy</author>
+        <title>Home Page</title>
+    </www>
+</dblp>
