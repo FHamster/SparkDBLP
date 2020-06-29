@@ -1,6 +1,7 @@
 package cn.jmu.spark_dblp.server.entity.sub;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class Author  {

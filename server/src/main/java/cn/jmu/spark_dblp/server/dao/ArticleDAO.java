@@ -13,17 +13,9 @@ import java.util.stream.Stream;
 @Repository
 public interface ArticleDAO extends CrudRepository<Article, String> {
     List<Article> findAllByAuthorContaining(List<Author> author);
-//    {$regex: '?1', $options: 'i'}
-/*    @Query("{" +
-            "title: ?#{ [0].isEmpty() ?  {$exists :true} : {$regex: [0], $options: '$i'} }," +
-            " 'author._VALUE': ?#{ [0].isEmpty() ?  {$regex: '*'} : {$regex: [0], $options: '$i'} }" +
-            "}")
-//            "'year': ?#{ [2].length==0 ? {$exists :true} : {$in: [2]}}}")
-    Stream<Article> findAllByTitleContainingAndAuthor__VALUEContainingAndYearIn(
-            String title,
-            String author,
-            Integer[] year
-    );*/
+
+    Stream<Article> findAllByAuthorContaining(Author author);
+
     @Query("{" +
             "title: ?#{ [0].isEmpty() ?  {$exists :true} : {$regex: [0], $options: '$i'} }," +
             "'author._VALUE': ?#{ [1].size()==0 ?  {$exists :true} : {$in:[1]} }," +
@@ -36,8 +28,8 @@ public interface ArticleDAO extends CrudRepository<Article, String> {
             List<Integer> year
     );
 
-    @Query("{'author._VALUE': {$regex: '?0', $options: '$i'}}")
-    Stream<Article> findAllByAuthor__VALUEContaining(String author);
+    @Query("{'author._VALUE': ?0}")
+    Stream<Article> findAllByAuthorContainingAccurate(String author);
 
 //    @Query("{title: {$regex: ?0, $Option: '$i'}}")
 //    Stream<Article> findAllByTitleContaining(String title);
@@ -46,7 +38,7 @@ public interface ArticleDAO extends CrudRepository<Article, String> {
 //    @Query("{title: ?#{ [title] ? {$exists :true} : {$regex: [1], $Option: '$i'} }}")
     @Query("{title: ?#{ [0].isEmpty() ?  abc : {$regex: [0], $options: '$i'} }}")
     Stream<Article> findAllByTitleContaining(String title);
-    @Query("{'author._VALUE': ?#{ [0].isEmpty() ?  {$regex: '*'} : {$regex: [0], $options: '$i'} } }")
-    Stream<Article> findAllByAuthorContaining(String author);
+//    @Query("{'author._VALUE': ?#{ [0].isEmpty() ?  {$regex: '*'} : {$regex: [0], $options: '$i'} } }")
+//    Stream<Article> findAllByAuthorContaining2(String author);
 
 }

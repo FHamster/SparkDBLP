@@ -80,7 +80,8 @@ class ArticleDAOTest {
 
     @Test
     public void findAllByAuthorContaining() {
-        Stream<Article> oa = dao.findAllByAuthorContaining("abc");
+        Stream<Article> oa = dao.findAllByAuthorContaining(new Author("Joon"));
+
 //        Assertions.assertTrue(oa.isPresent());
 //        String.
         oa.forEach(System.out::println);
