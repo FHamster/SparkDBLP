@@ -21,7 +21,6 @@ public interface ArticleDAO extends CrudRepository<Article, String> {
             "'author._VALUE': ?#{ [1].size()==0 ?  {$exists :true} : {$in:[1]} }," +
             "'year': ?#{ [2].size()==0 ? {$exists :true} : {$in: [2]}  }"+
             "}")
-//            "'year': ?#{ [2].length==0 ? {$exists :true} : {$in: [2]}}}")
     Stream<Article> findAllByTitleContainingAndAuthor__VALUEContainingAndYearIn(
             String title,
             List<Pattern> author,
@@ -31,14 +30,7 @@ public interface ArticleDAO extends CrudRepository<Article, String> {
     @Query("{'author._VALUE': ?0}")
     Stream<Article> findAllByAuthorContainingAccurate(String author);
 
-//    @Query("{title: {$regex: ?0, $Option: '$i'}}")
-//    Stream<Article> findAllByTitleContaining(String title);
-
-    //    @Query("{title: ?#{ [title.exists] ? {$exists :true} : {$regex: [title], $Option: '$i'} }}")
-//    @Query("{title: ?#{ [title] ? {$exists :true} : {$regex: [1], $Option: '$i'} }}")
     @Query("{title: ?#{ [0].isEmpty() ?  abc : {$regex: [0], $options: '$i'} }}")
     Stream<Article> findAllByTitleContaining(String title);
-//    @Query("{'author._VALUE': ?#{ [0].isEmpty() ?  {$regex: '*'} : {$regex: [0], $options: '$i'} } }")
-//    Stream<Article> findAllByAuthorContaining2(String author);
 
 }

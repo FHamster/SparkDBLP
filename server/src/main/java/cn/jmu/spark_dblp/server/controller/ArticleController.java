@@ -2,13 +2,12 @@ package cn.jmu.spark_dblp.server.controller;
 
 import cn.jmu.spark_dblp.server.dao.ArticleDAO;
 import cn.jmu.spark_dblp.server.entity.Article;
-import cn.jmu.spark_dblp.server.entity.sub.Author;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.util.resources.cldr.vai.CalendarData_vai_Latn_LR;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,7 +21,7 @@ public class ArticleController {
     @PostMapping("/search")
     public Stream<Article> combineSearch(
             @RequestBody Map<String, Object> body
-    ) {
+    ) throws Exception {
 //        System.out.println(body.get("title"));
 //        System.out.println(body.get("msg"));
 //        System.out.println(body.get("author"));
@@ -36,6 +35,9 @@ public class ArticleController {
             title = "";
         }
         System.out.println(title);
+        if (title.equals("") && author.size() == 0 && finalYear.size() == 0) {
+            throw new Exception("搜索关键字全空错误");
+        }
         List<Pattern> p = author.stream()
                 .map(it -> Pattern.compile(it, Pattern.CASE_INSENSITIVE))
                 .collect(Collectors.toList());
@@ -47,8 +49,7 @@ public class ArticleController {
     public Stream<Article> findAllByAuthor(
             @RequestParam("author") String _VALUE
     ) {
-//        Author author = new Author(_VALUE);
-//        System.out.println(_VALUE);
+        System.out.println(_VALUE);
         return dao.findAllByAuthorContainingAccurate(_VALUE);
     }
 
