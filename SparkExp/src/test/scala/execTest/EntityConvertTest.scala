@@ -1,8 +1,12 @@
+package execTest
+
 import java.io.File
 
+import property.PropertiesObj
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.scalatest.funsuite.AnyFunSuite
+import util.{ReplaceEntityUtil, ReplaceTagUtil}
 
 /**
  * 对dblp进行实体转换的测试

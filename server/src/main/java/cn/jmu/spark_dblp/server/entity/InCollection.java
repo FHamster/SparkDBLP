@@ -8,93 +8,74 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection = "article")
+@Document(collection = "incollection")
 @Data
-public class Article {
+public class InCollection {
     @Id
     protected String _id;
-/*    @Field
-    private String _cdate;*/
     @Field
     private String _key;
     @Field
     private String prefix;
-/*    @Field
-    private String _mdate;*/
+    /*    @Field
+        private String _mdate;*/
     @Field
     private String _publtype;
     @Field
-    private List<Author> author;
+    private List<Author> authorList;
     @Field
     private String booktitle;
+    @Field
+    private String cdrom;
+    @Field
+    private Long chapter;
 /*    @Field
-    private String cdrom;*/
+    private List<Cite> cite;*/
     @Field
-    private List<Cite> cite;
-    @Field
-    private List<String> crossref;
-    @Field
-    private List<Editor> editor;
-    @Field
-    private List<Ee> ee;
-    @Field
-    private String journal;
-    @Field
-    private String month;
+    private List<Ee> eeList;
 /*    @Field
     private List<Note> note;*/
+    @Field
+    private Long number;
+    @Field
+    private String pages;
     @Field
     private List<Publisher> publisherList;
     @Field
     private String title;
-/*    @Field
-    private String url;*/
-    @Field
-    private String volume;
+    /*    @Field
+        private String url;*/
     @Field
     private Long year;
-
 }
-    /*
-
-    root
- |-- _cdate: string (nullable = true)
+/*
+root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
  |-- _publtype: string (nullable = true)
  |-- author: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _aux: string (nullable = true)
  |    |    |-- _orcid: string (nullable = true)
  |-- booktitle: string (nullable = true)
  |-- cdrom: string (nullable = true)
+ |-- chapter: long (nullable = true)
  |-- cite: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _label: string (nullable = true)
  |-- crossref: string (nullable = true)
- |-- editor: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _orcid: string (nullable = true)
  |-- ee: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _type: string (nullable = true)
- |-- journal: string (nullable = true)
- |-- month: string (nullable = true)
- |-- note: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _type: string (nullable = true)
+ |-- note: string (nullable = true)
  |-- number: string (nullable = true)
  |-- pages: string (nullable = true)
- |-- publisher: string (nullable = true)
- |-- title: struct (nullable = true)
+ |-- publisher: struct (nullable = true)
  |    |-- _VALUE: string (nullable = true)
- |    |-- _bibtex: string (nullable = true)
+ |    |-- _href: string (nullable = true)
+ |-- title: string (nullable = true)
  |-- url: string (nullable = true)
- |-- volume: string (nullable = true)
  |-- year: long (nullable = true)
-    * */
+ */

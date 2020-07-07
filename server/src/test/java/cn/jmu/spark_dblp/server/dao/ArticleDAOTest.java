@@ -34,7 +34,7 @@ class ArticleDAOTest {
     public void findArticleByAuthorContaining() {
         List<Author> list = new ArrayList<>();
         list.add(new Author("Chen"));
-        List<Article> oa = dao.findAllByAuthorContaining(list);
+        Stream<Article> oa = dao.findAllByAuthorContainingAccurate("Chen");
 //        Assertions.assertTrue(oa.isPresent());
         oa.forEach(System.out::println);
 
@@ -42,9 +42,7 @@ class ArticleDAOTest {
 
     @Test
     public void findAuthorByVALUE() {
-        List<Author> list = new ArrayList<>();
-        list.add(new Author("Chen"));
-        List<Article> oa = dao.findAllByAuthorContaining(list);
+        Stream<Article> oa = dao.findAllByAuthorContainingAccurate("Chen");
 //        Assertions.assertTrue(oa.isPresent());
         oa.forEach(System.out::println);
 
@@ -80,7 +78,7 @@ class ArticleDAOTest {
 
     @Test
     public void findAllByAuthorContaining() {
-        Stream<Article> oa = dao.findAllByAuthorContaining(new Author("Joon"));
+        Stream<Article> oa = dao.findAllByAuthorContainingAccurate("Joon");
 
 //        Assertions.assertTrue(oa.isPresent());
 //        String.
