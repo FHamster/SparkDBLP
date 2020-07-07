@@ -1,46 +1,13 @@
 import com.mongodb.spark.MongoSpark
-import com.mongodb.spark.rdd.MongoRDD
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.explode
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 
 
 /**
- * 写入author信息
+ * 写入author信息,并对相同author的orcid进行合并
  */
 class WriteAuthor extends AnyFunSuite {
-
-
-  test("distinct author") {
-    import com.mongodb.spark.config._
-    val sparkSession: SparkSession = SparkSession
-      .builder
-      .appName("in")
-      .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
-      .getOrCreate()
-
-    import com.mongodb.spark.config._
-    //    import com.mongodb.spark
-    import sparkSession.implicits._
-    val customReadConfig = ReadConfig(Map(
-      "readPreference.name" -> "secondaryPreferred"),
-      Some(ReadConfig(sparkSession)))
-    val df = sparkSession.read.format("mongo").options(customReadConfig.asOptions).load()
-
-    println(df.count())
-    val df2 = df.dropDuplicates("_VALUE")
-      .select($"_VALUE", $"_orcid")
-      .cache()
-    println(df2.count())
-    df2.show(100)
-    import com.mongodb.spark.config._
-
-    MongoSpark.save(df2.write.option("collection", "Author").mode("overwrite"))
-  }
-
   test("article") {
     import com.databricks.spark.xml._
     val subnode = "article"
@@ -63,8 +30,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
@@ -92,8 +58,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
@@ -120,8 +85,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
@@ -148,8 +112,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
@@ -176,9 +139,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
-
+      )
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
     ss.stop()
@@ -204,8 +165,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
@@ -232,8 +192,7 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
@@ -260,11 +219,49 @@ class WriteAuthor extends AnyFunSuite {
       .select($"author._VALUE" as "_VALUE",
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
-      ).distinct()
-      .sort($"_VALUE")
+      )
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(res)
     ss.stop()
+  }
+
+  test("distinct author") {
+    val sparkSession: SparkSession = SparkSession
+      .builder
+      .appName("in")
+      .master("local[*]")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.DistinctAuthor")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .getOrCreate()
+    import sparkSession.implicits._
+    val mongoDF: DataFrame = MongoSpark.load[Author](sparkSession).cache()
+    mongoDF.show()
+
+    val orcidNotNull = mongoDF
+      .filter($"_orcid".isNotNull)
+      .dropDuplicates("_VALUE")
+      .select($"_VALUE" as "noUseValue", $"_orcid")
+      .cache()
+    val orcidNull = mongoDF
+      .filter($"_orcid".isNull)
+      .dropDuplicates("_VALUE")
+      .select($"_VALUE", $"_aux")
+      .cache()
+    orcidNotNull.show()
+    println("orcidNotNull")
+    orcidNull.show()
+    println("orcidNull")
+
+    val joinedRow = orcidNull
+      .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
+      .select($"_VALUE", $"_orcid", $"_aux")
+      .cache()
+
+    joinedRow.show()
+    joinedRow.printSchema()
+    joinedRow.filter($"_orcid".isNotNull).show(300)
+
+    MongoSpark.save(joinedRow.write.mode("overwrite"))
   }
 }
