@@ -243,16 +243,10 @@ class WriteAuthor extends AnyFunSuite {
       .filter($"_orcid".isNotNull)
       .dropDuplicates("_VALUE")
       .select($"_VALUE" as "noUseValue", $"_orcid")
-      .cache()
     val orcidNull = mongoDF
       .filter($"_orcid".isNull)
       .dropDuplicates("_VALUE")
       .select($"_VALUE", $"_aux")
-      .cache()
-    orcidNotNull.show()
-    println("orcidNotNull")
-    orcidNull.show()
-    println("orcidNull")
 
     val joinedRow = orcidNull
       .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
