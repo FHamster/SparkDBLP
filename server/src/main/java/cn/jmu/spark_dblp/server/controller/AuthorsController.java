@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/authors")
@@ -17,7 +17,7 @@ public class AuthorsController {
     AuthorsDAO dao;
 
     @GetMapping
-    public List<Authors> getAuthorsBy_VALUE(
+    public Stream<Authors> getAuthorsBy_VALUE(
             @RequestParam("_VALUE") String _VALUE
     ) {
         return dao.findAllBy_VALUEContaining(_VALUE);

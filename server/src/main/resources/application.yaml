@@ -5,4 +5,5 @@ spring:
       host: localhost
       port: 27017
       database: SparkDBLPTest
-
+    rest:
+      default-page-size: 30

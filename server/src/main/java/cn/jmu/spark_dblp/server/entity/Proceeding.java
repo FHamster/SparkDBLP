@@ -42,7 +42,7 @@ public class Proceeding {
 /*    @Field
     private List<Note> note;*/
     @Field
-    private Long number;
+    private String number;
     @Field
     private String pages;
     @Field
