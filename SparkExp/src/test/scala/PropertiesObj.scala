@@ -167,9 +167,11 @@ root
         StructField("_label", StringType, nullable = true)
       )), containsNull = true)
     ),
-    StructField("crossref", ArrayType(
+    //更改，只有一个记录有两个crossref
+    /*StructField("crossref", ArrayType(
       StringType, containsNull = true
-    )),
+    )),*/
+    StructField("crossref", StringType, nullable = true),
     StructField("editor", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
@@ -243,12 +245,16 @@ root
     ),
     StructField("number", StringType, nullable = true),
     StructField("pages", StringType, nullable = true),
-    StructField("publisher", ArrayType(
+    StructField("publisher",
+      ArrayType(StringType, containsNull = true)
+    ),
+    //修改简化
+    /*StructField("publisher", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
         StructField("_href", StringType, nullable = true)
       )), containsNull = true)
-    ),
+    ),*/
     StructField("series", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
