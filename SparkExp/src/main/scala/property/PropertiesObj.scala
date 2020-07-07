@@ -4,7 +4,7 @@ import org.apache.spark.sql.types._
 
 object PropertiesObj {
   val pwd: String = System.getProperty("user.dir")
-  val wholeDBLP = "/SparkExp/whole/dblp.xml"
+  val wholeDBLP = "/whole/dblp.xml"
   val wholeDBLP_cvt = "/whole/dblp_cvt.xml"
   lazy val wholeDBLP_cvtSparkPath: String = s"file://${pwd + wholeDBLP_cvt}"
   lazy val wholeDBLP_SparkPath: String = s"file://${pwd + wholeDBLP}"
