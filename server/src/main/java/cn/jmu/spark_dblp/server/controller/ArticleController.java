@@ -41,8 +41,8 @@ public class ArticleController {
         List<Pattern> p = author.stream()
                 .map(it -> Pattern.compile(it, Pattern.CASE_INSENSITIVE))
                 .collect(Collectors.toList());
-        return dao.findAllByTitleContainingAndAuthor__VALUEContainingAndYearIn(title, p, finalYear);
 
+        return dao.findAllByTitleContainingAndAuthor__VALUEContainingAndYearIn(title, p, finalYear).limit(30);
     }
 
     @GetMapping("/accurateAuthor")
@@ -52,6 +52,4 @@ public class ArticleController {
         System.out.println(_VALUE);
         return dao.findAllByAuthorContainingAccurate(_VALUE);
     }
-
-
 }
