@@ -1,3 +1,5 @@
+package property
+
 import org.apache.spark.sql.types._
 
 object PropertiesObj {

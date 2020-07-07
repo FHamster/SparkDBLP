@@ -10,7 +10,7 @@ import scala.collection.mutable
 
 //本地的小规模Dataframe操作测试
 final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
-  val testRes: String = "src/test/resources/article_after.xml"
+  val testRes: String = "SparkExp/src/test/resources/article_after.xml"
   //  val testRes: String = "src/test/resources/article_CharTest.xml"
 
   //  val testRes: String = "hdfs://localhost:9000/testdata/hadoop_namenode/article_after.xml"
@@ -35,6 +35,7 @@ final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
       .cache()
   }
 
+  import spark.implicits._
   override protected def afterAll(): Unit = {
     try {
       spark.stop()
@@ -53,41 +54,32 @@ final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Select some column from article") {
-    import spark.implicits._
     dblpArticle.select($"title", $"author", $"url")
       .show()
   }
   test("filter with number of long type") {
-    import spark.implicits._
     dblpArticle.select($"title", $"author", $"year").filter($"year" > 2000)
       .show()
   }
   test("filter with exact string match") {
-    import spark.implicits._
     dblpArticle.filter($"title" <=> "Knowledge in Operation")
       .show()
   }
   test("filter with sql like") {
-    import spark.implicits._
     dblpArticle.filter($"title" like "%Knowledge%")
       .show()
   }
 
   test("filter with regex string") {
-    import spark.implicits._
     dblpArticle.select($"title", $"author", $"url").filter($"title" rlike "^Knowledge").show()
   }
 
   test("filter with complex struct") {
-    import spark.implicits._
-
     dblpArticle.filter(array_contains($"author._VALUE", "Paul Kocher"))
       .show()
   }
 
   test("export into array") {
-    import spark.implicits._
-
     val cache: DataFrame = dblpArticle
       .filter(array_contains($"author._VALUE", "Paul Kocher"))
       .cache()
@@ -99,16 +91,12 @@ final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
 
     //    a(0).getList()
     a(0).schema.fieldNames.foreach(println(_));
-
-
     println(a(0).getAs(fieldName = "_key"));
 
     println(a(0).getAs(fieldName = "author"));
   }
 
   test("read dataframe schma") {
-    import spark.implicits._
-
     val cache: DataFrame = dblpArticle
       .filter(array_contains($"author._VALUE", "Paul Kocher"))
       .cache()
@@ -127,24 +115,48 @@ final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("writh json") {
-    import spark.implicits._
     val cache: DataFrame = dblpArticle
       .filter(array_contains($"author._VALUE", "Paul Kocher"))
       .cache()
   }
-
   test("test if there is corrupt_record") {
     assert(!dblpArticle.columns.contains("_corrupt_record"))
-
   }
   test("explode author array") {
-    import spark.implicits._
+    //测试explode
     dblpArticle.select(explode($"author._VALUE") as "author2", $"_key", $"title")
       .show(100)
   }
+  test("add column with regex expression") {
+    //新增column
+    dblpArticle
+      .withColumn("prefix", regexp_extract($"_key", "\\S*/\\S*/", 0))
+      .show(100)
+  }
+  test("merge author") {
+    //测试join功能
+    val orcidNotNull = dblpArticle
+      .select(explode($"author") as "author")
+      .select($"author._VALUE" as "_VALUE",
+        $"author._orcid" as "_orcid",
+        $"author._aux" as "_aux")
+      .filter($"_orcid".isNotNull)
+      .dropDuplicates("_VALUE")
 
+    val orcidNull = dblpArticle
+      .select(explode($"author") as "author")
+      .select($"author._VALUE" as "_VALUE",
+        $"author._orcid" as "_orcid",
+        $"author._aux" as "_aux")
+      .filter($"_orcid".isNull)
+      .dropDuplicates("_VALUE")
+
+    val joinedRow = orcidNull
+      .join(orcidNotNull, orcidNull("_VALUE") === orcidNotNull("_VALUE"), "left")
+      .select(orcidNull("_VALUE"), orcidNotNull("_orcid"))
+      .show(200)
+  }
   test("write jdbc") {
-    import spark.implicits._
     val cache: DataFrame = dblpArticle
       .select($"_key", $"url")
       .cache()
@@ -157,6 +169,7 @@ final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
 
     //    cache.write.jdbc(url = "jdbc:mysql://114.116.39.130:3306/dblp", table = "dblp", connectionProperties = properties)
   }
+
 
   test("filter with xpath") {
 

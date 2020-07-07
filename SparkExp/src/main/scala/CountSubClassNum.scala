@@ -19,7 +19,6 @@ import org.apache.spark.sql.SparkSession
  * 该代码需要很长时间用于统计dblp下各个子节点的数量 *
  * ********************************************/
 object CountSubClassNum extends App {
-
   val pwd = "/Users/gaoxin/IdeaProjects/SparkExp/"
   val wholeDBLP = "whole/dblp.xml"
   val wholeDBLP_Converted = "whole/dblp_cvt.xml"

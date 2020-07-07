@@ -1,30 +1,33 @@
+package execTest
+
+import property._
+import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
 import org.apache.spark.sql.functions.explode
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
-
-
 /**
  * 写入author信息,并对相同author的orcid进行合并
  */
 class WriteAuthor extends AnyFunSuite {
+
   test("article") {
-    import com.databricks.spark.xml._
     val subnode = "article"
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
-
+ 
     val opt = ss.read
       .option("rootTag", "dblp")
       .option("rowTag", subnode)
       .schema(PropertiesObj.articleSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
 
-    import ss.implicits._
+
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -38,21 +41,19 @@ class WriteAuthor extends AnyFunSuite {
   }
 
   test("inproceedings") {
-    import com.databricks.spark.xml._
     val subnode = "inproceedings"
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
-
     val opt = ss.read
       .option("rootTag", "dblp")
       .option("rowTag", subnode)
       .schema(PropertiesObj.inproceedingsSchema)
-      .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+      .xml(PropertiesObj.wholeDBLP_cvtSparkPath)  
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -65,13 +66,13 @@ class WriteAuthor extends AnyFunSuite {
     ss.stop()
   }
   test("proceedings") {
-    import com.databricks.spark.xml._
     val subnode = "proceedings"
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
 
     val opt = ss.read
@@ -79,7 +80,7 @@ class WriteAuthor extends AnyFunSuite {
       .option("rowTag", subnode)
       .schema(PropertiesObj.proceedingsSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -92,13 +93,13 @@ class WriteAuthor extends AnyFunSuite {
     ss.stop()
   }
   test("book") {
-    import com.databricks.spark.xml._
     val subnode = "book"
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
 
     val opt = ss.read
@@ -106,7 +107,7 @@ class WriteAuthor extends AnyFunSuite {
       .option("rowTag", subnode)
       .schema(PropertiesObj.bookSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -119,13 +120,13 @@ class WriteAuthor extends AnyFunSuite {
     ss.stop()
   }
   test("incollection") {
-    import com.databricks.spark.xml._
     val subnode = "incollection"
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
 
     val opt = ss.read
@@ -133,7 +134,7 @@ class WriteAuthor extends AnyFunSuite {
       .option("rowTag", subnode)
       .schema(PropertiesObj.incollectionSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -145,13 +146,13 @@ class WriteAuthor extends AnyFunSuite {
     ss.stop()
   }
   test("phdthesis") {
-    import com.databricks.spark.xml._
     val subnode = "phdthesis"
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
 
     val opt = ss.read
@@ -159,7 +160,7 @@ class WriteAuthor extends AnyFunSuite {
       .option("rowTag", subnode)
       .schema(PropertiesObj.phdthesisSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -172,13 +173,14 @@ class WriteAuthor extends AnyFunSuite {
     ss.stop()
   }
   test("mastersthesis") {
-    import com.databricks.spark.xml._
     val subnode = "mastersthesis"
+
+    import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
 
     val opt = ss.read
@@ -186,7 +188,7 @@ class WriteAuthor extends AnyFunSuite {
       .option("rowTag", subnode)
       .schema(PropertiesObj.mastersthesisSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -199,13 +201,12 @@ class WriteAuthor extends AnyFunSuite {
     ss.stop()
   }
   test("www") {
-    import com.databricks.spark.xml._
     val subnode = "www"
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
 
     val opt = ss.read
@@ -213,7 +214,7 @@ class WriteAuthor extends AnyFunSuite {
       .option("rowTag", subnode)
       .schema(PropertiesObj.wwwSchema)
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
-    import ss.implicits._
+    import ss.implicits.StringToColumn
     val res = opt
       .select(explode($"author") as "author")
       .select($"author._VALUE" as "_VALUE",
@@ -232,7 +233,7 @@ class WriteAuthor extends AnyFunSuite {
       .appName("in")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.DistinctAuthor")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Author")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.Property.Author")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark.load[Author](sparkSession).cache()
