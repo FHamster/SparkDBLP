@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
-@Document(collection = "Author")
+@Document(collection = "DistinctAuthor")
 @Data
 public class Authors {
     @Id
