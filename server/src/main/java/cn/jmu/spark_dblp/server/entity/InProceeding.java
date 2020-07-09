@@ -16,7 +16,6 @@ import java.util.List;
 public class InProceeding {
     @Id
     protected String _id;
-
     @Field
     private String _key;
     @Field
@@ -28,7 +27,7 @@ public class InProceeding {
     @Field
     private String _publtype;
     @Field
-    private List<Author> authorList;
+    private List<Author> author;
     @Field
     private String booktitle;
 /*    @Field
@@ -36,11 +35,11 @@ public class InProceeding {
 /*    @Field
     private List<Cite> cite;*/
     @Field
-    private List<String> crossreList;
+    private String crossref;
     @Field
-    private List<Editor> editorList;
+    private List<Editor> editor;
     @Field
-    private List<Ee> eeList;
+    private List<Ee> ee;
     @Field
     private String month;
 /*    @Field

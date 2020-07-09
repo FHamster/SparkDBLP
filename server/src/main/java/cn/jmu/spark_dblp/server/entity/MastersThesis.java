@@ -24,7 +24,7 @@ public class MastersThesis {
     @Field
     private String _publtype;
     @Field
-    private List<Author> authorList;
+    private List<Author> author;
     @Field
     private List<Ee> ee;
     /*    @Field
@@ -32,7 +32,7 @@ public class MastersThesis {
 /*    @Field
     private String number;*/
     @Field
-    private List<String> schoolList;
+    private List<String> school;
     @Field
     private String title;
     @Field

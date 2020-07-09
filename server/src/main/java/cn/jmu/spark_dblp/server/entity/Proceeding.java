@@ -26,17 +26,17 @@ public class Proceeding {
 /*    @Field
     private String address;*/
     @Field
-    private List<Author> authorList;
+    private List<Author> author;
     @Field
     private String booktitle;
 /*    @Field
     private List<Cite> cite;*/
     @Field
-    private List<Editor> editorList;
+    private List<Editor> editor;
     @Field
-    private List<Ee> eeList;
+    private List<Ee> ee;
     @Field
-    private List<ISBN> isbnList;
+    private List<ISBN> isbn;
     @Field
     private String journal;
     @Field
@@ -48,9 +48,9 @@ public class Proceeding {
     @Field
     private String pages;
     @Field
-    private List<Publisher> publisherList;
+    private List<String> publisher;
     @Field
-    private List<Series> seriesList;
+    private List<Series> seriess;
     @Field
     private String title;
     /*    @Field

@@ -28,7 +28,7 @@ public class PhdThesis {
     @Field
     private List<Ee> ee;
     @Field
-    private List<ISBN> isbnList;
+    private List<String> isbn;
     @Field
     private String month;
 /*    @Field
@@ -38,11 +38,11 @@ public class PhdThesis {
     @Field
     private String pages;
     @Field
-    private List<Publisher> publisherList;
+    private String publisher;
     @Field
-    private List<String> schoolList;
+    private List<String> school;
     @Field
-    private List<Series> seriesList;
+    private Series series;
     @Field
     private String title;
     @Field
@@ -50,7 +50,7 @@ public class PhdThesis {
 /*    @Field
     private String url;*/
     @Field
-    private List<Long> yeaList;
+    private Long yea;
 
 }
 /*

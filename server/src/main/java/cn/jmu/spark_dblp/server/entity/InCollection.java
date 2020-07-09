@@ -24,9 +24,11 @@ public class InCollection {
     @Field
     private String _publtype;
     @Field
-    private List<Author> authorList;
+    private List<Author> author;
     @Field
     private String booktitle;
+    @Field
+    private String crossref;
     @Field
     private String cdrom;
     @Field
@@ -34,7 +36,7 @@ public class InCollection {
 /*    @Field
     private List<Cite> cite;*/
     @Field
-    private List<Ee> eeList;
+    private List<Ee> ee;
 /*    @Field
     private List<Note> note;*/
     @Field
@@ -42,7 +44,7 @@ public class InCollection {
     @Field
     private String pages;
     @Field
-    private List<Publisher> publisherList;
+    private Publisher publisher;
     @Field
     private String title;
     /*    @Field
