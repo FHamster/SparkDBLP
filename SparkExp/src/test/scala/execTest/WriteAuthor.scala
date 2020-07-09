@@ -4,7 +4,7 @@ import property._
 import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
 import org.apache.spark.sql.functions.explode
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 /**
  * 写入author信息,并对相同author的orcid进行合并
@@ -36,7 +36,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
 
@@ -62,7 +62,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("proceedings") {
@@ -89,7 +89,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("book") {
@@ -116,7 +116,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("incollection") {
@@ -142,7 +142,7 @@ class WriteAuthor extends AnyFunSuite {
         $"author._aux" as "_aux"
       )
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("phdthesis") {
@@ -169,7 +169,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("mastersthesis") {
@@ -197,7 +197,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("www") {
@@ -223,7 +223,7 @@ class WriteAuthor extends AnyFunSuite {
       )
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(res)
+    MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
 
@@ -257,6 +257,6 @@ class WriteAuthor extends AnyFunSuite {
     joinedRow.printSchema()
     joinedRow.filter($"_orcid".isNotNull).show(300)
 
-    MongoSpark.save(joinedRow.write.mode("overwrite"))
+    MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
   }
 }
