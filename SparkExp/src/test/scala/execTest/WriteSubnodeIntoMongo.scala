@@ -153,7 +153,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
   }
   test("mastersthesis") {
     import ss.implicits.StringToColumn
-    val subnode = "incollection"
+    val subnode = "mastersthesis"
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
