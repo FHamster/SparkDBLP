@@ -44,7 +44,7 @@ public class Article {
 /*    @Field
     private List<Note> note;*/
     @Field
-    private List<Publisher> publisherList;
+    private List<Publisher> publisher;
     @Field
     private String title;
 /*    @Field

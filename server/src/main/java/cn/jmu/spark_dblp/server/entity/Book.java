@@ -18,11 +18,13 @@ public class Book {
     @Field
     private String _key;
     @Field
-    private String prefix;
+    private String prefix1;
+    @Field
+    private String prefix2;
     @Field
     private String _publtype;
     @Field
-    private List<Author> authorList;
+    private List<Author> author;
     @Field
     private String booktitle;
     /*    @Field
@@ -30,25 +32,25 @@ public class Book {
 /*    @Field
     private List<Cite> citeList;*/
     @Field
-    private List<String> crossrList;
+    private String crossref;
     @Field
-    private List<Editor> editorList;
+    private List<Editor> editor;
     @Field
-    private List<Ee> eeList;
+    private List<Ee> ee;
     @Field
-    private List<ISBN> isbnList;
+    private List<ISBN> isbn;
     @Field
     private String month;
     @Field
-    private List<String> pageList;
+    private List<String> pages;
 /*    @Field
     private List<Note> note;*/
     @Field
-    private List<Publisher> publisherList;
+    private String publisher;
     @Field
-    private List<String> schoolList;
+    private List<String> school;
     @Field
-    private List<Series> seriesList;
+    private Series series;
     @Field
     private String title;
 /*    @Field

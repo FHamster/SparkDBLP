@@ -4,21 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AuthorsDAOTest {
-
+class BookDAOTest {
     @Autowired
-    AuthorsDAO dao;
-
+    BookDAO dao;
 
     @Test
     public void findAuthorByVALUE() {
-//        List<Author> list = new ArrayList<>();
-//        list.add(new Author("Chen"));
-//        Stream<Authors> oa = dao.findAllBy_VALUEContaining("Chen");
-//        Assertions.assertTrue(oa.isPresent());
-//        oa.forEach(System.out::println);
-
+//        dao.findAllByTitleContaining("Hadoop")
+//                .limit(100)
+//                .forEach(System.out::println);
     }
 }
