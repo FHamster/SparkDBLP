@@ -2,7 +2,7 @@ package execTest
 
 import property.PropertiesObj
 import com.mongodb.spark.MongoSpark
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions.regexp_extract
 import org.scalatest.funsuite.AnyFunSuite
 import com.databricks.spark.xml.XmlDataFrameReader
@@ -33,7 +33,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
 
@@ -56,7 +56,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("proceedings") {
@@ -78,7 +78,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("book") {
@@ -100,7 +100,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("incollection") {
@@ -122,7 +122,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("phdthesis") {
@@ -144,7 +144,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("mastersthesis") {
@@ -166,7 +166,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
   test("www") {
@@ -188,7 +188,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
 

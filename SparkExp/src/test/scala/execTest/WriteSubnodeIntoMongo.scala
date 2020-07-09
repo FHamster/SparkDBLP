@@ -2,7 +2,7 @@ package execTest
 
 import property.PropertiesObj
 import com.mongodb.spark.MongoSpark
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions.regexp_extract
 import org.scalatest.funsuite.AnyFunSuite
 import com.databricks.spark.xml.XmlDataFrameReader
@@ -33,7 +33,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
 
@@ -56,7 +56,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
   test("proceedings") {
@@ -79,7 +79,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
   test("book") {
@@ -102,7 +102,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
     opt.show()
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
   test("incollection") {
@@ -125,7 +125,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
   test("phdthesis") {
@@ -148,7 +148,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
   test("mastersthesis") {
@@ -171,7 +171,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
   test("www") {
@@ -194,7 +194,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
 
 
     println(s"write $subnode into mongodb")
-    MongoSpark.save(opt)
+    MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   }
 
