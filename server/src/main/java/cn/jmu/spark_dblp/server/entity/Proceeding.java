@@ -16,7 +16,9 @@ public class Proceeding {
     @Field
     private String _key;
     @Field
-    private String prefix;
+    private String prefix1;
+    @Field
+    private String prefix2;
     /*    @Field
         private String _mdate;*/
     @Field
