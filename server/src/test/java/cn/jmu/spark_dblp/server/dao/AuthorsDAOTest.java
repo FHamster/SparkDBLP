@@ -20,9 +20,9 @@ class AuthorsDAOTest {
     public void findAuthorByVALUE() {
 //        List<Author> list = new ArrayList<>();
 //        list.add(new Author("Chen"));
-        Stream<Authors> oa = dao.findAllBy_VALUEContaining("Chen");
+//        Stream<Authors> oa = dao.findAllBy_VALUEContaining("Chen");
 //        Assertions.assertTrue(oa.isPresent());
-        oa.forEach(System.out::println);
+//        oa.forEach(System.out::println);
 
     }
 }

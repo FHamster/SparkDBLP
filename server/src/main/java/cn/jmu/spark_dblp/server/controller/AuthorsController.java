@@ -20,7 +20,8 @@ public class AuthorsController {
     public Stream<Authors> getAuthorsBy_VALUE(
             @RequestParam("_VALUE") String _VALUE
     ) {
-        return dao.findAllBy_VALUEContaining(_VALUE);
+//        return dao.findAllBy_VALUEContaining(_VALUE);
+        return null;
     }
 
 }

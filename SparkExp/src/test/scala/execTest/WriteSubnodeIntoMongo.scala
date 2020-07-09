@@ -31,9 +31,6 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -56,9 +53,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -81,9 +76,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -106,9 +99,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -131,9 +122,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -156,9 +145,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -181,9 +168,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
@@ -206,9 +191,7 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
-      .cache()
-    opt.show()
-    opt.printSchema()
+ 
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt)
