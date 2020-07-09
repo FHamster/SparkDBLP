@@ -20,17 +20,15 @@ public abstract class AbstractDoc {
     @Field
     protected String prefix2;
     @Field
-    private List<Author> author;
+    protected List<Author> author;
     @Field
-    private List<Ee> ee;
+    protected List<Ee> ee;
     @Field
-    private String title;
+    protected String title;
     @Field
-    private Long year;
+    protected Long year;
     @Field
-    private String month;
-    @Field
-    private List<Cite> cite;
-
-
+    protected String month;
+/*    @Field
+    protected List<Cite> cite;*/
 }

@@ -193,10 +193,11 @@ root
     )), nullable = true),
     StructField("number", StringType, nullable = true),
     StructField("pages", StringType, nullable = true),
-    StructField("title", StructType(Array(
+    StructField("title", StringType, nullable = true),
+    /* StructField("title", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_bibtex", StringType, nullable = true),
-    )), nullable = true),
+    )), nullable = true),*/
     StructField("url", StringType, nullable = true),
     StructField("year", LongType, nullable = true)
   ))
