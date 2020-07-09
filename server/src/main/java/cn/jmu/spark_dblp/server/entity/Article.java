@@ -10,53 +10,53 @@ import java.util.List;
 
 @Document(collection = "article")
 @Data
-public class Article {
-    @Id
+public class Article extends AbstractDoc{
+/*    @Id
     protected String _id;
-/*    @Field
-    private String _cdate;*/
+*//*    @Field
+    private String _cdate;*//*
     @Field
     private String _key;
     @Field
     private String prefix1;
     @Field
-    private String prefix2;
+    private String prefix2;*/
 /*    @Field
     private String _mdate;*/
     @Field
     private String _publtype;
-    @Field
-    private List<Author> author;
+/*    @Field
+    private List<Author> author;*/
     @Field
     private String booktitle;
 /*    @Field
     private String cdrom;*/
+/*    @Field
+    private List<Cite> cite;*/
     @Field
-    private List<Cite> cite;
-    @Field
-    private List<String> crossref;
+    private String crossref;
     @Field
     private List<Editor> editor;
-    @Field
-    private List<Ee> ee;
+/*    @Field
+    private List<Ee> ee;*/
     @Field
     private String journal;
-    @Field
-    private String month;
+/*    @Field
+    private String month;*/
 /*    @Field
     private List<Note> note;*/
     @Field
     private String pages;
     @Field
     private String publisher;
-    @Field
-    private String title;
+/*    @Field
+    private String title;*/
 /*    @Field
     private String url;*/
     @Field
     private String volume;
-    @Field
-    private Long year;
+/*    @Field
+    private Long year;*/
 
 }
     /*

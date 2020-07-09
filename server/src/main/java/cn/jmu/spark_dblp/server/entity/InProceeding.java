@@ -13,21 +13,21 @@ import java.util.List;
 
 @Document(collection = "inproceedings")
 @Data
-public class InProceeding {
-    @Id
+public class InProceeding extends AbstractDoc{
+/*    @Id
     protected String _id;
     @Field
     private String _key;
     @Field
     private String prefix1;
     @Field
-    private String prefix2;
+    private String prefix2;*/
     /*    @Field
         private String _mdate;*/
     @Field
     private String _publtype;
-    @Field
-    private List<Author> author;
+/*    @Field
+    private List<Author> author;*/
     @Field
     private String booktitle;
 /*    @Field
@@ -38,22 +38,22 @@ public class InProceeding {
     private String crossref;
     @Field
     private List<Editor> editor;
-    @Field
-    private List<Ee> ee;
-    @Field
-    private String month;
+/*    @Field
+    private List<Ee> ee;*/
+/*    @Field
+    private String month;*/
 /*    @Field
     private List<Note> note;*/
 /*    @Field
     private String number;*/
     @Field
     private String pages;
-    @Field
-    private String title;
+/*    @Field
+    private String title;*/
 /*    @Field
     private String url;*/
-    @Field
-    private Long year;
+/*    @Field
+    private Long year;*/
 
 }
 /*

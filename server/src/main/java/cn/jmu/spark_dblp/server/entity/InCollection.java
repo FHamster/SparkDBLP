@@ -10,21 +10,21 @@ import java.util.List;
 
 @Document(collection = "incollection")
 @Data
-public class InCollection {
-    @Id
+public class InCollection extends AbstractDoc{
+/*    @Id
     protected String _id;
     @Field
     private String _key;
     @Field
     private String prefix1;
     @Field
-    private String prefix2;
+    private String prefix2;*/
     /*    @Field
         private String _mdate;*/
     @Field
     private String _publtype;
-    @Field
-    private List<Author> author;
+/*    @Field
+    private List<Author> author;*/
     @Field
     private String booktitle;
     @Field
@@ -35,8 +35,8 @@ public class InCollection {
     private Long chapter;
 /*    @Field
     private List<Cite> cite;*/
-    @Field
-    private List<Ee> ee;
+/*    @Field
+    private List<Ee> ee;*/
 /*    @Field
     private List<Note> note;*/
     @Field
@@ -45,12 +45,12 @@ public class InCollection {
     private String pages;
     @Field
     private Publisher publisher;
-    @Field
-    private String title;
+/*    @Field
+    private String title;*/
     /*    @Field
         private String url;*/
-    @Field
-    private Long year;
+/*    @Field
+    private Long year;*/
 }
 /*
 root

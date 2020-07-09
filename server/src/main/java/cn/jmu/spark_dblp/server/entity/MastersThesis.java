@@ -10,33 +10,33 @@ import java.util.List;
 
 @Document(collection = "mastersthesis")
 @Data
-public class MastersThesis {
-    @Id
+public class MastersThesis extends AbstractDoc{
+/*    @Id
     protected String _id;
     @Field
     private String _key;
     @Field
     private String prefix1;
     @Field
-    private String prefix2;
+    private String prefix2;*/
     /*    @Field
         private String _mdate;*/
     @Field
     private String _publtype;
-    @Field
-    private List<Author> author;
-    @Field
-    private List<Ee> ee;
+/*    @Field
+    private List<Author> author;*/
+/*    @Field
+    private List<Ee> ee;*/
     /*    @Field
         private List<Note> note;*/
 /*    @Field
     private String number;*/
     @Field
     private List<String> school;
-    @Field
-    private String title;
-    @Field
-    private List<Long> year;
+/*    @Field
+    private String title;*/
+/*    @Field
+    private Long year;*/
 }
 /*
 root

@@ -10,27 +10,27 @@ import java.util.List;
 
 @Document(collection = "phdthesis")
 @Data
-public class PhdThesis {
-    @Id
+public class PhdThesis extends AbstractDoc {
+   /* @Id
     protected String _id;
     @Field
     private String _key;
     @Field
     private String prefix1;
     @Field
-    private String prefix2;
+    private String prefix2;*/
     /*    @Field
         private String _mdate;*/
     @Field
     private String _publtype;
-    @Field
-    private List<Author> author;
-    @Field
-    private List<Ee> ee;
+/*    @Field
+    private List<Author> author;*/
+/*    @Field
+    private List<Ee> ee;*/
     @Field
     private List<String> isbn;
-    @Field
-    private String month;
+/*    @Field
+    private String month;*/
 /*    @Field
     private List<Note> note;*/
 /*    @Field
@@ -43,14 +43,14 @@ public class PhdThesis {
     private List<String> school;
     @Field
     private Series series;
-    @Field
-    private String title;
+/*    @Field
+    private String title;*/
     @Field
     private String volume;
 /*    @Field
     private String url;*/
-    @Field
-    private Long yea;
+/*    @Field
+    private Long year;*/
 
 }
 /*
