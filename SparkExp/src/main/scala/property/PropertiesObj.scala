@@ -118,7 +118,9 @@ root
       )), containsNull = true)
     ),
     StructField("number", StringType, nullable = true),
-    StructField("pages", StringType, nullable = true),
+    StructField("pages", ArrayType(
+      StringType, containsNull = true
+    )),
     StructField("publisher", StringType, nullable = true),
     //人工设定表
     StructField("title", StringType, nullable = true),
@@ -192,12 +194,15 @@ root
       StructField("_type", StringType, nullable = true)
     )), nullable = true),
     StructField("number", StringType, nullable = true),
-    StructField("pages", StringType, nullable = true),
+    StructField("pages", ArrayType(
+      StringType, containsNull = true
+    )),
     StructField("title", StringType, nullable = true),
     /* StructField("title", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_bibtex", StringType, nullable = true),
     )), nullable = true),*/
+    StructField("volume", StringType, nullable = true),
     StructField("url", StringType, nullable = true),
     StructField("year", LongType, nullable = true)
   ))
@@ -247,7 +252,9 @@ root
       )), containsNull = true)
     ),
     StructField("number", StringType, nullable = true),
-    StructField("pages", StringType, nullable = true),
+    StructField("pages", ArrayType(
+      StringType, containsNull = true
+    )),
     StructField("publisher",
       ArrayType(StringType, containsNull = true)
     ),
@@ -361,7 +368,9 @@ root
       )), containsNull = true)
     ),
     StructField("note", StringType, nullable = true),
-    StructField("pages", StringType, nullable = true),
+    StructField("pages", ArrayType(
+      StringType, containsNull = true
+    )),
     StructField("publisher", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_href", StringType, nullable = true)
