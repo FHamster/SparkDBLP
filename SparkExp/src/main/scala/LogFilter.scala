@@ -8,7 +8,7 @@ object  LogFilter {
     val lineIterator = source.getLines()
 
     lineIterator.filter(it=>{
-      !(it.contains("20/05/03") || it.contains("20/04/17"))
+      !(it.contains("20/07/10") || it.contains("20/04/17"))
     }).foreach(println)
 
   }
