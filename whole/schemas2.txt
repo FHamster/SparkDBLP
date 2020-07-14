@@ -1,5 +1,6 @@
-//这是所有的推测的schema打印的日志
 
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+write article into mongodb
 root
  |-- _cdate: string (nullable = true)
  |-- _key: string (nullable = true)
@@ -8,8 +9,8 @@ root
  |-- author: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _aux: string (nullable = true)
  |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- booktitle: string (nullable = true)
  |-- cdrom: string (nullable = true)
  |-- cite: array (nullable = true)
@@ -32,18 +33,21 @@ root
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _type: string (nullable = true)
  |-- number: string (nullable = true)
- |-- pages: string (nullable = true)
+ |-- pages: array (nullable = true)
+ |    |-- element: string (containsNull = true)
  |-- publisher: string (nullable = true)
- |-- title: struct (nullable = true)
- |    |-- _VALUE: string (nullable = true)
- |    |-- _bibtex: string (nullable = true)
+ |-- title: string (nullable = true)
  |-- url: string (nullable = true)
  |-- volume: string (nullable = true)
  |-- year: long (nullable = true)
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 
-write article into mongodb
 
 
+write inproceedings into mongodb
 root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
@@ -51,8 +55,8 @@ root
  |-- author: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _aux: string (nullable = true)
  |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- booktitle: string (nullable = true)
  |-- cdrom: array (nullable = true)
  |    |-- element: string (containsNull = true)
@@ -60,8 +64,7 @@ root
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _label: string (nullable = true)
- |-- crossref: array (nullable = true)
- |    |-- element: string (containsNull = true)
+ |-- crossref: string (nullable = true)
  |-- editor: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
@@ -75,23 +78,30 @@ root
  |    |-- _VALUE: string (nullable = true)
  |    |-- _type: string (nullable = true)
  |-- number: string (nullable = true)
- |-- pages: string (nullable = true)
- |-- title: struct (nullable = true)
- |    |-- _VALUE: string (nullable = true)
- |    |-- _bibtex: string (nullable = true)
+ |-- pages: array (nullable = true)
+ |    |-- element: string (containsNull = true)
+ |-- title: string (nullable = true)
+ |-- volume: string (nullable = true)
  |-- url: string (nullable = true)
- |-- volume: long (nullable = true)
  |-- year: long (nullable = true)
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 
-write inproceedings into mongodb
 
 
+write proceedings into mongodb
 root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
  |-- _publtype: string (nullable = true)
  |-- address: string (nullable = true)
- |-- author: string (nullable = true)
+ |-- author: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- _VALUE: string (nullable = true)
+ |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- booktitle: string (nullable = true)
  |-- cite: array (nullable = true)
  |    |-- element: struct (containsNull = true)
@@ -115,11 +125,10 @@ root
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _type: string (nullable = true)
  |-- number: string (nullable = true)
- |-- pages: string (nullable = true)
+ |-- pages: array (nullable = true)
+ |    |-- element: string (containsNull = true)
  |-- publisher: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _href: string (nullable = true)
+ |    |-- element: string (containsNull = true)
  |-- series: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
@@ -128,10 +137,14 @@ root
  |-- url: string (nullable = true)
  |-- volume: string (nullable = true)
  |-- year: long (nullable = true)
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 
-write proceedings into mongodb
 
 
+write book into mongodb
 root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
@@ -139,8 +152,8 @@ root
  |-- author: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _bibtex: string (nullable = true)
  |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- booktitle: string (nullable = true)
  |-- cdrom: string (nullable = true)
  |-- cite: array (nullable = true)
@@ -164,7 +177,7 @@ root
  |-- note: struct (nullable = true)
  |    |-- _VALUE: string (nullable = true)
  |    |-- _type: string (nullable = true)
- |-- pages: array (nullable = true)   不统一
+ |-- pages: array (nullable = true)
  |    |-- element: string (containsNull = true)
  |-- publisher: struct (nullable = true)
  |    |-- _VALUE: string (nullable = true)
@@ -178,9 +191,14 @@ root
  |-- url: string (nullable = true)
  |-- volume: string (nullable = true)
  |-- year: long (nullable = true)
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 
-write book into mongodb
 
+
+write incollection into mongodb
 root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
@@ -189,9 +207,10 @@ root
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- booktitle: string (nullable = true)
  |-- cdrom: string (nullable = true)
- |-- chapter: long (nullable = true)
+ |-- chapter: string (nullable = true)
  |-- cite: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
@@ -202,17 +221,22 @@ root
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _type: string (nullable = true)
  |-- note: string (nullable = true)
- |-- number: string (nullable = true)
- |-- pages: string (nullable = true)
+ |-- pages: array (nullable = true)
+ |    |-- element: string (containsNull = true)
  |-- publisher: struct (nullable = true)
  |    |-- _VALUE: string (nullable = true)
  |    |-- _href: string (nullable = true)
  |-- title: string (nullable = true)
  |-- url: string (nullable = true)
  |-- year: long (nullable = true)
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 
-write incollection into mongodb
 
+
+write phdthesis into mongodb
 root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
@@ -221,20 +245,18 @@ root
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- ee: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _type: string (nullable = true)
  |-- isbn: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _type: string (nullable = true)
+ |    |-- element: string (containsNull = true)
  |-- month: string (nullable = true)
  |-- note: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
  |    |    |-- _type: string (nullable = true)
- |-- number: string (nullable = true)
  |-- pages: array (nullable = true)
  |    |-- element: string (containsNull = true)
  |-- publisher: string (nullable = true)
@@ -245,16 +267,24 @@ root
  |    |-- _href: string (nullable = true)
  |-- title: string (nullable = true)
  |-- volume: string (nullable = true)
- |-- year: array (nullable = true)
- |    |-- element: long (containsNull = true)
+ |-- year: long (nullable = true)
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 
-write phdthesis into mongodb
----------------+----------+--------------------+--------------------+--------------------+--------------------+--------------------+----+
 
+
+write mastersthesis into mongodb
 root
  |-- _key: string (nullable = true)
  |-- _mdate: string (nullable = true)
- |-- author: string (nullable = true)
+ |-- _publtype: string (nullable = true)
+ |-- author: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- _VALUE: string (nullable = true)
+ |    |    |-- _orcid: string (nullable = true)
+ |    |    |-- _aux: string (nullable = true)
  |-- ee: array (nullable = true)
  |    |-- element: struct (containsNull = true)
  |    |    |-- _VALUE: string (nullable = true)
@@ -265,34 +295,8 @@ root
  |-- school: string (nullable = true)
  |-- title: string (nullable = true)
  |-- year: long (nullable = true)
-
-write mastersthesis into mongodb
-
-root
- |-- _key: string (nullable = true)
- |-- _mdate: string (nullable = true)
- |-- _publtype: string (nullable = true)
- |-- author: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _bibtex: string (nullable = true)
- |-- cite: array (nullable = true)
- |    |-- element: string (containsNull = true)
- |-- crossref: string (nullable = true)
- |-- editor: array (nullable = true)
- |    |-- element: string (containsNull = true)
- |-- ee: string (nullable = true)
- |-- note: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _label: string (nullable = true)
- |    |    |-- _type: string (nullable = true)
- |-- title: string (nullable = true)
- |-- url: array (nullable = true)
- |    |-- element: struct (containsNull = true)
- |    |    |-- _VALUE: string (nullable = true)
- |    |    |-- _type: string (nullable = true)
- |-- year: long (nullable = true)
-
-write www into mongodb
+ |-- prefix1: string (nullable = true)
+ |-- prefix2: string (nullable = true)
+ |-- type_xml: string (nullable = false)
+ |-- type: string (nullable = true)
 

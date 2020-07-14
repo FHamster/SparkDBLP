@@ -1,14 +1,16 @@
-package cn.jmu.spark_dblp.server.entity;
+package com.example.demo.entity;
 
 import cn.jmu.spark_dblp.server.entity.sub.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
+@Document(collection = "onlyDoc")
 @Data
-public abstract class BaseDoc {
+public class OnlyDoc {
     @Id
     protected String _id;
     @Field
@@ -23,8 +25,6 @@ public abstract class BaseDoc {
     protected List<Ee> ee;
     @Field
     protected String title;
-
-//   Long->string
     @Field
     protected Long year;
     @Field
@@ -135,6 +135,7 @@ public abstract class BaseDoc {
     @Field
     private String volume;
     */
-    @Field
-    private List<Series> seriess;
+//    @Field
+//    private List<Series> seriess;
+
 }

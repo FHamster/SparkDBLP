@@ -5,5 +5,12 @@ spring:
       host: localhost
       port: 27017
       database: SparkDBLPTest
+    #      auto-index-creation: true
+
     rest:
       default-page-size: 30
+  jpa:
+    show-sql: true
+logging:
+  level:
+    org.springframework.data.mongodb.core: debug
