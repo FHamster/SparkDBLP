@@ -66,10 +66,10 @@ class ArticleDAOTest {
 
     @Test
     public void findAllByTitleContaining() {
-        Stream<Article> oa = dao.findAllByTitleContaining("hadoop");
+//        Stream<Article> oa = dao.findAllByTitleContaining("hadoop");
 //        Assertions.assertTrue(oa.isPresent());
 //        String.
-        oa.forEach(it -> System.out.println(it));
+//        oa.forEach(it -> System.out.println(it));
 //        String
 //        String a = "";
 //        System.out.println(a.isEmpty());

@@ -2,15 +2,12 @@ package cn.jmu.spark_dblp.server.entity;
 
 import cn.jmu.spark_dblp.server.entity.sub.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.List;
-
 @Document(collection = "incollection")
 @Data
-public class InCollection extends AbstractDoc{
+public class InCollection extends BaseDoc {
 /*    @Id
     protected String _id;
     @Field

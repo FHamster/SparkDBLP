@@ -1,11 +1,7 @@
 package cn.jmu.spark_dblp.server.entity;
 
-import cn.jmu.spark_dblp.server.entity.sub.Author;
-import cn.jmu.spark_dblp.server.entity.sub.Cite;
 import cn.jmu.spark_dblp.server.entity.sub.Editor;
-import cn.jmu.spark_dblp.server.entity.sub.Ee;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -13,7 +9,7 @@ import java.util.List;
 
 @Document(collection = "inproceedings")
 @Data
-public class InProceeding extends AbstractDoc{
+public class InProceeding extends BaseDoc {
 /*    @Id
     protected String _id;
     @Field

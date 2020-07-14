@@ -2,7 +2,6 @@ package cn.jmu.spark_dblp.server.entity;
 
 import cn.jmu.spark_dblp.server.entity.sub.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 @Document(collection = "phdthesis")
 @Data
-public class PhdThesis extends AbstractDoc {
+public class PhdThesis extends BaseDoc {
    /* @Id
     protected String _id;
     @Field

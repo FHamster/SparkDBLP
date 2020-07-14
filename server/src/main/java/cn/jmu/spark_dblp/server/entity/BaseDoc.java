@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
 
 @Data
-public abstract class AbstractDoc {
+public abstract class BaseDoc {
     @Id
     protected String _id;
     @Field

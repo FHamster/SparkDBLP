@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "article")
 @Data
-public class OnlyDoc extends AbstractDoc{
+public class OnlyDoc extends BaseDoc {
 
 }

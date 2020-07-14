@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 @Repository
-public interface ArticleDAO extends PagingAndSortingRepository<Article, String> {
+public interface ArticleDAO extends PagingAndSortingRepository<Article, String>,BaseDAO {
     @Query("{" +
             "title: ?#{ [0].isEmpty() ?  {$exists :true} : {$regex: [0], $options: '$i'} }," +
             "'author._VALUE': ?#{ [1].size()==0 ?  {$exists :true} : {$in:[1]} }," +
@@ -25,6 +25,6 @@ public interface ArticleDAO extends PagingAndSortingRepository<Article, String> 
     @Query("{'author._VALUE': ?0}")
     Stream<Article> findAllByAuthorContainingAccurate(String author);
 
-    Stream<Article> findAllByTitleContaining(String title);
+
 
 }
