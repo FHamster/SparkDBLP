@@ -24,10 +24,10 @@ class ArticleDAOTest {
 
     @Test
     public void findArticle() {
-        Optional<Article> oa = dao.findById("5eedea99310f336f41bf5ca0");
+//        Optional<Article> oa = dao.findById("5eedea99310f336f41bf5ca0");
 //        Assertions.assertTrue(oa.isPresent());
-        Article a = oa.get();
-        System.out.println(a.toString());
+//        Article a = oa.get();
+//        System.out.println(a.toString());
     }
 
     @Test
@@ -103,12 +103,12 @@ class ArticleDAOTest {
         List<Integer> year = new ArrayList<>();
 //        year.add(2016);
 //        year.add(2015);
-        dao.findAllByTitleContainingAndAuthor__VALUEContainingAndYearIn(title, p, year)
+/*        dao.findAllByTitleContainingAndAuthor__VALUEContainingAndYearIn(title, p, year)
                 .forEach(it -> {
                             System.out.println(it.getTitle());
                             System.out.println(it.getAuthor());
                             System.out.println(it.getYear());
-                        });
+                        });*/
 
 //        year2.length
 //        author.stream().reduce((s, s2) -> {

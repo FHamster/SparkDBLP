@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection = "proceedings")
+//@Document(collection = "proceedings")
 @Data
-public class Proceeding extends BaseDoc {
+public class Proceeding  {
 /*    @Id
     protected String _id;
     @Field

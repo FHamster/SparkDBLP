@@ -17,7 +17,7 @@ object PropertiesObj {
     "incollection",
     "phdthesis",
     "mastersthesis",
-    "www",
+//    "www",
     //    "person",
     //    "data"
   )

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Document(collection = "inproceedings")
 @Data
-public class InProceeding extends BaseDoc {
+public class InProceeding  {
 /*    @Id
     protected String _id;
     @Field

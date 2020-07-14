@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.stream.Stream;
 
-@Repository
-public interface BookDAO extends PagingAndSortingRepository<Book, String> {
+//@Repository
+public interface BookDAO /*extends PagingAndSortingRepository<Book, String> */{
     Page<Book> findAllByTitleContaining(String title,Pageable pageable);
 //    Stream<Book> findAllByTitleContaining(String title);
 }

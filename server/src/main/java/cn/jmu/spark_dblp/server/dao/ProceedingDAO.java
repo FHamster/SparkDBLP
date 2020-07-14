@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
-public interface ProceedingDAO extends PagingAndSortingRepository<Proceeding, String> {
+public interface ProceedingDAO/* extends PagingAndSortingRepository<Proceeding, String> */{
     Stream<Proceeding> findAllByTitleContaining(String title);
 }

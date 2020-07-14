@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.stream.Stream;
 
 @Repository
-public interface InProceedingDAO extends PagingAndSortingRepository<InProceeding, String> {
+public interface InProceedingDAO/* extends PagingAndSortingRepository<InProceeding, String>*/ {
     Stream<InProceeding> findAllByTitleContaining(String title);
 }

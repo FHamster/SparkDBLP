@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.stream.Stream;
 
-@Repository
-public interface InCollectionDAO extends PagingAndSortingRepository<InCollection, String> {
+//@Repository
+public interface InCollectionDAO /*extends PagingAndSortingRepository<InCollection, String>*/ {
     Stream<InCollection> findAllByTitleContaining(String title);
 }

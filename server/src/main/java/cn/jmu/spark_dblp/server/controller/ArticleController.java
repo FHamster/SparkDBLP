@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@RestController
-@RequestMapping("/article")
+//@RestController
+//@RequestMapping("/article")
 public class ArticleController {
-    @Autowired
+//    @Autowired
     ArticleDAO dao;
 
     /*    @PostMapping("/search")

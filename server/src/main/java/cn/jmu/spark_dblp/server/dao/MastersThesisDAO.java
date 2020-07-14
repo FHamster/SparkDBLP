@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.stream.Stream;
 
-@Repository
-public interface MastersThesisDAO extends PagingAndSortingRepository<MastersThesis, String> {
-    Stream<MastersThesis> findAllByTitleContaining(String title);
+//@Repository
+public interface MastersThesisDAO /*extends PagingAndSortingRepository<MastersThesis, String> */{
+//    Stream<MastersThesis> findAllByTitleContaining(String title);
 }

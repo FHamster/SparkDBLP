@@ -5,9 +5,9 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "incollection")
+//@Document(collection = "incollection")
 @Data
-public class InCollection extends BaseDoc {
+public class InCollection  {
 /*    @Id
     protected String _id;
     @Field

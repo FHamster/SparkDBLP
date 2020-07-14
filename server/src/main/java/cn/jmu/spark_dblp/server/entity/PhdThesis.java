@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection = "phdthesis")
+//@Document(collection = "phdthesis")
 @Data
-public class PhdThesis extends BaseDoc {
+public class PhdThesis  {
    /* @Id
     protected String _id;
     @Field
@@ -26,7 +26,7 @@ public class PhdThesis extends BaseDoc {
     private List<Author> author;*/
 /*    @Field
     private List<Ee> ee;*/
-    @Field
+//    @Field
     private List<String> isbn;
 /*    @Field
     private String month;*/
@@ -34,23 +34,22 @@ public class PhdThesis extends BaseDoc {
     private List<Note> note;*/
 /*    @Field
     private String number;*/
-    @Field
+//    @Field
     private String pages;
-    @Field
+//    @Field
     private String publisher;
-    @Field
+//    @Field
     private List<String> school;
-    @Field
+//    @Field
     private Series series;
 /*    @Field
     private String title;*/
-    @Field
+//    @Field
     private String volume;
 /*    @Field
     private String url;*/
 /*    @Field
     private Long year;*/
-
 }
 /*
 root
