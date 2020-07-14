@@ -1,9 +1,10 @@
 package execTest
 
 import property.PropertiesObj
+import org.apache.spark.sql.functions.lit
 import com.mongodb.spark.MongoSpark
 import org.apache.spark.sql.{SaveMode, SparkSession}
-import org.apache.spark.sql.functions.regexp_extract
+import org.apache.spark.sql.functions.{regexp_extract, udf}
 import org.scalatest.funsuite.AnyFunSuite
 import com.databricks.spark.xml.XmlDataFrameReader
 
@@ -14,6 +15,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
   val charTest = "src/test/resources/article_CharTest.xml"
   val prefixRegex2 = "^(\\S*?)/(\\S*?)/"
   val prefixRegex1 = "^(\\S*?)/"
+  import util.UDFObject
+  val initDblpType = udf(UDFObject.dblpType _)
   test("article") {
     import ss.implicits.StringToColumn
     val subnode = "article"
@@ -31,6 +34,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
     println(s"write $subnode into mongodb")
     MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
@@ -53,6 +58,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
 
     println(s"write $subnode into mongodb")
@@ -76,6 +83,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
 
     println(s"write $subnode into mongodb")
@@ -99,6 +108,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
     opt.show()
     println(s"write $subnode into mongodb")
@@ -122,6 +133,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
 
     println(s"write $subnode into mongodb")
@@ -145,6 +158,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
 
     println(s"write $subnode into mongodb")
@@ -168,6 +183,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
 
     println(s"write $subnode into mongodb")
@@ -191,6 +208,8 @@ class WriteSubnodeIntoMongo extends AnyFunSuite {
       .xml(PropertiesObj.wholeDBLP_cvtSparkPath)
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
+      .withColumn("type_xml", lit(subnode))
+      .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
 
 
     println(s"write $subnode into mongodb")

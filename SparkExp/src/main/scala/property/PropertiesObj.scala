@@ -426,6 +426,7 @@ root
   val mastersthesisSchema = new StructType(Array(
     StructField("_key", StringType, nullable = true),
     StructField("_mdate", StringType, nullable = true),
+    StructField("_publtype", StringType, nullable = true),
     StructField("author", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),

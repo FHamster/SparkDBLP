@@ -1,7 +1,6 @@
 package cn.jmu.spark_dblp.server.entity;
 
 import cn.jmu.spark_dblp.server.entity.sub.Author;
-import cn.jmu.spark_dblp.server.entity.sub.Cite;
 import cn.jmu.spark_dblp.server.entity.sub.Ee;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -28,7 +27,11 @@ public abstract class AbstractDoc {
     @Field
     protected Long year;
     @Field
+    private String _publtype;
+    @Field
     protected String month;
+    @Field
+    protected String type;
 /*    @Field
     protected List<Cite> cite;*/
 }

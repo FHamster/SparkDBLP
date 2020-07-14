@@ -21,8 +21,8 @@ public class Proceeding extends AbstractDoc{
     private String prefix2;*/
     /*    @Field
         private String _mdate;*/
-    @Field
-    private String _publtype;
+/*    @Field
+    private String _publtype;*/
 /*    @Field
     private String address;*/
 /*    @Field

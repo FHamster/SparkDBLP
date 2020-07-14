@@ -21,8 +21,8 @@ public class Book extends AbstractDoc{
     private String prefix1;
     @Field
     private String prefix2;*/
-    @Field
-    private String _publtype;
+/*    @Field
+    private String _publtype;*/
 /*    @Field
     private List<Author> author;*/
     @Field

@@ -1,5 +1,6 @@
 import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.functions.{explode, regexp_extract}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import property.{Author, PropertiesObj}
@@ -13,9 +14,11 @@ object ExecScript extends App {
   val onlyDoc = "onlyDoc"
   val DistinctAuthor = "DistinctAuthor"
   val AuthorTemp = "AuthorTemp"
+  Logger.getRootLogger.setLevel(Level.INFO)
   //写入所有子节点到多个集合
   PropertiesObj.subNode.foreach(subnode => {
     import ss.implicits.StringToColumn
+//    ss.
     val ss: SparkSession = SparkSession
       .builder
       .appName("Write_article")
@@ -31,7 +34,7 @@ object ExecScript extends App {
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
-    println(s"write $subnode into mongodb")
+    Logger.getLogger("UserLogger").warn(s"write $subnode into mongodb")
     MongoSpark.save(opt.write.mode(SaveMode.Overwrite))
     ss.stop()
   })
@@ -59,8 +62,7 @@ object ExecScript extends App {
         $"author._orcid" as "_orcid",
         $"author._aux" as "_aux"
       )
-
-    println(s"write $subnode into mongodb")
+    Logger.getLogger("UserLogger").warn(s"write $subnode into mongodb")
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   })
@@ -92,11 +94,7 @@ object ExecScript extends App {
     .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
     .select($"_VALUE", $"_orcid", $"_aux")
     .cache()
-
-  joinedRow.show()
-  joinedRow.printSchema()
-  joinedRow.filter($"_orcid".isNotNull).show(300)
-
+  Logger.getLogger("UserLogger").warn(s"join complete")
   MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
 
   //写入所有数据至同一集合
@@ -117,8 +115,9 @@ object ExecScript extends App {
       .withColumn("prefix1", regexp_extract($"_key", prefixRegex1, 0))
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
 
-    println(s"write $subnode into mongodb")
+    Logger.getLogger("UserLogger").warn(s"write $subnode into only set")
     MongoSpark.save(opt.write.mode(SaveMode.Append))
+    ss.stop()
     ss.stop()
   })
 }
