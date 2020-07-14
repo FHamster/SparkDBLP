@@ -16,7 +16,6 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
   val prefixRegex1 = "^(\\S*?)/"
 
   import util.UDFObject
-
   val initDblpType = udf(UDFObject.dblpType _)
   test("article") {
     import ss.implicits.StringToColumn
@@ -177,8 +176,6 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("type_xml", lit(subnode))
       .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
       .withColumn("type_dblp", $"type_xml")
-    //        .when())
-
 
     opt.printSchema()
     println(s"write $subnode into mongodb")
