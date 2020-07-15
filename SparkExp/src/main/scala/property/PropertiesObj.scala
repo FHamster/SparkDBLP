@@ -322,10 +322,16 @@ root
     StructField("school", ArrayType(
       StringType, containsNull = true
     )),
-    StructField("series", StructType(Array(
+    StructField("series", ArrayType(
+      StructType(Array(
+        StructField("_VALUE", StringType, nullable = true),
+        StructField("_href", StringType, nullable = true)
+      )), containsNull = true)
+    ),
+/*    StructField("series", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_href", StringType, nullable = true)
-    )), nullable = true),
+    )), nullable = true),*/
     StructField("title", StringType, nullable = true),
     StructField("url", StringType, nullable = true),
     StructField("volume", StringType, nullable = true),
@@ -359,7 +365,7 @@ root
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
     ),
-  /*  StructField("note", StringType, nullable = true),*/
+    /*  StructField("note", StringType, nullable = true),*/
     StructField("pages", ArrayType(
       StringType, containsNull = true
     )),
@@ -406,10 +412,16 @@ root
     StructField("school", ArrayType(
       StringType, containsNull = true
     )),
-    StructField("series", StructType(Array(
+/*    StructField("series", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_href", StringType, nullable = true)
-    )), nullable = true),
+    )), nullable = true),*/
+    StructField("series", ArrayType(
+      StructType(Array(
+        StructField("_VALUE", StringType, nullable = true),
+        StructField("_href", StringType, nullable = true)
+      )), containsNull = true)
+    ),
     StructField("title", StringType, nullable = true),
     StructField("volume", StringType, nullable = true),
     StructField("year", LongType, nullable = true)
