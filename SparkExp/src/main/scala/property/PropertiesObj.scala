@@ -17,7 +17,7 @@ object PropertiesObj {
     "incollection",
     "phdthesis",
     "mastersthesis",
-//    "www",
+    //    "www",
     //    "person",
     //    "data"
   )
@@ -111,12 +111,12 @@ root
     ),
     StructField("journal", StringType, nullable = true),
     StructField("month", StringType, nullable = true),
-    StructField("note", ArrayType(
+    /*StructField("note", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
-    ),
+    ),*/
     StructField("number", StringType, nullable = true),
     StructField("pages", ArrayType(
       StringType, containsNull = true
@@ -162,9 +162,10 @@ root
       )), containsNull = true)
     ),
     StructField("booktitle", StringType, nullable = true),
-    StructField("cdrom", ArrayType(
+    StructField("cdrom", StringType, nullable = true),
+    /*StructField("cdrom", ArrayType(
       StringType, containsNull = true
-    )),
+    )),*/
     StructField("cite", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
@@ -189,10 +190,10 @@ root
       )), containsNull = true)
     ),
     StructField("month", StringType, nullable = true),
-    StructField("note", StructType(Array(
+    /*StructField("note", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_type", StringType, nullable = true)
-    )), nullable = true),
+    )), nullable = true),*/
     StructField("number", StringType, nullable = true),
     StructField("pages", ArrayType(
       StringType, containsNull = true
@@ -238,19 +239,14 @@ root
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
     ),
-    StructField("isbn", ArrayType(
-      StructType(Array(
-        StructField("_VALUE", StringType, nullable = true),
-        StructField("_type", StringType, nullable = true)
-      )), containsNull = true)
-    ),
+    StructField("isbn", ArrayType(StringType, containsNull = true)),
     StructField("journal", StringType, nullable = true),
-    StructField("note", ArrayType(
+    /*StructField("note", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
-    ),
+    ),*/
     StructField("number", StringType, nullable = true),
     StructField("pages", ArrayType(
       StringType, containsNull = true
@@ -309,17 +305,13 @@ root
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
     ),
-    StructField("isbn", ArrayType(
-      StructType(Array(
-        StructField("_VALUE", StringType, nullable = true),
-        StructField("_type", StringType, nullable = true)
-      )), containsNull = true)
+    StructField("isbn", ArrayType(StringType, containsNull = true)
     ),
     StructField("month", StringType, nullable = true),
-    StructField("note", StructType(Array(
+    /*StructField("note", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_type", StringType, nullable = true)
-    )), nullable = true),
+    )), nullable = true),*/
     StructField("pages", ArrayType(
       StringType, containsNull = true
     )),
@@ -367,7 +359,7 @@ root
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
     ),
-    StructField("note", StringType, nullable = true),
+  /*  StructField("note", StringType, nullable = true),*/
     StructField("pages", ArrayType(
       StringType, containsNull = true
     )),
@@ -401,12 +393,12 @@ root
       StringType, containsNull = true
     )),
     StructField("month", StringType, nullable = true),
-    StructField("note", ArrayType(
+    /*StructField("note", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
-    ),
+    ),*/
     StructField("pages", ArrayType(
       StringType, containsNull = true
     )),
@@ -440,10 +432,10 @@ root
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
     ),
-    StructField("note", StructType(Array(
+    /*StructField("note", StructType(Array(
       StructField("_VALUE", StringType, nullable = true),
       StructField("_type", StringType, nullable = true)
-    )), nullable = true),
+    )), nullable = true),*/
     StructField("school", StringType, nullable = true),
     StructField("title", StringType, nullable = true),
     StructField("year", LongType, nullable = true),
@@ -469,13 +461,13 @@ root
       StringType, containsNull = true
     )),
     StructField("ee", StringType, nullable = true),
-    StructField("note", ArrayType(
+    /*StructField("note", ArrayType(
       StructType(Array(
         StructField("_VALUE", StringType, nullable = true),
         StructField("_label", StringType, nullable = true),
         StructField("_type", StringType, nullable = true)
       )), containsNull = true)
-    ),
+    ),*/
     StructField("title", StringType, nullable = true),
     StructField("url", ArrayType(
       StructType(Array(
