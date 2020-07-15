@@ -13,17 +13,19 @@ import reactor.core.publisher.Flux;
 import java.time.Duration;
 
 @RestController
-@RequestMapping("/onlyDocReactive")
+@RequestMapping(value = "/onlyDocReactive", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+//@RequestMapping(value = "/onlyDocReactive")
 public class OnlyDocReactiveController {
     @Autowired
     OnlyDocReactiveDAO dao;
 
-    @GetMapping(value = "/test", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(value = "/test")
     public Flux<OnlyDocReactive> findAll() {
         return dao.findAllByTitleMatchesRegexReactive("hadoop").delayElements(Duration.ofSeconds(1));
 //        return dao.findAllByTitleMatchesRegexReactive("hadoop");
     }
-    @GetMapping(value = "/findAllByTitleMatchesRegexReactive", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+
+    @GetMapping(value = "/findAllByTitleMatchesRegexReactive")
     public Flux<OnlyDocReactive> findAllByTitleMatchesRegexReactive(
             @RequestParam String title
     ) {
