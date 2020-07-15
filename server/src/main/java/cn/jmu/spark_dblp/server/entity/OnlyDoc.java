@@ -2,15 +2,11 @@ package cn.jmu.spark_dblp.server.entity;
 
 import cn.jmu.spark_dblp.server.entity.sub.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import java.util.List;
-
 @Document(collection = "onlyDoc")
 @Data
 public class OnlyDoc {
@@ -52,11 +48,11 @@ public class OnlyDoc {
     @Field
     private String volume;
     @Field
-    private List<ISBN> isbn;
+    private List<String> isbn;
     @Field
     private List<String> school;
     @Field
-    private Series series;
+    private List<Series> series;
     @Field
     private String cdrom;
     @Field
