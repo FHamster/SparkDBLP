@@ -6,4 +6,9 @@ import lombok.Data;
 public class AggClass {
     String group;
     long count;
+
+    public AggClass(String group, long count) {
+        this.group = group;
+        this.count = count;
+    }
 }

@@ -1,16 +1,10 @@
 package cn.jmu.spark_dblp.server.dao;
 
-import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import cn.jmu.spark_dblp.server.entity.OnlyDocReactive;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
-
-import java.util.stream.Stream;
 
 @Repository
 public interface OnlyDocReactiveDAO extends ReactiveMongoRepository<OnlyDocReactive, String> {

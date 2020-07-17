@@ -1,12 +1,17 @@
 package cn.jmu.spark_dblp.server.entity;
 
-import cn.jmu.spark_dblp.server.entity.sub.*;
+import cn.jmu.spark_dblp.server.entity.sub.Author;
+import cn.jmu.spark_dblp.server.entity.sub.Editor;
+import cn.jmu.spark_dblp.server.entity.sub.Ee;
+import cn.jmu.spark_dblp.server.entity.sub.Series;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
+
 @Document(collection = "onlyDoc")
 @Data
 public class OnlyDoc {
@@ -19,9 +24,9 @@ public class OnlyDoc {
     @Field
     private String prefix2;
     @Field
-    private List<Author> author;
+    private ArrayList<Author> author;
     @Field
-    private List<Ee> ee;
+    private ArrayList<Ee> ee;
     @Field
     private String title;
     @Field
@@ -38,7 +43,7 @@ public class OnlyDoc {
     @Field
     private String crossref;
     @Field
-    private List<Editor> editor;
+    private ArrayList<Editor> editor;
     @Field
     private String journal;
     @Field
@@ -48,11 +53,11 @@ public class OnlyDoc {
     @Field
     private String volume;
     @Field
-    private List<String> isbn;
+    private ArrayList<String> isbn;
     @Field
-    private List<String> school;
+    private ArrayList<String> school;
     @Field
-    private List<Series> series;
+    private ArrayList<Series> series;
     @Field
     private String cdrom;
     @Field
@@ -64,4 +69,14 @@ public class OnlyDoc {
     private String type_xml;
 //    @Field
 //    private String type;
+
+    public Optional<ArrayList<Author>> getAuthor() {
+        return Optional.ofNullable(author);
+    }
+    public Optional<Long> getYear() {
+        return Optional.ofNullable(year);
+    }
+    public Optional<String> getPrefix2() {
+        return Optional.ofNullable(prefix2);
+    }
 }

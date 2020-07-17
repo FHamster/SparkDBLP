@@ -11,6 +11,9 @@ spring:
       default-page-size: 30
   jpa:
     show-sql: true
+  cache:
+    type: simple
+
 logging:
   level:
     org.springframework.data.mongodb.core: debug
