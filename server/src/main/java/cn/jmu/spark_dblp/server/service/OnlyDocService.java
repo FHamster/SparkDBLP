@@ -39,6 +39,14 @@ public class OnlyDocService {
         });
     }
 
+    public Stream<OnlyDoc> filterByType(Stream<OnlyDoc> stream, String[] typeArray) {
+        return stream.filter(onlyDoc -> {
+            String docPrefix2 = onlyDoc.getTypeOption().orElse("");
+            for (String it : typeArray) if (docPrefix2.equals(it)) return true;
+            return false;
+        });
+    }
+
     public Stream<OnlyDoc> filterByAuthor(Stream<OnlyDoc> stream, String[] authorArray) {
         return stream.filter(onlyDoc -> {
             List<String> list = onlyDoc.getAuthorOption()

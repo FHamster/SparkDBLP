@@ -73,9 +73,15 @@ public class OnlyDoc {
     public Optional<ArrayList<Author>> getAuthorOption() {
         return Optional.ofNullable(author);
     }
+
     public Optional<Long> getYearOption() {
         return Optional.ofNullable(year);
     }
+
+    public Optional<String> getTypeOption() {
+        return Optional.ofNullable(type);
+    }
+
     public Optional<String> getPrefix2Option() {
         return Optional.ofNullable(prefix2);
     }
