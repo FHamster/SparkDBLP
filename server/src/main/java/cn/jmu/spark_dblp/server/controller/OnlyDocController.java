@@ -98,7 +98,7 @@ public class OnlyDocController {
             parallelStream = service.filterByYear(parallelStream, yearArray);
         }
 
-        //处理根据venue的过滤
+        //处理根据prefix2的过滤
         String[] venueArray;
         if (venue == null) venueArray = null;
         else venueArray = venue.split(",");
@@ -108,8 +108,18 @@ public class OnlyDocController {
 
         //聚合处理
         parallelStream
-                .collect(Collectors.groupingByConcurrent(OnlyDoc::getPrefix2Option, Collectors.counting()))
-                .forEach((key, value) -> aggClassList.add(new AggClass(key.orElse(""), value)));
+                .collect(Collectors.groupingByConcurrent(OnlyDoc::getPrefix2Option, Collectors.toList()))
+                .forEach((key, value) -> {
+                    String pro = "";
+                    OnlyDoc sample = value.get(0);
+                    if (sample.getBooktitle() != null) {
+                        pro = sample.getBooktitle();
+                    }
+                    if (sample.getJournal() != null) {
+                        pro = sample.getJournal();
+                    }
+                    aggClassList.add(new AggClass(key.orElse(""), value.size(), pro));
+                });
 //        System.out.println(aggClassList.size());
         aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
         aggClassList.forEach(System.out::println);

@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Document(collection = "onlyDoc")
 @Data
