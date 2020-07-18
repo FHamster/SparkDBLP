@@ -70,13 +70,13 @@ public class OnlyDoc {
 //    @Field
 //    private String type;
 
-    public Optional<ArrayList<Author>> getAuthor() {
+    public Optional<ArrayList<Author>> getAuthorOption() {
         return Optional.ofNullable(author);
     }
-    public Optional<Long> getYear() {
+    public Optional<Long> getYearOption() {
         return Optional.ofNullable(year);
     }
-    public Optional<String> getPrefix2() {
+    public Optional<String> getPrefix2Option() {
         return Optional.ofNullable(prefix2);
     }
 }

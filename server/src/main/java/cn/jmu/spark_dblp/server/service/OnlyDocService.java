@@ -25,7 +25,7 @@ public class OnlyDocService {
 
     public Stream<OnlyDoc> filterByYear(Stream<OnlyDoc> stream, String[] yearArray) {
         return stream.filter(onlyDoc -> {
-            Long docYear = onlyDoc.getYear().orElse(0L);
+            Long docYear = onlyDoc.getYearOption().orElse(0L);
             for (String it : yearArray) if (docYear.equals(Long.valueOf(it))) return true;
             return false;
         });
@@ -33,7 +33,7 @@ public class OnlyDocService {
 
     public Stream<OnlyDoc> filterByVenue(Stream<OnlyDoc> stream, String[] venueArray) {
         return stream.filter(onlyDoc -> {
-            String docPrefix2 = onlyDoc.getPrefix2().orElse("");
+            String docPrefix2 = onlyDoc.getPrefix2Option().orElse("");
             for (String it : venueArray) if (docPrefix2.equals(it)) return true;
             return false;
         });
@@ -41,7 +41,7 @@ public class OnlyDocService {
 
     public Stream<OnlyDoc> filterByAuthor(Stream<OnlyDoc> stream, String[] authorArray) {
         return stream.filter(onlyDoc -> {
-            List<String> list = onlyDoc.getAuthor()
+            List<String> list = onlyDoc.getAuthorOption()
                     .orElse(new ArrayList<>())
                     .stream()
                     .map(Author::get_VALUE)

@@ -60,7 +60,7 @@ public class OnlyDocController {
         }
 
         //聚合处理
-        parallelStream.map(it -> it.getAuthor().orElse(new ArrayList<>()))
+        parallelStream.map(it -> it.getAuthorOption().orElse(new ArrayList<>()))
                 .flatMap(List::stream)
                 .collect(Collectors.groupingByConcurrent(Author::get_VALUE, Collectors.counting()))
                 .forEach((key, value) -> aggClassList.add(new AggClass(key, value)));
@@ -108,7 +108,7 @@ public class OnlyDocController {
 
         //聚合处理
         parallelStream
-                .collect(Collectors.groupingByConcurrent(OnlyDoc::getPrefix2, Collectors.counting()))
+                .collect(Collectors.groupingByConcurrent(OnlyDoc::getPrefix2Option, Collectors.counting()))
                 .forEach((key, value) -> aggClassList.add(new AggClass(key.orElse(""), value)));
 //        System.out.println(aggClassList.size());
         aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
