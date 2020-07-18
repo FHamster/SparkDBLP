@@ -125,4 +125,95 @@ public class OnlyDocController {
         aggClassList.forEach(System.out::println);
         return aggClassList;
     }
+
+    @GetMapping(value = "/findAllByTitleMatchesTextYearRefineList")
+    public List<AggClass> findAllByTitleMatchesTextYearRefineList(
+            @RequestParam String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String year,
+            @RequestParam(required = false) String venue
+    ) {
+        //初始化聚合结果list
+        List<AggClass> aggClassList = new LinkedList<>();
+        //对service的结果流化
+        Stream<OnlyDoc> parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream();
+
+        //处理根据author的过滤
+        String[] authorArray;
+        if (author == null) authorArray = null;
+        else authorArray = author.split(",");
+        if (authorArray != null) {
+            parallelStream = service.filterByAuthor(parallelStream, authorArray);
+        }
+
+        //处理根据year的过滤
+        String[] yearArray;
+        if (year == null) yearArray = null;
+        else yearArray = year.split(",");
+        if (yearArray != null) {
+            parallelStream = service.filterByYear(parallelStream, yearArray);
+        }
+
+        //处理根据prefix2的过滤
+        String[] venueArray;
+        if (venue == null) venueArray = null;
+        else venueArray = venue.split(",");
+        if (venueArray != null) {
+            parallelStream = service.filterByVenue(parallelStream, venueArray);
+        }
+
+        //聚合处理
+        parallelStream
+                .collect(Collectors.groupingByConcurrent(OnlyDoc::getYear, Collectors.counting()))
+                .forEach((key, value) -> aggClassList.add(new AggClass(String.valueOf(key), value)));
+//        System.out.println(aggClassList.size());
+        aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
+        aggClassList.forEach(System.out::println);
+        return aggClassList;
+    }
+    @GetMapping(value = "/findAllByTitleMatchesTextTypeRefineList")
+    public List<AggClass> findAllByTitleMatchesTextTypeRefineList(
+            @RequestParam String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String year,
+            @RequestParam(required = false) String venue
+    ) {
+        //初始化聚合结果list
+        List<AggClass> aggClassList = new LinkedList<>();
+        //对service的结果流化
+        Stream<OnlyDoc> parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream();
+
+        //处理根据author的过滤
+        String[] authorArray;
+        if (author == null) authorArray = null;
+        else authorArray = author.split(",");
+        if (authorArray != null) {
+            parallelStream = service.filterByAuthor(parallelStream, authorArray);
+        }
+
+        //处理根据year的过滤
+        String[] yearArray;
+        if (year == null) yearArray = null;
+        else yearArray = year.split(",");
+        if (yearArray != null) {
+            parallelStream = service.filterByYear(parallelStream, yearArray);
+        }
+
+        //处理根据prefix2的过滤
+        String[] venueArray;
+        if (venue == null) venueArray = null;
+        else venueArray = venue.split(",");
+        if (venueArray != null) {
+            parallelStream = service.filterByVenue(parallelStream, venueArray);
+        }
+
+        //聚合处理
+        parallelStream
+                .collect(Collectors.groupingByConcurrent(OnlyDoc::getType, Collectors.counting()))
+                .forEach((key, value) -> aggClassList.add(new AggClass(String.valueOf(key), value)));
+//        System.out.println(aggClassList.size());
+        aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
+        aggClassList.forEach(System.out::println);
+        return aggClassList;
+    }
 }
