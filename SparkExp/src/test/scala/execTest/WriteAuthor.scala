@@ -13,13 +13,14 @@ import org.scalatest.funsuite.AnyFunSuite
 class WriteAuthor extends AnyFunSuite {
 
   val AuthorTemp = "AuthorTemp"
+  val onlyDoc = "onlyDoc"
   val DistinctAuthor = "DistinctAuthor"
   test("article") {
     val subnode = "article"
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -48,7 +49,7 @@ class WriteAuthor extends AnyFunSuite {
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -73,7 +74,7 @@ class WriteAuthor extends AnyFunSuite {
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -100,7 +101,7 @@ class WriteAuthor extends AnyFunSuite {
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -127,7 +128,7 @@ class WriteAuthor extends AnyFunSuite {
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -153,7 +154,7 @@ class WriteAuthor extends AnyFunSuite {
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -181,7 +182,7 @@ class WriteAuthor extends AnyFunSuite {
     import ss.implicits.StringToColumn
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -207,7 +208,7 @@ class WriteAuthor extends AnyFunSuite {
     val subnode = "www"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"Write_${subnode}_author")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
       .getOrCreate()
@@ -236,26 +237,77 @@ class WriteAuthor extends AnyFunSuite {
       .appName("in")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
-    val mongoDF: DataFrame = MongoSpark.load[Author](sparkSession).cache()
+    val mongoDF: DataFrame = MongoSpark
+      .load(sparkSession)
+      .select($"author")
+      .filter($"author" isNotNull)
+      .select(explode($"author") as "author")
+      .select($"author._VALUE" as "_VALUE",
+        $"author._orcid" as "_orcid"
+        //        $"author._aux" as "_aux"
+      ).cache()
     mongoDF.show()
 
     val orcidNotNull = mongoDF
-      .filter($"_orcid".isNotNull)
+      .filter($"_orcid" isNotNull)
       .dropDuplicates("_VALUE")
       .select($"_VALUE" as "noUseValue", $"_orcid")
     val orcidNull = mongoDF
-      .filter($"_orcid".isNull)
+      .filter($"_orcid" isNull)
       .dropDuplicates("_VALUE")
-      .select($"_VALUE", $"_aux")
+      .select($"_VALUE")
+    //      .select($"_VALUE", $"_aux")
 
     val joinedRow = orcidNull
       .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
-      .select($"_VALUE", $"_orcid", $"_aux")
-      .cache()
+      .select($"_VALUE", $"_orcid")
+//      .select($"_VALUE", $"_orcid", $"_aux")
+        .cache()
+    joinedRow.show()
+    joinedRow.printSchema()
+//    joinedRow.filter($"_orcid".isNotNull).show(300)
 
+    MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
+  }
+
+  test("distinct author") {
+    val sparkSession: SparkSession = SparkSession
+      .builder
+      .appName("in")
+      .master("local[*]")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .getOrCreate()
+    import sparkSession.implicits._
+    val mongoDF: DataFrame = MongoSpark
+      .load(sparkSession)
+      .select($"author")
+      .filter($"author" isNotNull)
+      .select(explode($"author") as "author")
+      .select($"author._VALUE" as "_VALUE",
+        $"author._orcid" as "_orcid"
+        //        $"author._aux" as "_aux"
+      ).cache()
+    mongoDF.show()
+
+    val orcidNotNull = mongoDF
+      .filter($"_orcid" isNotNull)
+      .dropDuplicates("_VALUE")
+      .select($"_VALUE" as "noUseValue", $"_orcid")
+    val orcidNull = mongoDF
+      .filter($"_orcid" isNull)
+      .dropDuplicates("_VALUE")
+      .select($"_VALUE")
+    //      .select($"_VALUE", $"_aux")
+
+    val joinedRow = orcidNull
+      .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
+      .select($"_VALUE", $"_orcid")
+      //      .select($"_VALUE", $"_orcid", $"_aux")
+      .cache()
     joinedRow.show()
     joinedRow.printSchema()
     joinedRow.filter($"_orcid".isNotNull).show(300)
