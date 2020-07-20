@@ -27,4 +27,14 @@ object UDFObject {
       //      case ("journals/", _) =>    "journals/"
     }
   }
+
+  def writeNotNull(in1: String, in2: String, defaultValue: String): String = {
+    if (in1 != null) {
+      return in1
+    }
+    if (in2 != null) {
+      return in2
+    }
+    defaultValue
+  }
 }

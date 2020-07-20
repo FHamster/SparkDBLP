@@ -16,8 +16,8 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
   val prefixRegex1 = "^(\\S*?)/"
 
   import util.UDFObject
-
   val initDblpType = udf(UDFObject.dblpType _)
+
   test("article") {
     import ss.implicits.StringToColumn
     val subnode = "article"

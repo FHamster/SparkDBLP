@@ -26,6 +26,9 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
     @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
     List<OnlyDoc> findAllByTitleMatchesTextReturnList(String title);
 
+//    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
+    List<OnlyDoc> findAllByCrossref(String crossref);
+
     @Query(value = "{'author._VALUE': ?0}", sort = "{ year : -1 }")
     Page<OnlyDoc> findAllByAuthor__VALUE(String author, Pageable pageable);
 //    Page<OnlyDoc> findAllByTitleContainingIgnoreCase(String title, Pageable pageable);

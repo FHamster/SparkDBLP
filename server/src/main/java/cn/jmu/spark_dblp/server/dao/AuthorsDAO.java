@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface AuthorsDAO extends PagingAndSortingRepository<Authors, String> {
     Page<Authors> findAllBy_VALUEContainingIgnoreCase(String author, Pageable pageable);
 
-    Page<Authors> findBy_VALUEStartingWith(String prefix, Pageable pageable);
+    Page<Authors> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
 }
