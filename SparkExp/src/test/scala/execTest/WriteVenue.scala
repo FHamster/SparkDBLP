@@ -17,6 +17,9 @@ class WriteVenue extends AnyFunSuite {
 
   val writeNotNull: UserDefinedFunction = udf(UDFObject.writeNotNull _)
 
+  /**
+   * @deprecated 需要对venue进行分组以后入库，这测试完成了不分组方式的探索，结束使命
+   */
   test("venue") {
     val sparkSession: SparkSession = SparkSession
       .builder
@@ -30,32 +33,18 @@ class WriteVenue extends AnyFunSuite {
       .select("_key", "booktitle", "crossref",
         "journal", "prefix1", "prefix2",
         "title", "type", "type_xml", "year")
-      .cache()
-    mongoDF.show()
-    mongoDF.printSchema()
 
     val crossRef = mongoDF
       .filter($"crossref" isNotNull)
       .select($"crossref" as "ref", $"booktitle" as "booktitle2")
       .dropDuplicates("ref")
-    //      .cache()
-    crossRef.show(100)
-    crossRef.printSchema()
+
     val crossReffed = crossRef
       .join(mongoDF, $"_key" === $"ref", "left")
       .withColumnRenamed("booktitle", "booktitle1")
       .withColumn("newbooktitle", writeNotNull($"booktitle1", $"booktitle2", $"title"))
       .drop("booktitle1", "booktitle2", "ref")
       .withColumnRenamed("newbooktitle", "booktitle")
-    //      .groupBy("prefix2")
-    //      .agg(collect_set($"booktitle"))
-
-
-    //      .agg(array($"_key", $"booktitle"))
-
-    //        .agg($"booktitle")
-    crossReffed.show(500)
-    crossReffed.printSchema()
 
     MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
   }
@@ -73,17 +62,11 @@ class WriteVenue extends AnyFunSuite {
       .select("_key", "booktitle", "crossref",
         "journal", "prefix1", "prefix2",
         "title", "type", "type_xml", "year")
-    //      .cache()
-    //    mongoDF.show()
-    //    mongoDF.printSchema()
 
     val crossRef = mongoDF
       .filter($"crossref" isNotNull)
       .select($"crossref" as "ref", $"booktitle" as "booktitle2")
       .dropDuplicates("ref")
-    //      .cache()
-//    crossRef.show(100)
-//    crossRef.printSchema()
     val crossReffed = crossRef
       .join(mongoDF, $"_key" === $"ref", "left")
       .withColumnRenamed("booktitle", "booktitle1")
@@ -91,7 +74,6 @@ class WriteVenue extends AnyFunSuite {
       .drop("booktitle1", "booktitle2", "ref")
       .withColumnRenamed("newbooktitle", "booktitle")
       .groupBy("prefix2")
-      //      .agg(collect_set($"booktitle"))
       .agg(collect_list($"booktitle") as "booktitle",
         collect_list($"_key") as "_key",
         collect_list($"year") as "year",
@@ -104,14 +86,6 @@ class WriteVenue extends AnyFunSuite {
         arrays_zip($"booktitle", $"_key", $"title", $"year", $"type", $"type_xml") as "venue"
       )
 
-
-
-    //      .agg(array($"_key", $"booktitle"))
-
-    //        .agg($"booktitle")
-    crossReffed.show()
-    crossReffed.printSchema()
-
-        MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
+    MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
   }
 }

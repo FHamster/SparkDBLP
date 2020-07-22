@@ -23,7 +23,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "article"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -49,7 +49,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "inproceedings"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -74,7 +74,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "proceedings"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -100,7 +100,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "book"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -125,7 +125,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "incollection"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -150,7 +150,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "phdthesis"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -175,7 +175,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
     val subnode = "mastersthesis"
     val ss: SparkSession = SparkSession
       .builder
-      .appName("Write_article")
+      .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
       .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
@@ -189,6 +189,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("prefix2", regexp_extract($"_key", prefixRegex2, 0))
       .withColumn("type_xml", lit(subnode))
       .withColumn("type", initDblpType($"_publType", $"type_xml", $"prefix1"))
+    
 
     println(s"write $subnode into mongodb")
     opt.show()
@@ -201,7 +202,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       val subnode = "www"
       val ss: SparkSession = SparkSession
         .builder
-        .appName("Write_article")
+        .appName(s"writeIntoOnlydoc_$subnode")
         .master("local[*]")
         .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
         .getOrCreate()

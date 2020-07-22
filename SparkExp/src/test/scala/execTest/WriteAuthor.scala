@@ -15,6 +15,9 @@ class WriteAuthor extends AnyFunSuite {
   val AuthorTemp = "AuthorTemp"
   val onlyDoc = "onlyDoc"
   val DistinctAuthor = "DistinctAuthor"
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("article") {
     val subnode = "article"
     import ss.implicits.StringToColumn
@@ -43,7 +46,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
-
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("inproceedings") {
     val subnode = "inproceedings"
     import ss.implicits.StringToColumn
@@ -69,6 +74,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("proceedings") {
     val subnode = "proceedings"
     import ss.implicits.StringToColumn
@@ -96,6 +104,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("book") {
     val subnode = "book"
     import ss.implicits.StringToColumn
@@ -123,6 +134,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("incollection") {
     val subnode = "incollection"
     import ss.implicits.StringToColumn
@@ -149,6 +163,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("phdthesis") {
     val subnode = "phdthesis"
     import ss.implicits.StringToColumn
@@ -176,6 +193,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("mastersthesis") {
     val subnode = "mastersthesis"
 
@@ -204,6 +224,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("www") {
     val subnode = "www"
     val ss: SparkSession = SparkSession
@@ -230,49 +253,9 @@ class WriteAuthor extends AnyFunSuite {
     MongoSpark.save(res.write.mode(SaveMode.Append))
     ss.stop()
   }
-
-  test("distinct author") {
-    val sparkSession: SparkSession = SparkSession
-      .builder
-      .appName("in")
-      .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
-      .getOrCreate()
-    import sparkSession.implicits._
-    val mongoDF: DataFrame = MongoSpark
-      .load(sparkSession)
-      .select($"author")
-      .filter($"author" isNotNull)
-      .select(explode($"author") as "author")
-      .select($"author._VALUE" as "_VALUE",
-        $"author._orcid" as "_orcid"
-        //        $"author._aux" as "_aux"
-      ).cache()
-    mongoDF.show()
-
-    val orcidNotNull = mongoDF
-      .filter($"_orcid" isNotNull)
-      .dropDuplicates("_VALUE")
-      .select($"_VALUE" as "noUseValue", $"_orcid")
-    val orcidNull = mongoDF
-      .filter($"_orcid" isNull)
-      .dropDuplicates("_VALUE")
-      .select($"_VALUE")
-    //      .select($"_VALUE", $"_aux")
-
-    val joinedRow = orcidNull
-      .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
-      .select($"_VALUE", $"_orcid")
-//      .select($"_VALUE", $"_orcid", $"_aux")
-        .cache()
-    joinedRow.show()
-    joinedRow.printSchema()
-//    joinedRow.filter($"_orcid".isNotNull).show(300)
-
-    MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
-  }
-
+  /**
+   * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
+   */
   test("distinct author") {
     val sparkSession: SparkSession = SparkSession
       .builder
@@ -310,7 +293,47 @@ class WriteAuthor extends AnyFunSuite {
       .cache()
     joinedRow.show()
     joinedRow.printSchema()
-    joinedRow.filter($"_orcid".isNotNull).show(300)
+    //    joinedRow.filter($"_orcid".isNotNull).show(300)
+
+    MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
+  }
+
+  test("write author") {
+    val sparkSession: SparkSession = SparkSession
+      .builder
+      .appName("write author")
+      .master("local[*]")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .getOrCreate()
+    import sparkSession.implicits._
+    val mongoDF: DataFrame = MongoSpark
+      .load(sparkSession)
+      .select($"author")
+      .filter($"author" isNotNull)
+      .select(explode($"author") as "author")
+      .select($"author._VALUE" as "_VALUE",
+        $"author._orcid" as "_orcid"
+        //        $"author._aux" as "_aux"
+      )
+    val orcidNotNull = mongoDF
+      .filter($"_orcid" isNotNull)
+      .dropDuplicates("_VALUE")
+      .select($"_VALUE" as "noUseValue", $"_orcid")
+    val orcidNull = mongoDF
+      .filter($"_orcid" isNull)
+      .dropDuplicates("_VALUE")
+      .select($"_VALUE")
+    //      .select($"_VALUE", $"_aux")
+
+    val joinedRow = orcidNull
+      .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
+      .select($"_VALUE", $"_orcid")
+      //      .select($"_VALUE", $"_orcid", $"_aux")
+//      .cache()
+//    joinedRow.show()
+//    joinedRow.printSchema()
+//    joinedRow.filter($"_orcid".isNotNull).show(300)
 
     MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
   }

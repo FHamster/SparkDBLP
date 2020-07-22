@@ -8,8 +8,10 @@ import org.apache.spark.sql.functions.{regexp_extract, udf}
 import org.scalatest.funsuite.AnyFunSuite
 import com.databricks.spark.xml.XmlDataFrameReader
 
+
 /**
  * 这个类记录了如何将spark的数据写入mongodb（使用手工设定的Schema）
+ * @deprecated 最终采取了将所有子标签写入同一集合的做法，这个就废弃了
  */
 class WriteSubnodeIntoMongo extends AnyFunSuite {
   val charTest = "src/test/resources/article_CharTest.xml"
