@@ -1,5 +1,9 @@
 package util
 
+import util.ReplaceTagUtil.rtoaRegex
+
+import scala.util.matching.Regex
+
 object UDFObject {
   def dblpType(_publType: String, type_xml: String, prefix1: String): String = {
     (_publType, type_xml, prefix1) match {
@@ -37,4 +41,20 @@ object UDFObject {
     }
     defaultValue
   }
+
+  private val rtoaRegex: Regex = new Regex("\\((sub|i|sup|/i|/sub|/sup|tt|/tt)\\)");
+  def rtoaAarse(s: String): String = rtoaRegex.replaceAllIn(s, it => it.toString() match{
+    case "(i)" => "<i>"
+    case "(tt)" => "<tt>"
+    case "(sub)" => "<sub>"
+    case "(sup)" => "<sup>"
+    case "(/i)" => "</i>"
+    case "(/tt)" => "</tt>"
+    case "(/sub)" => "</sub>"
+    case "(/sup)" => "</sup>"
+    case _ => {
+      println(it)
+      it.toString()
+    }
+  })
 }

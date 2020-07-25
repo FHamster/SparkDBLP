@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
+//@RepositoryRestResource(exported = )
 public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
     @Query(value = "{title: {$regex: '?0', $options: 'i'}}")
     Page<OnlyDoc> findAllByTitleMatches(String title, Pageable pageable);
@@ -20,16 +21,18 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
     Stream<OnlyDoc> findAllByTitleMatchesRegexReturnStream(String title);
 //    List<OnlyDoc> findAllByTitleContainingIgnoreCase(String title);
 
-    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
-    Page<OnlyDoc> findAllByTitleMatchesText(String title, Pageable pageable);
+    //    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
+    @Query(value = "{$text: {$search: ?0}})")
+    Page<OnlyDoc> findAllByText(String title, Pageable pageable);
 
-    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
-    List<OnlyDoc> findAllByTitleMatchesTextReturnList(String title);
 
-//    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
+    @Query(value = "{$text: {$search: ?0}})")
+    List<OnlyDoc> findAllByTextReturnListJPA(String title);
+
+    //    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
     List<OnlyDoc> findAllByCrossref(String crossref);
 
-    @Query(value = "{'author._VALUE': ?0}", sort = "{ year : -1 }")
+    @Query(value = "{'author._VALUE': ?0}")
     Page<OnlyDoc> findAllByAuthor__VALUE(String author, Pageable pageable);
 //    Page<OnlyDoc> findAllByTitleContainingIgnoreCase(String title, Pageable pageable);
 //    Stream<Book> findAllByTitleContaining(String title);

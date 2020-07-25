@@ -75,7 +75,7 @@ public class OnlyDocController {
                 .forEach((key, value) -> aggClassList.add(new AggClass(key, value)));
 //        System.out.println(aggClassList.size());
         aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
-        aggClassList.forEach(System.out::println);
+//        aggClassList.forEach(System.out::println);
         return aggClassList;
     }
 
@@ -140,7 +140,7 @@ public class OnlyDocController {
                 });
 //        System.out.println(aggClassList.size());
         aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
-        aggClassList.forEach(System.out::println);
+//        aggClassList.forEach(System.out::println);
         return aggClassList;
     }
 
@@ -195,7 +195,7 @@ public class OnlyDocController {
                 .forEach((key, value) -> aggClassList.add(new AggClass(String.valueOf(key), value)));
 //        System.out.println(aggClassList.size());
         aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
-        aggClassList.forEach(System.out::println);
+//        aggClassList.forEach(System.out::println);
         return aggClassList;
     }
 
@@ -250,11 +250,11 @@ public class OnlyDocController {
                 .forEach((key, value) -> aggClassList.add(new AggClass(key, value)));
 //        System.out.println(aggClassList.size());
         aggClassList.sort((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()));
-        aggClassList.forEach(System.out::println);
+//        aggClassList.forEach(System.out::println);
         return aggClassList;
     }
 
-    @GetMapping(value = "/findAllByTitleMatchesTextAllList")
+    @GetMapping(value = "/findAllByTextReturnList")
     public List<OnlyDoc> findAllByTitleMatchesTextAllList(
             @RequestParam String title,
             @RequestParam(required = false) String author,

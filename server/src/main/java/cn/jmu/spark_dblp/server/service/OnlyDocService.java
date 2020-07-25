@@ -20,7 +20,7 @@ public class OnlyDocService {
 
     @Cacheable(value = "findAllByTitleMatchesTextReturnStream", key = "#title")
     public List<OnlyDoc> findAllByTitleMatchesTextReturnList(String title) {
-        return dao.findAllByTitleMatchesTextReturnList(title);
+        return dao.findAllByTextReturnListJPA(title);
     }
 
     public Stream<OnlyDoc> filterByYear(Stream<OnlyDoc> stream, String[] yearArray) {

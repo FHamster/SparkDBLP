@@ -1,5 +1,6 @@
 import java.util.Properties
 
+import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
@@ -155,6 +156,15 @@ final class DBLPTestClass extends AnyFunSuite with BeforeAndAfterAll {
       .join(orcidNotNull, orcidNull("_VALUE") === orcidNotNull("_VALUE"), "left")
       .select(orcidNull("_VALUE"), orcidNotNull("_orcid"))
       .show(200)
+  }
+
+  test("convert tag") {
+    import util.UDFObject
+
+    val rtoaAarse: UserDefinedFunction = udf(UDFObject.rtoaAarse _)
+    val cvted = dblpArticle
+      .select(rtoaAarse($"title"))
+      .show()
   }
   test("write jdbc") {
     val cache: DataFrame = dblpArticle

@@ -12,5 +12,7 @@ public interface VenueGroupDAO extends PagingAndSortingRepository<VenueGroup, St
     @Query(value = "{'venue.booktitle':{$regex: '?0', $options: 'i'}}")
     List<VenueGroup> findAllByVenue_BooktitleContainingIgnoreCase(String booktitle);
 
+    @Query(value = "{$text: {$search: ?0}})")
+    List<VenueGroup> findAllByTextReturnList(String booktitle);
 //    Page<Venue> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
 }
