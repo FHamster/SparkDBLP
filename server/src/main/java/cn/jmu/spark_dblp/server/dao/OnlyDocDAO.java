@@ -26,13 +26,13 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
     Page<OnlyDoc> findAllByText(String title, Pageable pageable);
 
 
+    List<OnlyDoc> findAllByPrefix2AndVolume(String prefix2, String volume);
     @Query(value = "{$text: {$search: ?0}})")
     List<OnlyDoc> findAllByTextReturnListJPA(String title);
 
     //    @Query(value = "{$text: {$search: ?0}})", sort = "{ year : -1 }")
     List<OnlyDoc> findAllByCrossref(String crossref);
 
-    List<OnlyDoc> findAllByPrefix2AndVolume(String prefix2, String volume);
 
     @Query(value = "{'author._VALUE': ?0}")
     Page<OnlyDoc> findAllByAuthor__VALUE(String author, Pageable pageable);

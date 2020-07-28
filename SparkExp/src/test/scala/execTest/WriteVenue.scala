@@ -116,7 +116,7 @@ class WriteVenue extends AnyFunSuite {
       .withColumn("newbooktitle", writeNotNull($"booktitle1", $"booktitle2", $"title"))
       .drop("booktitle1", "booktitle2", "ref")
       .withColumnRenamed("newbooktitle", "booktitle")
-      .filter(!($"prefix1" equalTo "reference/") || ($"prefix1" equalTo "books/"))
+      .filter(($"prefix1" equalTo "reference/") || ($"prefix1" equalTo "books/"))
       .groupBy("prefix1", "prefix2")
       .agg(collect_list($"booktitle") as "booktitle",
         collect_list($"_key") as "_key",
