@@ -1,6 +1,7 @@
 package cn.jmu.spark_dblp.server.dao;
 
 import cn.jmu.spark_dblp.server.entity.VenueGroup;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -29,4 +30,14 @@ public interface VenueGroupDAO extends PagingAndSortingRepository<VenueGroup, St
     @Query(value = "{$text: {$search: ?0}})")
     List<VenueGroup> findAllByTextReturnList(String booktitle);
 //    Page<Venue> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
+
+    /**
+     * 根据booktitle前缀匹配
+     * @param prefix 前缀
+     * @param pageable 分页信息
+     * @return 匹配成功的列表
+     */
+
+    @Query(value="{booktitle:{$regex: '^?0', $options: 'i'}}")
+    List<VenueGroup> findAllByBooktitleStartingWith(String prefix, Pageable pageable);
 }

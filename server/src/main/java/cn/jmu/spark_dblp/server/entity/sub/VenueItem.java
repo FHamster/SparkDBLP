@@ -17,4 +17,6 @@ public class VenueItem {
     private String booktitle;
     @Field
     private String type_xml;
+    @Field
+    private String crossref;
 }

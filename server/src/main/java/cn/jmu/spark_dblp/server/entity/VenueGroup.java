@@ -16,6 +16,10 @@ public class VenueGroup {
     @Field
     private String prefix2;
     @Field
+    private ArrayList<String> booktitle;
+    @Field
+    private ArrayList<String> title;
+    @Field
     private ArrayList<VenueItem> venue;
 
 }
