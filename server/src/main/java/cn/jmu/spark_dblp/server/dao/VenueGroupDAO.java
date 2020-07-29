@@ -1,6 +1,7 @@
 package cn.jmu.spark_dblp.server.dao;
 
 import cn.jmu.spark_dblp.server.entity.VenueGroup;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -38,5 +39,5 @@ public interface VenueGroupDAO extends PagingAndSortingRepository<VenueGroup, St
      * @return 匹配成功的列表
      */
     @Query(value="{booktitle:{$regex: '^?0', $options: 'i'}}")
-    List<VenueGroup> findAllByBooktitleStartingWith(String prefix, Pageable pageable);
+    Page<VenueGroup> findAllByBooktitleStartingWith(String prefix, Pageable pageable);
 }
