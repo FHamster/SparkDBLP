@@ -6,10 +6,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Distinct的DAO
+ */
 @Repository
 public interface AuthorsDAO extends PagingAndSortingRepository<Authors, String> {
-//    Page<Authors> findAllBy_VALUEContaining(String author, Pageable pageable);
+    /**
+     * 根据作者名称进行模糊匹配 （忽略大小写）
+     *
+     * @param author   作者名称
+     * @param pageable 分页信息
+     * @return 匹配成功的Authors分页
+     */
     Page<Authors> findAllBy_VALUEContainingIgnoreCase(String author, Pageable pageable);
 
-    Page<Authors> findBy_VALUEStartingWith(String prefix, Pageable pageable);
+    /**
+     * 根据作者名称进行精确前缀匹配 （忽略大小写）
+     *
+     * @param prefix   作者姓名前缀
+     * @param pageable 分页信息
+     * @return 匹配成功的Authors分页
+     */
+    Page<Authors> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
 }

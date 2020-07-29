@@ -6,9 +6,12 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import reactor.core.publisher.Flux;
 
+/**
+ * @deprecated 前端无法支持响应式特性
+ */
 @RepositoryRestResource(exported = false)
 public interface OnlyDocReactiveDAO extends ReactiveMongoRepository<OnlyDocReactive, String> {
-//    @Query(value = "{title: {$regex: '?0', $options: 'i'}}")
+    //    @Query(value = "{title: {$regex: '?0', $options: 'i'}}")
 //    Page<OnlyDoc> findAllByTitleMatchesRegex(String title, Pageable pageable);
 //    List<OnlyDoc> findAllByTitleContainingIgnoreCase(String title);
     @Query(value = "{title: {$regex: '?0', $options: 'i'}}")

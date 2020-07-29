@@ -12,6 +12,9 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.ArrayList;
 
+/**
+ * @deprecated 前端无法支持响应式特性
+ */
 @Document(collection = "onlyDoc")
 @Data
 @RestResource(exported = false)

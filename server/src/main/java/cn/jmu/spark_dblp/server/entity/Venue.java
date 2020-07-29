@@ -7,6 +7,10 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Optional;
 
+/**
+ * @deprecated venue的数据模式不符合功能预期
+ * 迁移至VenueGroup @see {@link VenueGroup}
+ */
 @Document(collection = "venue")
 @Data
 public class Venue {

@@ -9,6 +9,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JournalIndexDAO extends PagingAndSortingRepository<JournalIndex, String> {
+    /**
+     * 根据journal进行模糊匹配
+     *
+     * @param journal  journal名称
+     * @param pageable 分页信息
+     * @return JournalIndex的分页
+     */
     @Query(value = "{journal:{$regex: '?0', $options: 'i'}}")
     Page<JournalIndex> findAllByJournalContaining(String journal, Pageable pageable);
 
