@@ -21,11 +21,11 @@ public interface AuthorsDAO extends PagingAndSortingRepository<Authors, String> 
     Page<Authors> findAllBy_VALUEContainingIgnoreCase(String author, Pageable pageable);
 
     /**
-     * 根据作者名称进行精确前缀匹配 （忽略大小写）
+     * 根据作者名称进行精确前缀匹配
      *
      * @param prefix   作者姓名前缀
      * @param pageable 分页信息
      * @return 匹配成功的Authors分页
      */
-    Page<Authors> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
+    Page<Authors> findBy_VALUEStartingWith(String prefix, Pageable pageable);
 }

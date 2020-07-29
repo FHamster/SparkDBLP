@@ -16,7 +16,7 @@ public interface JournalIndexDAO extends PagingAndSortingRepository<JournalIndex
      * @param pageable 分页信息
      * @return JournalIndex的分页
      */
-    @Query(value = "{journal:{$regex: '?0', $options: 'i'}}")
+    @Query(value = "{journal:{$regex: '?0', $options: 'i'}}",sort="{journal:1}")
     Page<JournalIndex> findAllByJournalContaining(String journal, Pageable pageable);
 
 //    Page<Venue> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
