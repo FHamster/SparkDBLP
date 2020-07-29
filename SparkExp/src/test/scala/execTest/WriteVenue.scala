@@ -72,22 +72,27 @@ class WriteVenue extends AnyFunSuite {
       .join(mongoDF, $"_key" === $"ref", "left")
       .withColumnRenamed("booktitle", "booktitle1")
       .withColumn("newbooktitle", writeNotNull($"booktitle1", $"booktitle2", $"title"))
-      .drop("booktitle1", "booktitle2", "ref")
+      .drop("booktitle1", "booktitle2")
       .withColumnRenamed("newbooktitle", "booktitle")
       .filter($"prefix1" equalTo "conf/")
       .groupBy("prefix2")
       .agg(collect_list($"booktitle") as "booktitle",
         collect_list($"_key") as "_key",
+        collect_list($"title") as "title",
         collect_list($"year") as "year",
         collect_list($"type") as "type",
         collect_list($"type_xml") as "type_xml",
-        collect_list($"title") as "title"
+        collect_list($"ref") as "crossref",
+        collect_set($"title") as "titleset",
+        collect_set($"booktitle") as "booktitleset"
       )
       .select(
         $"prefix2",
-        arrays_zip($"booktitle", $"_key", $"title", $"year", $"type", $"type_xml") as "venue"
+        $"titleset" as "title",
+        $"booktitleset" as "booktitle",
+        arrays_zip($"booktitle", $"_key", $"title", $"year", $"type", $"type_xml", $"crossref") as "venue"
       )
-
+    crossReffed.show(100)
     MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
   }
 
@@ -174,5 +179,51 @@ class WriteVenue extends AnyFunSuite {
       )
 
     MongoSpark.save(journals.write.mode(SaveMode.Overwrite))
+  }
+  test("venue index") {
+    val sparkSession: SparkSession = SparkSession
+      .builder
+      .appName("venue")
+      .master("local[*]")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.venueIndex")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .getOrCreate()
+    import sparkSession.implicits._
+    val mongoDF: DataFrame = MongoSpark.load(sparkSession)
+      .select("_key", "booktitle", "crossref",
+        "journal", "prefix1", "prefix2",
+        "title", "type", "type_xml", "year")
+
+    val crossRef = mongoDF
+      .filter($"crossref" isNotNull)
+      .select($"crossref" as "ref", $"booktitle" as "booktitle2")
+      .dropDuplicates("ref")
+    val crossReffed = crossRef
+      .join(mongoDF, $"_key" === $"ref", "left")
+      .withColumnRenamed("booktitle", "booktitle1")
+      .withColumn("newbooktitle", writeNotNull($"booktitle1", $"booktitle2", $"title"))
+      .drop("booktitle1", "booktitle2")
+      .withColumnRenamed("newbooktitle", "booktitle")
+      .filter($"prefix1" equalTo "conf/")
+      .groupBy("prefix2")
+      .agg(collect_list($"booktitle") as "booktitle",
+        collect_list($"_key") as "_key",
+        collect_list($"title") as "title",
+        collect_list($"year") as "year",
+        collect_list($"type") as "type",
+        collect_list($"type_xml") as "type_xml",
+        collect_list($"ref") as "crossref",
+        collect_set($"title") as "titleset",
+        collect_set($"booktitle") as "booktitleset"
+      )
+      .select(
+        $"prefix2",
+        $"titleset" as "title",
+        $"booktitleset" as "booktitle",
+        arrays_zip($"booktitle", $"_key", $"title", $"year", $"type", $"type_xml", $"crossref") as "venue"
+      )
+
+    crossReffed.show(100)
+    MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
   }
 }
