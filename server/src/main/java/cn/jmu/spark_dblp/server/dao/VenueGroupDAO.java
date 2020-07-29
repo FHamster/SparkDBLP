@@ -37,7 +37,6 @@ public interface VenueGroupDAO extends PagingAndSortingRepository<VenueGroup, St
      * @param pageable 分页信息
      * @return 匹配成功的列表
      */
-
     @Query(value="{booktitle:{$regex: '^?0', $options: 'i'}}")
     List<VenueGroup> findAllByBooktitleStartingWith(String prefix, Pageable pageable);
 }
