@@ -5,6 +5,14 @@ import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import cn.jmu.spark_dblp.server.entity.sub.Author;
 import cn.jmu.spark_dblp.server.service.OnlyDocService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -255,12 +263,16 @@ public class OnlyDocController {
     }
 
     @GetMapping(value = "/findAllByTextReturnList")
-    public List<OnlyDoc> findAllByTitleMatchesTextAllList(
+    public HttpEntity<PagedModel<OnlyDoc>> findAllByTitleMatchesTextAllList(
             @RequestParam String title,
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String year,
             @RequestParam(required = false) String venue,
-            @RequestParam(required = false) String type
+            @RequestParam(required = false) String type,
+            Pageable pageable,
+            PagedResourcesAssembler assembler
+//            @RequestParam(defaultValue = "30") int size,
+//            @RequestParam(defaultValue = "0") int page
     ) {
 
         //对service的结果流化
@@ -299,14 +311,23 @@ public class OnlyDocController {
         }
 
         //初始化聚合结果list
-        List<OnlyDoc> onlyDocList = parallelStream.collect(Collectors.toList());
-//        Stream<OnlyDoc> onlyDocList = parallelStream;
-//                .collect(Collectors.groupingByConcurrent(OnlyDoc::getType, Collectors.counting()))
-//                .forEach((key, value) -> aggClassList.add(new AggClass(key, value)));
-//        System.out.println(aggClassList.size());
-//        aggClassList.forEach(System.out::println);
-        return onlyDocList;
+        List<OnlyDoc> onlyDocList = parallelStream
+                .sorted((o1, o2) -> Math.toIntExact(o2.getYearOption().orElse(0L) - o1.getYearOption().orElse(0L)))
+               /* .sorted(
+                        Comparator.comparingLong(o -> o.getYearOption().orElse(0L))
+                )*/
+                .skip(pageable.getOffset())
+                .collect(Collectors.toList());
+
+//        Long offset = pageable.getOffset();
+        Page<OnlyDoc> onlyDocPage = new PageImpl<>(
+                onlyDocList.subList(0, pageable.getPageSize()),
+                pageable,
+                onlyDocList.size()
+        );
+
+
+        PagedModel<OnlyDoc> model = assembler.toModel(onlyDocPage);
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
-
-
 }
