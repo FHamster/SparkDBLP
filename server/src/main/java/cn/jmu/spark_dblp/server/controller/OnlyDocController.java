@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +29,6 @@ public class OnlyDocController {
     OnlyDocService service;
 
     @GetMapping(value = "/findAllByTitleMatchesTextAuthorRefineList")
-//    public List<AggClass> findAll(
     public List<AggClass> findAllByTitleMatchesTextAuthorRefineList(
             @RequestParam String title,
             @RequestParam(required = false) String author,
@@ -263,14 +260,14 @@ public class OnlyDocController {
     }
 
     @GetMapping(value = "/findAllByTextReturnList")
-    public HttpEntity<PagedModel<OnlyDoc>> findAllByTitleMatchesTextAllList(
+    public ResponseEntity findAllByTitleMatchesTextAllList(
             @RequestParam String title,
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String year,
             @RequestParam(required = false) String venue,
             @RequestParam(required = false) String type,
             Pageable pageable,
-            PagedResourcesAssembler assembler
+            PagedResourcesAssembler<OnlyDoc> assembler
 //            @RequestParam(defaultValue = "30") int size,
 //            @RequestParam(defaultValue = "0") int page
     ) {
@@ -309,25 +306,27 @@ public class OnlyDocController {
         if (typeArray != null) {
             parallelStream = service.filterByType(parallelStream, typeArray);
         }
+//        Stream.
 
         //初始化聚合结果list
         List<OnlyDoc> onlyDocList = parallelStream
                 .sorted((o1, o2) -> Math.toIntExact(o2.getYearOption().orElse(0L) - o1.getYearOption().orElse(0L)))
-               /* .sorted(
-                        Comparator.comparingLong(o -> o.getYearOption().orElse(0L))
-                )*/
-                .skip(pageable.getOffset())
                 .collect(Collectors.toList());
 
-//        Long offset = pageable.getOffset();
+
         Page<OnlyDoc> onlyDocPage = new PageImpl<>(
-                onlyDocList.subList(0, pageable.getPageSize()),
+                onlyDocList.stream()
+                        .skip(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .collect(Collectors.toList()),
                 pageable,
                 onlyDocList.size()
         );
 
 
-        PagedModel<OnlyDoc> model = assembler.toModel(onlyDocPage);
-        return new ResponseEntity<>(model, HttpStatus.OK);
+        PagedModel model = assembler.toModel(onlyDocPage);
+
+        return ResponseEntity.ok(model);
+
     }
 }
