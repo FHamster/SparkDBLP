@@ -3,7 +3,7 @@ package execTest
 import property._
 import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
-import org.apache.spark.sql.functions.explode
+import org.apache.spark.sql.functions.{explode, split}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -15,6 +15,7 @@ class WriteAuthor extends AnyFunSuite {
   val AuthorTemp = "AuthorTemp"
   val onlyDoc = "onlyDoc"
   val DistinctAuthor = "DistinctAuthor"
+  val indexPattern = "[\\s(),.]"
   /**
    * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
    */
@@ -329,6 +330,7 @@ class WriteAuthor extends AnyFunSuite {
     val joinedRow = orcidNull
       .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
       .select($"_VALUE", $"_orcid")
+      .withColumn("prefixIndex",split($"_VALUE",indexPattern) )
       //      .select($"_VALUE", $"_orcid", $"_aux")
 //      .cache()
 //    joinedRow.show()

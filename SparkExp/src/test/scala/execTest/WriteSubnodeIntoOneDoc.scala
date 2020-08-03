@@ -2,7 +2,7 @@ package execTest
 
 import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
-import org.apache.spark.sql.functions.{lit, regexp_extract, udf}
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 import property.PropertiesObj
@@ -14,7 +14,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
   val onlyDoc = "onlyDoc"
   val prefixRegex2 = "^(\\S*?)/(\\S*?)/"
   val prefixRegex1 = "^(\\S*?)/"
-
+  val indexPattern = "[\\s(),.]"
   import util.UDFObject
 
   val initDblpType = udf(UDFObject.dblpType _)
@@ -42,6 +42,8 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
+
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()
@@ -71,9 +73,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
-      .withColumn("cvtTitle", paren2tag($"title"))
-      .drop($"title")
-      .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()
@@ -102,6 +102,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()
@@ -131,6 +132,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()
@@ -159,6 +161,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()
@@ -187,6 +190,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()
@@ -215,6 +219,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .withColumn("cvtTitle", paren2tag($"title"))
       .drop($"title")
       .withColumnRenamed("cvtTitle", "title")
+      .withColumn("prefixIndex", split($"title", indexPattern))
     println(s"write $subnode into mongodb")
     opt.show()
     opt.printSchema()

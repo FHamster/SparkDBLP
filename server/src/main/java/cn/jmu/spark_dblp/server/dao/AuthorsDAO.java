@@ -3,6 +3,7 @@ package cn.jmu.spark_dblp.server.dao;
 import cn.jmu.spark_dblp.server.entity.Authors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +30,7 @@ public interface AuthorsDAO extends PagingAndSortingRepository<Authors, String> 
      * @param pageable 分页信息
      * @return 匹配成功的Authors
      */
+    @Query("{prefixIndex:{$regex: '?0', $options: 'i'}}")
     List<Authors> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
 //    Page<Authors> findBy_VALUEStartingWithIgnoreCase(String prefix, Pageable pageable);
 }
