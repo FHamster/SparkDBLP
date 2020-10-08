@@ -23,7 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(value = "/onlyDoc")
+@RequestMapping(value = "/onlyDocs/search")
+//@RequestMapping(value = "/onlyDoc")
 public class OnlyDocController {
     @Autowired
     OnlyDocService service;
@@ -268,10 +269,7 @@ public class OnlyDocController {
             @RequestParam(required = false) String type,
             Pageable pageable,
             PagedResourcesAssembler<OnlyDoc> assembler
-//            @RequestParam(defaultValue = "30") int size,
-//            @RequestParam(defaultValue = "0") int page
     ) {
-
         //对service的结果流化
         Stream<OnlyDoc> parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream();
 
@@ -306,7 +304,6 @@ public class OnlyDocController {
         if (typeArray != null) {
             parallelStream = service.filterByType(parallelStream, typeArray);
         }
-//        Stream.
 
         //初始化聚合结果list
         List<OnlyDoc> onlyDocList = parallelStream
