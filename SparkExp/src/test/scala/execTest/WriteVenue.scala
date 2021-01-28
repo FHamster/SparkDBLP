@@ -47,7 +47,7 @@ class WriteVenue extends AnyFunSuite {
       .drop("booktitle1", "booktitle2", "ref")
       .withColumnRenamed("newbooktitle", "booktitle")
 
-    MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
+//    MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
   }
 
   test("venue group") {
