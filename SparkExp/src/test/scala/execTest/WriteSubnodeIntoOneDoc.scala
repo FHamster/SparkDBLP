@@ -19,7 +19,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
 
   val initDblpType = udf(UDFObject.dblpType _)
   val paren2tag = udf(UDFObject.rtoaAarse _)
-
+  val ipAddress = PropertiesObj.ipAddress
   test("article") {
     import ss.implicits.StringToColumn
     val subnode = "article"
@@ -27,7 +27,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -58,7 +58,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -87,7 +87,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -117,7 +117,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -146,7 +146,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -175,7 +175,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -204,7 +204,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
       .builder
       .appName(s"writeIntoOnlydoc_$subnode")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
 
     val opt = ss.read
@@ -233,7 +233,7 @@ class WriteSubnodeIntoOneDoc extends AnyFunSuite {
         .builder
         .appName(s"writeIntoOnlydoc_$subnode")
         .master("local[*]")
-        .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+        .config("spark.mongodb.output.uri", s"mongodb://${ipAddress}/SparkDBLPTest.$onlyDoc")
         .getOrCreate()
 
       val opt = ss.read

@@ -8,7 +8,9 @@ object PropertiesObj {
   val wholeDBLP_cvt = "/whole/dblp_cvt.xml"
   lazy val wholeDBLP_cvtSparkPath: String = s"file://${pwd + wholeDBLP_cvt}"
   lazy val wholeDBLP_SparkPath: String = s"file://${pwd + wholeDBLP}"
-
+//  lazy val ipAddress = "localhost"
+//  lazy val ipAddress = "192.168.101.19:27017"
+  lazy val ipAddress = "localhost"
   lazy val subNode = Seq(
     "article",
     "inproceedings",

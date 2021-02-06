@@ -28,7 +28,7 @@ public class OnlyDocService {
      * @return 匹配成功的OnlyDoc列表
      * @apiNote 该服务会对数据进行缓存
      */
-    @Cacheable(value = "findAllByTitleMatchesTextReturnStream", key = "#title")
+    @Cacheable(value = "onlyDocTitleCache", key = "#title")
     public List<OnlyDoc> findAllByTitleMatchesTextReturnList(String title) {
         return dao.findAllByTextReturnListJPA(title);
     }
