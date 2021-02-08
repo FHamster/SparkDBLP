@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,13 +32,16 @@ public class ReSTQueryController {
      * 创建ReSTQuery
      */
     @PostMapping
-    public String creatReSTQuery(
-            @RequestBody Map json
+    public Properties creatReSTQuery(
+            @RequestBody Properties json
     ) {
         String title = (String) json.get("title");
         UUID uuid = UUID.randomUUID();
         List<OnlyDoc> list2 = cache.putOnlyDocListCache(uuid.toString(), title);
-        return uuid.toString();
+
+        Properties properties = new Properties();
+        properties.setProperty("uuid", uuid.toString());
+        return properties;
     }
 
     @GetMapping(value = "/{queryid}")

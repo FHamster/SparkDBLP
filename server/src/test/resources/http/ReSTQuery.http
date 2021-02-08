@@ -1,0 +1,16 @@
+###
+POST http://localhost:8080/onlyDocs/restquery
+Content-Type: application/json
+
+{"title":"hadoop"}
+
+<> 2021-02-08T195436.200.txt
+<> 2021-02-06T191625.200.txt
+<> 2021-02-06T191504.500.json
+
+
+###
+GET http://localhost:8080/onlyDocs/restquery/dccae11d-46c5-4b6b-93b9-62f0e891ff05
+
+<> 2021-02-08T195457.200.json
+<> 2021-02-06T191707.200.json
