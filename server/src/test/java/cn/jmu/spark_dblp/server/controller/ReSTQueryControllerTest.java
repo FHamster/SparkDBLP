@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,18 +29,14 @@ class ReSTQueryControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-//    @Autowired
-//    Properties properties
     @BeforeEach
-    @Disabled
     void before() {
-        System.out.println("Test Start");
+        System.out.println("=================Test Start=================");
     }
 
     @AfterEach
-    @Disabled
     void after() {
-        System.out.println("Test end");
+        System.out.println("=================Test end=================");
     }
 
     @Test
@@ -52,6 +48,8 @@ class ReSTQueryControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid").exists())
+                .andExpect(jsonPath("$._links.queryHandler").exists())
+                .andExpect(jsonPath("$._links.self").exists())
                 .andReturn();
     }
 
@@ -65,13 +63,28 @@ class ReSTQueryControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid").exists())
+                .andExpect(jsonPath("$._links.queryHandler").exists())
+                .andExpect(jsonPath("$._links.self").exists())
                 .andReturn();
 
         ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
-        String uuid = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.uuid");
+        String uri = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$._links.queryHandler.href");
         System.out.println("=================getQueryResut=================");
-        mockMvc.perform(get("/onlyDocs/restquery/{queryid}", uuid))
+
+
+//        Properties values = new Properties();
+//        values.put("size", 1);
+//        values.put("number",1);
+
+//        UriTemplate template = UriTemplate.of("http://localhost/onlyDocs/restquery/e34cc2c1ffdd4cf3b65dff1bffb65aac")
+//        UriTemplate template = UriTemplate.of(uri);
+//                .with(new TemplateVariable("size", VariableType.REQUEST_PARAM))
+//                .with(new TemplateVariable("number", VariableType.REQUEST_PARAM));
+
+//        System.out.println(UriTemplate.of(uri).expand(50, 1).toString());
+
+        mockMvc.perform(get(UriTemplate.of(uri).expand(30, 0)))
                 .andDo(print())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$._embedded.onlyDocs").isArray());
     }
 }

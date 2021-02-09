@@ -21,14 +21,7 @@ object TestSQL {
       "<Y p=\"1111\" q=\"2222\">yyyyyyy</Y></B></A></D></A1><A><X><B><T>tttttt" +
       "<M>mmmm</M></T></B></X></A></root>',       '//A'      )")
 
-    // result.show()
-
-    //    result.foreach(row => println(row))
-    //result.write.format("json").save("c:/out/rrr.txt") //xxxxxxx
-    //    result.write.xml("rrr.txt") //OK
-
-    //测试发现，//和/是有区分的。
-    //如有结果的查询： //A，root/A，//A[B]，//M/text()，//T/text()，//@p
+    val a = List(1, 2, 3)
 
   }
 

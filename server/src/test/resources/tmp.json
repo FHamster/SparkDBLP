@@ -1,0 +1,250 @@
+{
+  "alps": {
+    "version": "1.0",
+    "descriptor": [
+      {
+        "id": "onlyDoc-representation",
+        "href": "http://localhost:8080/profile/onlyDocs",
+        "descriptor": [
+          {
+            "name": "_key",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "prefix1",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "prefix2",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "author",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "ee",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "title",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "year",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "_publtype",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "month",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "type",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "booktitle",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "crossref",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "editor",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "journal",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "pages",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "publisher",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "volume",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "isbn",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "school",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "series",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "cdrom",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "chapter",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "number",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "type_xml",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "id": "get-onlyDocs",
+        "name": "onlyDocs",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "page",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The page to return."
+            }
+          },
+          {
+            "name": "size",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The size of the page to return."
+            }
+          },
+          {
+            "name": "sort",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The sorting criteria to use to calculate the content of the page."
+            }
+          }
+        ],
+        "rt": "#onlyDoc-representation"
+      },
+      {
+        "id": "create-onlyDocs",
+        "name": "onlyDocs",
+        "type": "UNSAFE",
+        "descriptor": [],
+        "rt": "#onlyDoc-representation"
+      },
+      {
+        "id": "get-onlyDoc",
+        "name": "onlyDoc",
+        "type": "SAFE",
+        "descriptor": [],
+        "rt": "#onlyDoc-representation"
+      },
+      {
+        "id": "patch-onlyDoc",
+        "name": "onlyDoc",
+        "type": "UNSAFE",
+        "descriptor": [],
+        "rt": "#onlyDoc-representation"
+      },
+      {
+        "id": "delete-onlyDoc",
+        "name": "onlyDoc",
+        "type": "IDEMPOTENT",
+        "descriptor": [],
+        "rt": "#onlyDoc-representation"
+      },
+      {
+        "id": "update-onlyDoc",
+        "name": "onlyDoc",
+        "type": "IDEMPOTENT",
+        "descriptor": [],
+        "rt": "#onlyDoc-representation"
+      },
+      {
+        "name": "findAllByText",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "title",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findAllByPrefix2AndVolume",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "prefix2",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "volume",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findAllByTextReturnListJPA",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "title",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findAllByAuthor__VALUE",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "author",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findAllByTitleMatchesRegexReturnStream",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "title",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findAllByCrossref",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "crossref",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findAllByTitleMatches",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "title",
+            "type": "SEMANTIC"
+          }
+        ]
+      }
+    ]
+  }
+}
