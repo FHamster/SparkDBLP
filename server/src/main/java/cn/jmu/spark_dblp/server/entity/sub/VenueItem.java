@@ -3,8 +3,10 @@ package cn.jmu.spark_dblp.server.entity.sub;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.io.Serializable;
+
 @Data
-public class VenueItem {
+public class VenueItem implements Serializable {
     @Field
     private String _key;
     @Field

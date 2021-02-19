@@ -9,12 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Optional;
 
 @Document(collection = "onlyDoc")
 @Data
-public class OnlyDoc {
+public class OnlyDoc implements Serializable {
     @MongoId
     private String _id;
     @Field
