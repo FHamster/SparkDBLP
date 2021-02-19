@@ -4,10 +4,6 @@ Content-Type: application/json
 
 {"title":"hadoop"}
 
-<> 2021-02-08T195436.200.txt
-<> 2021-02-06T191625.200.txt
-<> 2021-02-06T191504.500.json
-
 
 ###
 GET http://localhost:8080/onlyDocs/restquery/f329306c50ce4c73bfa082d8c89a7e17?size=1
@@ -15,7 +11,11 @@ GET http://localhost:8080/onlyDocs/restquery/f329306c50ce4c73bfa082d8c89a7e17?si
 <> 2021-02-08T195457.200.json
 <> 2021-02-06T191707.200.json
 ###
-GET http://localhost:8080/onlyDocs/restquery/f329306c50ce4c73bfa082d8c89a7e17
+GET http://localhost:8080/onlyDocs/restquery/0238775c7bd96e2eab98038afe0c4279
 
 <> 2021-02-08T195457.200.json
 <> 2021-02-06T191707.200.json
+
+
+###
+PUT http://localhost:8080/onlyDocs/restquery/81b56b44aa7b457c9303af360cb6a700?rsql=year==2019;author._VALUE==Thulasi Bikku

@@ -1,17 +1,25 @@
 package cn.jmu.spark_dblp.server.controller;
 
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
-import cn.jmu.spark_dblp.server.model.UuidModel;
-import cn.jmu.spark_dblp.server.service.CacheService;
+import cn.jmu.spark_dblp.server.model.Md5Model;
+import cn.jmu.spark_dblp.server.service.CacheServiceScalaImpl;
 import cn.jmu.spark_dblp.server.service.OnlyDocService;
+import com.github.rutledgepaulv.qbuilders.builders.GeneralQueryBuilder;
+import com.github.rutledgepaulv.qbuilders.conditions.Condition;
+import com.github.rutledgepaulv.qbuilders.visitors.PredicateVisitor;
+import com.github.rutledgepaulv.rqe.pipes.QueryConversionPipeline;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -22,7 +30,9 @@ public class ReSTQueryController {
     @Autowired
     OnlyDocService service;
     @Autowired
-    CacheService cache;
+    CacheServiceScalaImpl cache;
+
+    QueryConversionPipeline pipeline = QueryConversionPipeline.defaultPipeline();
 
     /**
      * 创建ReSTQuery
@@ -30,15 +40,14 @@ public class ReSTQueryController {
      * @return
      */
     @PostMapping
-    public UuidModel creatReSTQuery(
+    public Md5Model creatReSTQuery(
             @RequestBody Properties json
     ) {
         String title = (String) json.get("title");
-        String uuid = UUID.randomUUID().toString().replace("-", "");
-        UuidModel uuidModel = new UuidModel(uuid);
+        String md5 = DigestUtils.md5DigestAsHex(title.getBytes(StandardCharsets.UTF_8));
+        Md5Model md5Model = new Md5Model(md5);
 
-
-        List<OnlyDoc> list2 = cache.putOnlyDocListCache(uuid, title);
+        cache.push(md5, title);
 
 //        Properties properties = new Properties();
 //        properties.setProperty("uuid", uuid);
@@ -47,19 +56,56 @@ public class ReSTQueryController {
                         .withRel("queryHandler"),
                 linkTo(methodOn(ReSTQueryController.class).creatReSTQuery(null))
                         .withSelfRel());*/
-        return uuidModel.add(
-                linkTo(methodOn(ReSTQueryController.class).getQueryResult(uuid))
+        return md5Model.add(
+                linkTo(methodOn(ReSTQueryController.class).getQueryResult(md5))
                         .withRel("queryHandler"),
+                linkTo(methodOn(ReSTQueryController.class).patchQueryResult(md5, "1"))
+                        .withRel("patchQueryHandler"),
                 linkTo(methodOn(ReSTQueryController.class).creatReSTQuery(null))
                         .withSelfRel()
         );
+    }
+
+    @PatchMapping(value = "/{queryid}")
+    public ResponseEntity<CollectionModel<OnlyDoc>> patchQueryResult(
+            @PathVariable("queryid") String queryId,
+            @Param("rsql") String rsql
+    ) {
+        Condition<GeneralQueryBuilder> condition = pipeline.apply(rsql, OnlyDoc.class);
+        Predicate<OnlyDoc> predicate = condition.query(new PredicateVisitor<>());
+        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId)._1.stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(CollectionModel.of(
+                onlyDocList,
+                linkTo(methodOn(ReSTQueryController.class).patchQueryResult(queryId, rsql)).withSelfRel(),
+                linkTo(methodOn(ReSTQueryController.class).getQueryResult(queryId)).withRel("queryHandler")
+        ));
+    }
+
+    @PutMapping(value = "/{queryid}")
+    public ResponseEntity<CollectionModel<OnlyDoc>> putQueryResult(
+            @PathVariable("queryid") String queryId,
+            @RequestBody List<String> querys
+    ) {
+        //TODO
+//        cache.getOnlyDocListCache(queryId, predicates)
+//                .filter(predicate)
+//                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(CollectionModel.of(
+                null,
+//                onlyDocList,
+                linkTo(methodOn(ReSTQueryController.class).getQueryResult(queryId)).withRel("queryHandler")
+        ));
     }
 
     @GetMapping(value = "/{queryid}")
     public ResponseEntity<CollectionModel<OnlyDoc>> getQueryResult(
             @PathVariable("queryid") String queryId
     ) {
-        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId);
+        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId)._1;
         return ResponseEntity.ok(CollectionModel.of(
                 onlyDocList,
                 linkTo(methodOn(ReSTQueryController.class)
