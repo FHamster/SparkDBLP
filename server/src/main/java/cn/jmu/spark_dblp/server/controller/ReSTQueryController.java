@@ -16,8 +16,8 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -41,13 +41,20 @@ public class ReSTQueryController {
      */
     @PostMapping
     public Md5Model creatReSTQuery(
-            @RequestBody Properties json
+            @Param("rsql") String rsql
     ) {
-        String title = (String) json.get("title");
-        String md5 = DigestUtils.md5DigestAsHex(title.getBytes(StandardCharsets.UTF_8));
+
+//        String title = (String) json.get("title");
+        //md5作为资源表述
+        String md5 = DigestUtils.md5DigestAsHex(rsql.getBytes(StandardCharsets.UTF_8));
         Md5Model md5Model = new Md5Model(md5);
 
-        cache.push(md5, title);
+//        Condition<GeneralQueryBuilder> condition = pipeline.apply(rsql, OnlyDoc.class);
+
+        //存储上下文环境
+        List<String> context = new ArrayList<>();
+        context.add(rsql);
+        cache.pushContext(md5, context);
 
 //        Properties properties = new Properties();
 //        properties.setProperty("uuid", uuid);
@@ -59,26 +66,36 @@ public class ReSTQueryController {
         return md5Model.add(
                 linkTo(methodOn(ReSTQueryController.class).getQueryResult(md5))
                         .withRel("queryHandler"),
-                linkTo(methodOn(ReSTQueryController.class).patchQueryResult(md5, "1"))
+                linkTo(methodOn(ReSTQueryController.class).patchQueryResult(md5, rsql))
                         .withRel("patchQueryHandler"),
-                linkTo(methodOn(ReSTQueryController.class).creatReSTQuery(null))
+                linkTo(methodOn(ReSTQueryController.class).creatReSTQuery(rsql))
                         .withSelfRel()
         );
     }
 
     @PatchMapping(value = "/{queryid}")
     public ResponseEntity<CollectionModel<OnlyDoc>> patchQueryResult(
-            @PathVariable("queryid") String queryId,
+            @PathVariable("queryid") String md5,
             @Param("rsql") String rsql
     ) {
+
+        String queryId = "a";
+        //取出上下文环境
+        List<String> context = cache.getContext(md5);
+
+        //更新上下文环境
+        context.add(rsql);
+        cache.pushContext(md5, context);
+
         Condition<GeneralQueryBuilder> condition = pipeline.apply(rsql, OnlyDoc.class);
         Predicate<OnlyDoc> predicate = condition.query(new PredicateVisitor<>());
-        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId)._1.stream()
-                .filter(predicate)
-                .collect(Collectors.toList());
+//        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(md5)._1.stream()
+//                .filter(predicate)
+//                .collect(Collectors.toList());
 
         return ResponseEntity.ok(CollectionModel.of(
-                onlyDocList,
+//                onlyDocList,
+                new ArrayList<>(),
                 linkTo(methodOn(ReSTQueryController.class).patchQueryResult(queryId, rsql)).withSelfRel(),
                 linkTo(methodOn(ReSTQueryController.class).getQueryResult(queryId)).withRel("queryHandler")
         ));
@@ -86,18 +103,17 @@ public class ReSTQueryController {
 
     @PutMapping(value = "/{queryid}")
     public ResponseEntity<CollectionModel<OnlyDoc>> putQueryResult(
-            @PathVariable("queryid") String queryId,
+            @PathVariable("queryid") String md5,
             @RequestBody List<String> querys
     ) {
-        //TODO
-//        cache.getOnlyDocListCache(queryId, predicates)
-//                .filter(predicate)
-//                .collect(Collectors.toList());
+        //覆盖上下文环境
+        cache.pushContext(md5, querys);
+
 
         return ResponseEntity.ok(CollectionModel.of(
                 null,
 //                onlyDocList,
-                linkTo(methodOn(ReSTQueryController.class).getQueryResult(queryId)).withRel("queryHandler")
+                linkTo(methodOn(ReSTQueryController.class).getQueryResult(md5)).withRel("queryHandler")
         ));
     }
 
@@ -105,14 +121,20 @@ public class ReSTQueryController {
     public ResponseEntity<CollectionModel<OnlyDoc>> getQueryResult(
             @PathVariable("queryid") String queryId
     ) {
-        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId)._1;
+        //读取上下文环境
+        List<String> l = cache.getContext(queryId);
+        l.stream().collect(Collectors.joining(";"));
+
+//        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId)._1;
         return ResponseEntity.ok(CollectionModel.of(
-                onlyDocList,
+                new ArrayList<>(),
+//                onlyDocList,
                 linkTo(methodOn(ReSTQueryController.class)
                         .getQueryResult(queryId))
                         .withSelfRel()
         ));
     }
+
 /*
 
     @GetMapping(value = "/{queryid}")

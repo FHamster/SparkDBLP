@@ -1,11 +1,6 @@
 package cn.jmu.spark_dblp.server.controller;
 
-import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.rutledgepaulv.qbuilders.builders.GeneralQueryBuilder;
-import com.github.rutledgepaulv.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.qbuilders.visitors.PredicateVisitor;
-import com.github.rutledgepaulv.rqe.pipes.QueryConversionPipeline;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +15,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.function.Predicate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -100,7 +93,7 @@ class ReSTQueryControllerTest {
                 .andExpect(jsonPath("$._links.self").exists())
                 .andReturn();
 
-        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
+//        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
         String uri = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$._links.queryHandler.href");
         System.out.println("=================getQueryResut=================");
 
@@ -120,13 +113,5 @@ class ReSTQueryControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$._embedded.onlyDocs").isArray());
     }
-    @Test
-    void PredicateEquatable()  {
-        QueryConversionPipeline pipeline = QueryConversionPipeline.defaultPipeline();
-        Condition<GeneralQueryBuilder> condition1 = pipeline.apply("year==2019", OnlyDoc.class);
-        Condition<GeneralQueryBuilder> condition2 = pipeline.apply("year==2019", OnlyDoc.class);
-        Predicate<OnlyDoc> predicate1 = condition1.query(new PredicateVisitor<>());
-        Predicate<OnlyDoc> predicate2 = condition1.query(new PredicateVisitor<>());
-        System.out.println(predicate1.equals(predicate2));
-    }
+
 }
