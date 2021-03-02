@@ -1,28 +1,19 @@
 package cn.jmu.spark_dblp.server.controller;
 
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
-import cn.jmu.spark_dblp.server.model.Md5Model;
+import cn.jmu.spark_dblp.server.model.ContextModel;
 import cn.jmu.spark_dblp.server.service.CacheServiceScalaImpl;
 import cn.jmu.spark_dblp.server.service.OnlyDocService;
-import com.github.rutledgepaulv.qbuilders.builders.GeneralQueryBuilder;
-import com.github.rutledgepaulv.qbuilders.conditions.Condition;
-import com.github.rutledgepaulv.qbuilders.visitors.PredicateVisitor;
-import com.github.rutledgepaulv.rqe.pipes.QueryConversionPipeline;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping(value = "/onlyDocs/restquery")
@@ -32,108 +23,146 @@ public class ReSTQueryController {
     @Autowired
     CacheServiceScalaImpl cache;
 
-    QueryConversionPipeline pipeline = QueryConversionPipeline.defaultPipeline();
-
     /**
-     * 创建ReSTQuery
-     *
-     * @return
+     * POST创建语义的实现
      */
     @PostMapping
-    public Md5Model creatReSTQuery(
-            @Param("rsql") String rsql
+    public HttpEntity<ContextModel> postRSQLQueryContext(
+            @RequestBody List<String> context
     ) {
-
-//        String title = (String) json.get("title");
         //md5作为资源表述
-        String md5 = DigestUtils.md5DigestAsHex(rsql.getBytes(StandardCharsets.UTF_8));
-        Md5Model md5Model = new Md5Model(md5);
-
-//        Condition<GeneralQueryBuilder> condition = pipeline.apply(rsql, OnlyDoc.class);
-
+        String contextID = UUID.randomUUID().toString().replace("-", "");
         //存储上下文环境
-        List<String> context = new ArrayList<>();
-        context.add(rsql);
-        cache.pushContext(md5, context);
+        cache.pushContext(contextID, context);
 
-//        Properties properties = new Properties();
-//        properties.setProperty("uuid", uuid);
-        /*return EntityModel.of(properties,
-                linkTo(methodOn(ReSTQueryController.class).getQueryResult(uuid))
-                        .withRel("queryHandler"),
-                linkTo(methodOn(ReSTQueryController.class).creatReSTQuery(null))
-                        .withSelfRel());*/
-        return md5Model.add(
-                linkTo(methodOn(ReSTQueryController.class).getQueryResult(md5))
-                        .withRel("queryHandler"),
-                linkTo(methodOn(ReSTQueryController.class).patchQueryResult(md5, rsql))
-                        .withRel("patchQueryHandler"),
-                linkTo(methodOn(ReSTQueryController.class).creatReSTQuery(rsql))
-                        .withSelfRel()
+        ContextModel model = new ContextModel(contextID, context).add(
+                linkTo(methodOn(ReSTQueryController.class).getRSQLQueryResult(contextID)).withSelfRel()
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).patchRSQLQueryContext(contextID, context)))
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).putRSQLQueryContext(contextID, context)))
         );
+
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(model);
     }
 
-    @PatchMapping(value = "/{queryid}")
-    public ResponseEntity<CollectionModel<OnlyDoc>> patchQueryResult(
-            @PathVariable("queryid") String md5,
-            @Param("rsql") String rsql
-    ) {
 
-        String queryId = "a";
+    /**
+     * Patch补充语义的实现
+     */
+    @PatchMapping(value = "/{contextID}")
+    public HttpEntity<ContextModel> patchRSQLQueryContext(
+            @PathVariable("contextID") String contextID,
+            @RequestBody List<String> patchContext
+    ) {
         //取出上下文环境
-        List<String> context = cache.getContext(md5);
+        List<String> context = cache.getContext(contextID);
+
+        if (context == null) throw new ResourceNotFoundException();
 
         //更新上下文环境
-        context.add(rsql);
-        cache.pushContext(md5, context);
+        context.addAll(patchContext);
+        cache.pushContext(contextID, context);
 
-        Condition<GeneralQueryBuilder> condition = pipeline.apply(rsql, OnlyDoc.class);
-        Predicate<OnlyDoc> predicate = condition.query(new PredicateVisitor<>());
-//        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(md5)._1.stream()
-//                .filter(predicate)
-//                .collect(Collectors.toList());
+        //获取结果集
+//        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(context);
 
-        return ResponseEntity.ok(CollectionModel.of(
-//                onlyDocList,
-                new ArrayList<>(),
-                linkTo(methodOn(ReSTQueryController.class).patchQueryResult(queryId, rsql)).withSelfRel(),
-                linkTo(methodOn(ReSTQueryController.class).getQueryResult(queryId)).withRel("queryHandler")
-        ));
+        //设置链接
+/*        List<Link> links = Arrays.asList(
+                linkTo(methodOn(ReSTQueryController.class).patchRSQLQueryContext(contextID, patchContext)).withSelfRel(),
+                linkTo(methodOn(ReSTQueryController.class).getRSQLQueryResult(contextID)).withRel("queryHandler")
+        );*/
+
+        ContextModel model = new ContextModel(contextID, context).add(
+                linkTo(methodOn(ReSTQueryController.class).getRSQLQueryResult(contextID)).withSelfRel()
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).patchRSQLQueryContext(contextID, context)))
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).putRSQLQueryContext(contextID, context)))
+        );
+
+        /*        linkTo(methodOn(ReSTQueryController.class).patchRSQLQueryContext(contextID, context)).withSelfRel(),
+                linkTo(methodOn(ReSTQueryController.class).putRSQLQueryContext(contextID, context)).withRel("putRSQLQueryContext"),
+                linkTo(methodOn(ReSTQueryController.class).DeleteQueryResult(contextID)).withRel("DeleteQueryResult")
+        */
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(model);
     }
 
-    @PutMapping(value = "/{queryid}")
-    public ResponseEntity<CollectionModel<OnlyDoc>> putQueryResult(
-            @PathVariable("queryid") String md5,
-            @RequestBody List<String> querys
+    /**
+     * Put替换语义的实现
+     */
+    @PutMapping(value = "/{contextID}")
+    public HttpEntity<ContextModel> putRSQLQueryContext(
+            @PathVariable("contextID") String contextID,
+            @RequestBody List<String> context
     ) {
+        //取出上下文环境
+        if (cache.getContext(contextID) == null) throw new ResourceNotFoundException();
+
         //覆盖上下文环境
-        cache.pushContext(md5, querys);
+        cache.pushContext(contextID, context);
 
-
-        return ResponseEntity.ok(CollectionModel.of(
-                null,
-//                onlyDocList,
-                linkTo(methodOn(ReSTQueryController.class).getQueryResult(md5)).withRel("queryHandler")
-        ));
+        ContextModel model = new ContextModel(contextID, context).add(
+                linkTo(methodOn(ReSTQueryController.class).getRSQLQueryResult(contextID)).withSelfRel()
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).patchRSQLQueryContext(contextID, context)))
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).putRSQLQueryContext(contextID, context)))
+        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(model);
     }
 
-    @GetMapping(value = "/{queryid}")
-    public ResponseEntity<CollectionModel<OnlyDoc>> getQueryResult(
-            @PathVariable("queryid") String queryId
+    /**
+     * Get获取语义的实现
+     */
+    @GetMapping(value = "/{contextID}")
+    public HttpEntity<ContextModel> getRSQLQueryResult(
+            @PathVariable("contextID") String contextID
     ) {
         //读取上下文环境
-        List<String> l = cache.getContext(queryId);
-        l.stream().collect(Collectors.joining(";"));
+        List<String> context = cache.getContext(contextID);
+        //取出上下文环境
+        if (context == null) throw new ResourceNotFoundException();
 
-//        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(queryId)._1;
-        return ResponseEntity.ok(CollectionModel.of(
-                new ArrayList<>(),
-//                onlyDocList,
-                linkTo(methodOn(ReSTQueryController.class)
-                        .getQueryResult(queryId))
-                        .withSelfRel()
-        ));
+
+        List<OnlyDoc> onlyDocList = cache.getOnlyDocListCache(context);
+
+        ContextModel model = new ContextModel(contextID, context, onlyDocList).add(
+                linkTo(methodOn(ReSTQueryController.class).getRSQLQueryResult(contextID)).withSelfRel()
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).patchRSQLQueryContext(contextID, context)))
+                        .andAffordance(afford(methodOn(ReSTQueryController.class).putRSQLQueryContext(contextID, context)))
+        );
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(model);
     }
+
+    /**
+     * Delete删除语义的实现
+     */
+    @DeleteMapping(value = "/{contextID}")
+    public HttpEntity<ContextModel> DeleteQueryResult(
+            @PathVariable("contextID") String contextID
+    ) {
+        //取出上下文环境
+        if (cache.getContext(contextID) == null) throw new ResourceNotFoundException();
+
+        cache.deleteContext(contextID);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public HttpEntity<ContextModel> handleResourceNotFoundException() {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .build();
+    }
+
+
+}
 
 /*
 
@@ -169,7 +198,7 @@ public class ReSTQueryController {
         );
 */
 
-}
+
 
 /*
 

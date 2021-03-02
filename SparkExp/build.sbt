@@ -2,9 +2,9 @@ name := "SparkExp"
 
 version := "0.1"
 
-scalaVersion := "2.12.13"
+scalaVersion := "2.12.11"
 
-useCoursier := false
+//useCoursier := false
 
 logLevel := Level.Debug
 
