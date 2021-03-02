@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -76,7 +77,7 @@ class CacheServiceScalaImplTest {
 
         long startTime = System.currentTimeMillis();
         List<OnlyDoc> l1 = cache.getOnlyDocListCache(p1);
-        l1.forEach(System.out::println);
+//        l1.forEach(System.out::println);
         System.out.printf("如上为 title=re=hadoop 集合 size = %d \n", l1.size());
 
         long t1 = System.currentTimeMillis();
@@ -93,10 +94,8 @@ class CacheServiceScalaImplTest {
     //更复杂的可继承性测试
     @Test
     void pushMoreTest() {
-
-
         List<List<String>> l = new ArrayList<>();
-        l.add(Arrays.asList("title=re=spark"));
+        l.add(Collections.singletonList("title=re=spark"));
         l.add(Arrays.asList("title=re=spark", "year>2015"));
         l.add(Arrays.asList("title=re=spark", "year>2015", "year<=2020"));
         l.add(Arrays.asList("title=re=spark", "type_xml==inproceedings"));
@@ -107,8 +106,6 @@ class CacheServiceScalaImplTest {
             System.out.println("size = " + cache.getOnlyDocListCache(it).size());
             System.out.println(Arrays.toString(it.toArray()));
         });
-
-
     }
 
 }

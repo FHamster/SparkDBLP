@@ -2,7 +2,9 @@
 POST http://localhost:8080/onlyDocs/restquery
 Content-Type: application/json
 
-{"title":"hadoop"}
+["title=re=hadoop"]
+
+###
 
 
 ###
