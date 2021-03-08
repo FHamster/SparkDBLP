@@ -3,11 +3,12 @@ package cn.jmu.spark_dblp.server.service;
 import cn.jmu.spark_dblp.server.dao.OnlyDocDAO;
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Duration;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CacheServiceScalaImplTest {
 
     @Autowired
@@ -27,7 +29,6 @@ class CacheServiceScalaImplTest {
 
     //缓存可继承性测试
     @Test
-    @Repeat(3)
     void pushTest() {
         List<String> p1 = new ArrayList<>();
         p1.add("title=re=hadoop");
