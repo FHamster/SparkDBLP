@@ -23,15 +23,21 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
 
   def last: RSQLFilter[A] = new RSQLFilter(List(l.last), c)
 
+  def isEmpty: Boolean = l.isEmpty
+
+  def nonEmpty: Boolean = l.nonEmpty
+
+  def size: Int = l.size
+
+  def reverse: RSQLFilter[A] = new RSQLFilter(l.reverse, c)
+
   def timeLineL: List[String] = l
 
-  def lexOrderL: List[String] = {
-    def lt = (o1: String, o2: String) => {
-      o1 < o2
-    }
-
-    l.sortWith(lt)
+  private def lt = (o1: String, o2: String) => {
+    o1 < o2
   }
+
+  def lexOrderL: List[String] = l.sortWith(lt)
 
   override def toString: String = this.lexOrderL.toString()
 

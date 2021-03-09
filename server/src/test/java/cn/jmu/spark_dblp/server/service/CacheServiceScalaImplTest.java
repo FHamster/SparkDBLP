@@ -64,8 +64,11 @@ class CacheServiceScalaImplTest {
         l.add(Arrays.asList("title=re=spark", "type_xml==inproceedings", "year>2015"));
 
         l.forEach(it -> {
+            long startTime = System.currentTimeMillis();
             System.out.println("size = " + cache.getOnlyDocListCache(it).size());
+            long endTime = System.currentTimeMillis();
             System.out.println(Arrays.toString(it.toArray()));
+            System.out.println(Duration.ofMillis(endTime-startTime).toString());
         });
     }
 

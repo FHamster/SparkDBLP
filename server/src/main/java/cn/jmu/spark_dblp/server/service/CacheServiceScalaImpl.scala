@@ -1,6 +1,7 @@
 package cn.jmu.spark_dblp.server.service
 
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
+import cn.jmu.spark_dblp.server.util.ADT.RSQLFilter
 import cn.jmu.spark_dblp.server.util.{ConditionUtil, InsensitiveMongoVisitor, InsensitivePredicateVisitor}
 import com.github.rutledgepaulv.qbuilders.builders.GeneralQueryBuilder
 import com.github.rutledgepaulv.qbuilders.conditions.Condition
@@ -32,7 +33,7 @@ class CacheServiceScalaImpl extends CacheService {
      * @return 根据上下文环境返回的结果集
      */
     @tailrec
-    def get(context: List[String], contextBuffer: List[String]): util.List[OnlyDoc] = {
+    def get(context: RSQLFilter[OnlyDoc], contextBuffer: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
       //将timeline顺序的rsql序列序列化以后 parse
 
       //为了保证上下文环境序列在映射缓存结果集的可交换性
@@ -45,7 +46,7 @@ class CacheServiceScalaImpl extends CacheService {
         //尝试查缓存获取结果集
         soRedisTemplate
           .opsForValue()
-          .get(ConditionUtil.Condition2LexOrderString(toJavaList(context)))
+          .get(context.toCacheKey)
           .asInstanceOf[util.List[OnlyDoc]]
       } else {
         //此时上下文结果为空
@@ -56,14 +57,14 @@ class CacheServiceScalaImpl extends CacheService {
       if (result != null) {
         //此时缓存命中
         //根据缓存和buffer进行过滤
-        val restContext = parseCondition(context ++ contextBuffer.reverse)
+        val restContext = context * contextBuffer.reverse
         val temp: util.List[OnlyDoc] = result.parallelStream()
-          .filter(restContext.query(new InsensitivePredicateVisitor[OnlyDoc]()))
+          .filter(restContext toStreamPredicate)
           .collect(Collectors.toList[OnlyDoc])
 
         //加入缓存
         soRedisTemplate.opsForValue().set(
-          generateCacheKey(context, contextBuffer),
+          restContext.toCacheKey,
           temp
         )
         temp
@@ -71,15 +72,15 @@ class CacheServiceScalaImpl extends CacheService {
         //context没有断言的时候查MongoDB
         //TODO 虽然能用，不够优雅，下次闲一点用建造器模式做会好点
 
+        val restContext = context * contextBuffer.reverse
         //MongoDB的操作抽象
-        val c: Criteria = parseCondition(contextBuffer)
-          .query(new InsensitiveMongoVisitor)
+        val c: Criteria = restContext.toMongo
 
         val temp = mongoOps.find(query(c), classOf[OnlyDoc])
 
         //存入缓存
         soRedisTemplate.opsForValue().set(
-          generateCacheKey(context, contextBuffer),
+          restContext toCacheKey,
           temp
         )
         temp
@@ -89,12 +90,15 @@ class CacheServiceScalaImpl extends CacheService {
         //buffer则需要暂存被删去的尾部
         get(
           context.take(context.size - 1),
-          contextBuffer :+ context.last
+          contextBuffer * context.last
         )
       }
     }
     //递归开始
-    get(toScalaList(RSQLContext), List.empty[String])
+    get(
+      RSQLFilter(classOf[OnlyDoc], toScalaList(RSQLContext)),
+      RSQLFilter.apply(classOf[OnlyDoc])
+    )
   }
 
   def pushContext(key: String, context: util.List[String]): Unit = {
