@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-class RSQLTest {
+class RSQLFilterTest {
 
     QueryConversionPipeline pipeline = QueryConversionPipeline.defaultPipeline();
     @Autowired
