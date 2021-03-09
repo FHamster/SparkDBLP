@@ -19,15 +19,9 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
     this.lexOrderL equals that.lexOrderL
   }
 
-  /*
-    private def lexOrderFun(list: List[String]): List[String] = {
-      def lt = (o1: String, o2: String) => {
-        o1 < o2
-      }
+  def take(n: Int): RSQLFilter[A] = new RSQLFilter(l.take(n), c)
 
-      list.sortWith(lt)
-    }
-  */
+  def last: RSQLFilter[A] = new RSQLFilter(List(l.last), c)
 
   def timeLineL: List[String] = l
 
