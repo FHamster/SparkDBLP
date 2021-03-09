@@ -5,9 +5,9 @@ import cn.jmu.spark_dblp.server.entity.OnlyDoc
 trait Monoid[A] {
   def zero: A
 
-  def op(a1: A, a2: A): A
+  def *(a: A): A
 
-  def equal(a1: A, a2: A): Boolean
+  def equal(a: A): Boolean
 }
 
 object Monoid {
@@ -27,19 +27,6 @@ object Monoid {
     }
   }
 */
-  def RSQLMonoid2: Monoid[List[String]] = new Monoid[List[String]] {
-    override def zero: List[String] = scala.collection.immutable.Nil
-
-    override def op(a1: List[String], a2: List[String]): List[String] = a1 ++ a2 distinct
-
-    override def equal(a1: List[String], a2: List[String]): Boolean = {
-      def lt = (o1: String, o2: String) => {
-        o1 < o2
-      }
-
-      a1.sortWith(lt) equals a2.sortWith(lt)
-    }
-  }
 
   /* def listMonoid[A]: Monoid[List[A]] = new Monoid[List[A]] {
      def op(a1: List[A], a2: List[A]): List[A] = a1 ++ a2

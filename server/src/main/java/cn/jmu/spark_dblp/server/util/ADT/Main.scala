@@ -3,21 +3,17 @@ package cn.jmu.spark_dblp.server.util.ADT
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
 
 object Main extends App {
-  val a: RSQL[OnlyDoc] = RSQL("year==2010", classOf[OnlyDoc])
-
-  val al = List(
+  val a1: RSQL = RSQL(classOf[OnlyDoc], "year==2010")
+  val a2: RSQL = RSQL(classOf[OnlyDoc],
     "year==2010",
-    "year==2011"
-  )
-
-  val bl = List(
-    "year==2011",
+    "year==2012")
+  val a3: RSQL = RSQL(classOf[OnlyDoc], List(
+    "year==2012",
     "year==2010"
-  )
+  ))
 
-  val m = Monoid.RSQLMonoid2
+  println(a2 * a3)
+  println(a2 equal a3)
+  println((a1.zero * a1) equal (a1 * a1.zero))
 
-  println(m.op(al, m.zero))
-  println(m.op(al, bl))
-  println(m.equal(al, bl))
 }
