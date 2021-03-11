@@ -260,7 +260,7 @@ public class OnlyDocController {
         return aggClassList;
     }
 
-    @GetMapping(value = "/findAllByTextReturnList")
+    @GetMapping(value = "/findAllByText")
     public ResponseEntity findAllByTitleMatchesTextAllList(
             @RequestParam String title,
             @RequestParam(required = false) String author,
@@ -326,4 +326,44 @@ public class OnlyDocController {
         return ResponseEntity.ok(model);
 
     }
+
+/*    @GetMapping(value = "/findAllByRSQL")
+    public ResponseEntity findAllByRSQL(
+            @RequestParam String title,
+            @RequestParam(required = false) String filter,
+            Pageable pageable,
+            PagedResourcesAssembler<OnlyDoc> assembler
+    ) {
+        Predicate<OnlyDoc> p;
+        if (filter != null) {
+            p = QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc.class)
+                    .query(new InsensitivePredicateVisitor<OnlyDoc>());
+        } else p = it -> true;
+
+        //对service的结果流化
+        Stream<OnlyDoc> parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
+                .filter(p);
+
+
+        //初始化聚合结果list
+        List<OnlyDoc> onlyDocList = parallelStream
+                .sorted((o1, o2) -> Math.toIntExact(o2.getYearOption().orElse(0L) - o1.getYearOption().orElse(0L)))
+                .collect(Collectors.toList());
+
+
+        Page<OnlyDoc> onlyDocPage = new PageImpl<>(
+                onlyDocList.stream()
+                        .skip(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .collect(Collectors.toList()),
+                pageable,
+                onlyDocList.size()
+        );
+
+
+        PagedModel model = assembler.toModel(onlyDocPage);
+
+        return ResponseEntity.ok(model);
+
+    }*/
 }

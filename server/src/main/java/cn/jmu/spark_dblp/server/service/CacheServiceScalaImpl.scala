@@ -2,9 +2,6 @@ package cn.jmu.spark_dblp.server.service
 
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
 import cn.jmu.spark_dblp.server.util.ADT.RSQLFilter
-import cn.jmu.spark_dblp.server.util.{ConditionUtil, InsensitiveMongoVisitor, InsensitivePredicateVisitor}
-import com.github.rutledgepaulv.qbuilders.builders.GeneralQueryBuilder
-import com.github.rutledgepaulv.qbuilders.conditions.Condition
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query.query
 import org.springframework.stereotype.Service
@@ -70,8 +67,6 @@ class CacheServiceScalaImpl extends CacheService {
         temp
       } else if (context.isEmpty) {
         //context没有断言的时候查MongoDB
-        //TODO 虽然能用，不够优雅，下次闲一点用建造器模式做会好点
-
         val restContext = context * contextBuffer.reverse
         //MongoDB的操作抽象
         val c: Criteria = restContext.toMongo
@@ -107,7 +102,6 @@ class CacheServiceScalaImpl extends CacheService {
   }
 
   /**
-   *
    * @param key 作为获取
    * @return 当缓存中不存在key值时候返回null
    */
@@ -135,18 +129,4 @@ class CacheServiceScalaImpl extends CacheService {
       .bufferAsJavaList(l.toBuffer)
   }
 
-  //生成缓存的key
-  def generateCacheKey(context: List[String], contextBuffer: List[String]): String = ConditionUtil
-    .Condition2LexOrderString(
-      toJavaList(context ++ contextBuffer.reverse)
-    )
-
-  //断言语法分析工具
-  def parseCondition: List[String] => Condition[GeneralQueryBuilder] = (l: List[String]) => pipeline
-    .apply(
-      toJavaList(l)
-        .stream
-        .collect(Collectors.joining(";")),
-      classOf[OnlyDoc]
-    )
 }

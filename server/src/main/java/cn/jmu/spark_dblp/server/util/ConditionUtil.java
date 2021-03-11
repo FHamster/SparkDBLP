@@ -15,9 +15,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * 处理Condition的工具
+ * @deprecated 处理RSQL语句的抽象由String改为更安全的RSQLFilter对象，该工具的功能由RSQLFilter实现
+ */
+@Deprecated
 public class ConditionUtil {
-
-
     public static boolean isEqual(Condition<GeneralQueryBuilder> c1, Condition<GeneralQueryBuilder> c2) {
         if (c1 == null && c2 == null) return true;
         else if (c1 == null || c2 == null) return false;

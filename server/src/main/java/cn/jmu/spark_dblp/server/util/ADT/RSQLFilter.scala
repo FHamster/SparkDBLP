@@ -10,11 +10,31 @@ import java.util
 import java.util.function.Predicate
 import scala.annotation.tailrec
 
+/**
+ * RSQL过滤器
+ *
+ * @param l RSQL语句序列，按照插入先后顺序排序
+ * @param c 查询对象的Class
+ * @tparam A 查询对象
+ */
 class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extends Monoid[RSQLFilter[A]] {
+  /**
+   * 代数系统单位元
+   */
   override final def zero: RSQLFilter[A] = new RSQLFilter[A](scala.collection.immutable.Nil, c)
 
+  /**
+   * 代数系统的运算
+   */
   override def *(that: RSQLFilter[A]): RSQLFilter[A] = new RSQLFilter(l ++ that.l distinct, c)
 
+  /**
+   * RSQLRSQLFilter[A]除了满足幺半群的特性以外还满足交换性
+   * 事实上，这是一个交换幺半群
+   * 为了实现交换性在进行比较时统一以自然偏序进行比较
+   *
+   * @return 两个代数元素是否相等
+   */
   override def equal(that: RSQLFilter[A]): Boolean = {
     this.lexOrderL equals that.lexOrderL
   }
@@ -33,29 +53,50 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
 
   def timeLineL: List[String] = l
 
+  /**
+   * 自然偏序的比较器
+   * 自然偏序按照字典序
+   */
   private def lt = (o1: String, o2: String) => {
     o1 < o2
   }
 
+  /**
+   * 字典序的RSQL序列
+   */
   def lexOrderL: List[String] = l.sortWith(lt)
 
   override def toString: String = this.lexOrderL.toString()
 
+  /**
+   * 转换为缓存key的方法
+   *
+   * @return key
+   */
   def toCacheKey: String = toString
 
+  /**
+   * 转换为Java8函数式API的断言（Predicate）
+   *
+   * @return predicate
+   */
   def toStreamPredicate: Predicate[A] = {
     val pVisitor: PredicateVisitor[A] = new InsensitivePredicateVisitor[A]()
-    val string2P: String => Predicate[A] = (l: String) => QueryConversionPipeline.defaultPipeline.apply(l, classOf[OnlyDoc])
+    val string2P: String => Predicate[A] = (l: String) => QueryConversionPipeline.defaultPipeline.apply(l, c)
       .query(pVisitor)
 
     val pTrue: Predicate[A] = _ => true
     l.map(string2P).fold(pTrue)(_ and _)
   }
 
-
+  /**
+   * 转换为MongoDB的查询对象
+   *
+   * @return criteria
+   */
   def toMongo: Criteria = {
     val mVisitor: MongoVisitor = new InsensitiveMongoVisitor()
-    val string2M: String => Criteria = (l: String) => QueryConversionPipeline.defaultPipeline.apply(l, classOf[OnlyDoc])
+    val string2M: String => Criteria = (l: String) => QueryConversionPipeline.defaultPipeline.apply(l, c)
       .query(mVisitor)
 
     def toJL[A]: List[A] => util.List[A] = l => {

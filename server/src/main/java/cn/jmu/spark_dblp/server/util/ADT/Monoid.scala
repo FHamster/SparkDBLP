@@ -1,40 +1,26 @@
 package cn.jmu.spark_dblp.server.util.ADT
 
-import cn.jmu.spark_dblp.server.entity.OnlyDoc
-
+/**
+ * 幺半群代数系统
+ */
 trait Monoid[A] {
+
+  /**
+   * 代数系统的单位元e
+   * 应满足 x*e = e*x = x
+   */
   def zero: A
 
+  /**
+   * 代数系统的操作
+   * 应该满足结合律 (xy)z=x(yz)
+   */
   def *(a: A): A
 
+  /**
+   * 判断代数元素相等的方法
+   *
+   * @return 两个代数元素是否相等
+   */
   def equal(a: A): Boolean
 }
-
-object Monoid {
-  /*
-  def RSQLMonoid[A]: Monoid[List[RSQL[A]]] = new Monoid[List[RSQL[A]]] {
-    override def zero: List[RSQL[A]] = List(RSQL("", classOf[OnlyDoc]))
-
-    override def op(a1: List[RSQL[A]], a2: List[RSQL[A]]): List[RSQL[A]] =
-      a1 ++ a2
-
-    override def equal(a1: List[RSQL[A]], a2: List[RSQL[A]]): Boolean = {
-      def compare = (o1: RSQL[A], o2: RSQL[A]) => {
-        o1.rsql > o2.rsql
-      }
-
-      a1.sortWith(compare) equals a2.sortWith(compare)
-    }
-  }
-*/
-
-  /* def listMonoid[A]: Monoid[List[A]] = new Monoid[List[A]] {
-     def op(a1: List[A], a2: List[A]): List[A] = a1 ++ a2
-
-     val zero: List[Nothing] = scala.collection.immutable.List.empty
-
-     override def equal(a1: List[A], a2: List[A]): Boolean = ???
-   }*/
-
-}
-

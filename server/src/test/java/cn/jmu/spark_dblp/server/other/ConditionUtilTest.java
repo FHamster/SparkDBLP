@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated ConditionUtil已经被废弃
+ */
 class ConditionUtilTest {
     QueryConversionPipeline pipeline = QueryConversionPipeline.defaultPipeline();
 

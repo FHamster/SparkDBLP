@@ -71,6 +71,19 @@ public class OnlyDoc implements Serializable {
 //    @Field
 //    private String type;
 
+
+    public String getPrefix2() {
+        return prefix2;
+    }
+
+    public Long getYear() {
+        return year;
+    }
+
+    public String getType() {
+        return type;
+    }
+
     public Optional<ArrayList<Author>> getAuthorOption() {
         return Optional.ofNullable(author);
     }
