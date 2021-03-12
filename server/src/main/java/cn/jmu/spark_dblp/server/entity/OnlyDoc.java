@@ -84,6 +84,14 @@ public class OnlyDoc implements Serializable {
         return type;
     }
 
+    public String getBooktitle() {
+        return booktitle;
+    }
+
+    public String getJournal() {
+        return journal;
+    }
+
     public Optional<ArrayList<Author>> getAuthorOption() {
         return Optional.ofNullable(author);
     }

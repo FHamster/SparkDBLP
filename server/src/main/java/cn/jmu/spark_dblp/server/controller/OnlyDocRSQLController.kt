@@ -1,6 +1,5 @@
 package cn.jmu.spark_dblp.server.controller
 
-import cn.jmu.spark_dblp.server.entity.AggClass
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
 import cn.jmu.spark_dblp.server.service.OnlyDocService
 import cn.jmu.spark_dblp.server.util.InsensitivePredicateVisitor
@@ -21,8 +20,6 @@ import java.util.function.Predicate
 import java.util.stream.Collectors
 
 @RestController
-//@RequestMapping(value = ["/onlyDocs/search"])
-//@RequestMapping(value = "/onlyDoc")
 @RequestMapping(value = ["/onlyDocs/search"])
 class OnlyDocRSQLController {
     @Autowired
@@ -35,16 +32,12 @@ class OnlyDocRSQLController {
         pageable: Pageable,
         assembler: PagedResourcesAssembler<OnlyDoc>
     ): ResponseEntity<*> {
-        val p: Predicate<OnlyDoc> = if (filter != null) {
-            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
-                .query(InsensitivePredicateVisitor())
-        } else Predicate { true }
+        val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
         val parallelStream: List<OnlyDoc> = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
-
 
         //初始化聚合结果list
         val onlyDocList = parallelStream
@@ -66,50 +59,42 @@ class OnlyDocRSQLController {
         @RequestParam title: String,
         @RequestParam(required = false) filter: String?
     ): List<Pair<String, Int>> {
-        val p: Predicate<OnlyDoc> = if (filter != null) {
-            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
-                .query(InsensitivePredicateVisitor())
-        } else Predicate { true }
+        val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        val parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
-
-        //聚合处理
-        val res = parallelStream.map { it.authorOption.orElse(ArrayList()) }
+            .map { it.authorOption.orElse(ArrayList()) }
             .flatten()
             .groupingBy { it._VALUE }
             .eachCount()
             .toList()
             .sortedWith { it1, it2 -> it2.second - it1.second }
-
-        return res
     }
 
     @GetMapping(value = ["/findPrefix2RefineByRSQL"])
     fun findPrefix2RefineByRSQL(
         @RequestParam title: String?,
         @RequestParam(required = false) filter: String?
-    ): List<Pair<String, Int>> {
-        //初始化聚合结果list
-        val aggClassList: MutableList<AggClass> = LinkedList()
-        //对service的结果流化
-        val p: Predicate<OnlyDoc> = if (filter != null) {
-            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
-                .query(InsensitivePredicateVisitor())
-        } else Predicate { true }
+    ): List<Pair<String, Pair<String, Int>>> {
+        val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        val list = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
             .groupingBy { it.prefix2 }
-            .eachCount()
+            .fold(Pair("", 0), { acc, t ->
+                val a = when {
+                    t.booktitle != null -> t.booktitle
+                    t.journal != null -> t.journal
+                    else -> acc.first
+                }
+                Pair(a, acc.second + 1)
+            })
             .toList()
-            .sortedWith { it1, it2 -> it2.second - it1.second }
-
-        return list
+            .sortedWith { it1, it2 -> it2.second.second - it1.second.second }
     }
 
     @GetMapping(value = ["/findYearRefineByRSQL"])
@@ -117,22 +102,16 @@ class OnlyDocRSQLController {
         @RequestParam title: String?,
         @RequestParam(required = false) filter: String?
     ): List<Pair<Long, Int>> {
-        //初始化聚合结果list
-        //对service的结果流化
-        val p: Predicate<OnlyDoc> = if (filter != null) {
-            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
-                .query(InsensitivePredicateVisitor())
-        } else Predicate { true }
+        val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        val parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
             .groupingBy { it.year }
             .eachCount()
             .toList()
             .sortedWith { it1, it2 -> it2.second - it1.second }
-        return parallelStream
     }
 
     @GetMapping(value = ["/findTypeRefineByRSQL"])
@@ -140,22 +119,24 @@ class OnlyDocRSQLController {
         @RequestParam title: String?,
         @RequestParam(required = false) filter: String?
     ): List<Pair<String, Int>> {
-        //初始化聚合结果list
-        //对service的结果流化
-        val p: Predicate<OnlyDoc> = if (filter != null) {
-            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
-                .query(InsensitivePredicateVisitor())
-        } else Predicate { true }
+        val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        val parallelStream = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
             .groupingBy { it.type }
             .eachCount()
             .toList()
             .sortedWith { it1, it2 -> it2.second - it1.second }
-        return parallelStream
     }
+
+    private fun parse2Predicate(filter: String?): Predicate<OnlyDoc> {
+        return if (filter != null) {
+            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
+                .query(InsensitivePredicateVisitor())
+        } else Predicate { true }
+    }
+
 }
 
