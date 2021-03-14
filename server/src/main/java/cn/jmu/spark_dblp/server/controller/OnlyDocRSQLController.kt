@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -50,6 +51,7 @@ class OnlyDocRSQLController {
             pageable,
             onlyDocList.size.toLong()
         )
+//        val a:CollectionModel<*> = CollectionModel.of()
         val model: PagedModel<*> = assembler.toModel(onlyDocPage)
         return ResponseEntity.ok(model)
     }

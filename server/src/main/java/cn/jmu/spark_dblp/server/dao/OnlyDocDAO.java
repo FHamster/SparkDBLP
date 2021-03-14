@@ -3,7 +3,6 @@ package cn.jmu.spark_dblp.server.dao;
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.Meta;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -50,6 +49,17 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
 
 
     /**
+     * 根据文本索引进行匹配
+     *
+     * @param title 匹配关键字
+     * @return 满足匹配条件的列表
+     */
+//    @Meta(allowDiskUse = true)
+    @Query(value = "{$text: {$search: ?0}}")
+//    @Query(value = "{$text: {$search: ?0}}", sort = "{ year : -1 }")
+    List<OnlyDoc> findAllByText(String title);
+
+    /**
      * 根据prefix2&volume进行精确匹配
      *
      * @param prefix2 精确的prefix2字段
@@ -57,17 +67,6 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
      * @return 匹配成功的列表
      */
     List<OnlyDoc> findAllByPrefix2AndVolume(String prefix2, String volume);
-
-    /**
-     * 根据文本索引进行匹配
-     *
-     * @param title 匹配关键字
-     * @return 满足匹配条件的列表
-     */
-    @Meta(allowDiskUse = true)
-    @Query(value = "{$text: {$search: ?0}}")
-//    @Query(value = "{$text: {$search: ?0}}", sort = "{ year : -1 }")
-    List<OnlyDoc> findAllByText(String title);
 
 
     /**
