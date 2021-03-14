@@ -11,7 +11,7 @@ import property.PropertiesObj
 /**
  * 这个类记录了如何将spark的数据写入mongodb（使用手工设定的Schema,全部写入同一个集合）
  */
-class WriteSubnodeIntoOneDoc extends AnyFunSuite {
+class WriteSubNodeIntoOnlyDoc extends AnyFunSuite {
   val onlyDoc = "onlyDoc"
   val prefixRegex2 = "^(\\S*?)/(\\S*?)/"
   val prefixRegex1 = "^(\\S*?)/"
