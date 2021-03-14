@@ -16,6 +16,7 @@ class WriteAuthor extends AnyFunSuite {
   val onlyDoc = "onlyDoc"
   val DistinctAuthor = "DistinctAuthor"
   val indexPattern = "[\\s(),.]"
+  val dataBaseName = PropertiesObj.dataBaseName
   /**
    * @deprecated 数据源更改为onlydoc，不从xml文件直接读取
    */
@@ -26,7 +27,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -57,7 +58,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
     val opt = ss.read
       .option("rootTag", "dblp")
@@ -85,7 +86,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -115,7 +116,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -145,7 +146,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -174,7 +175,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -205,7 +206,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -234,7 +235,7 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName(s"Write_${subnode}_author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$AuthorTemp")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$AuthorTemp")
       .getOrCreate()
 
     val opt = ss.read
@@ -262,8 +263,8 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName("in")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$DistinctAuthor")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark
@@ -304,8 +305,8 @@ class WriteAuthor extends AnyFunSuite {
       .builder
       .appName("write author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$DistinctAuthor")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark

@@ -5,6 +5,7 @@ import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 import org.apache.spark.sql.functions._
+import property.PropertiesObj
 
 /**
  * 这个类记录了如何将spark的数据写入mongodb（使用手工设定的Schema,全部写入同一个集合）
@@ -13,7 +14,7 @@ class WriteVenue extends AnyFunSuite {
   val onlyDoc = "onlyDoc"
   val venue = "venue"
   val notvenue = "notvenue"
-
+  val dataBaseName = PropertiesObj.dataBaseName
   import util.UDFObject
 
   val writeNotNull: UserDefinedFunction = udf(UDFObject.writeNotNull _)
@@ -26,8 +27,8 @@ class WriteVenue extends AnyFunSuite {
       .builder
       .appName("venue")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.allSet")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.allSet")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark.load(sparkSession)
@@ -55,8 +56,8 @@ class WriteVenue extends AnyFunSuite {
       .builder
       .appName("venue")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$venue")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$venue")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark.load(sparkSession)
@@ -101,8 +102,8 @@ class WriteVenue extends AnyFunSuite {
       .builder
       .appName("venue")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.book&ref")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.book&ref")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark.load(sparkSession)
@@ -143,8 +144,8 @@ class WriteVenue extends AnyFunSuite {
       .builder
       .appName("venue")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.journalIndex")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.journalIndex")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark.load(sparkSession)
@@ -185,8 +186,8 @@ class WriteVenue extends AnyFunSuite {
       .builder
       .appName("venue")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.venueIndex")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.venueIndex")
+      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
       .getOrCreate()
     import sparkSession.implicits._
     val mongoDF: DataFrame = MongoSpark.load(sparkSession)
