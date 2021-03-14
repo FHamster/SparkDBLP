@@ -47,7 +47,7 @@ class RSQLFilterTest {
     void offlineQuery() {
         Condition<GeneralQueryBuilder> condition = pipeline.apply("year>2015", OnlyDoc.class);
         Predicate<OnlyDoc> predicate = condition.query(new PredicateVisitor<>());
-        List<OnlyDoc> docs = dao.findAllByTextReturnListJPA("Hadoop");
+        List<OnlyDoc> docs = dao.findAllByText("Hadoop");
 
         List<OnlyDoc> personsNamedPaulAndAge23 = docs.stream().filter(predicate).collect(toList());
         personsNamedPaulAndAge23.forEach(System.out::println);

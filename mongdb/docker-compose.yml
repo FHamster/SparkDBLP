@@ -6,8 +6,8 @@ services:
     container_name: MongoDB
     ports:
       - "27017:27017"
-#    volumes:
-#      - "./mongodbData:/data/db"
+    volumes:
+      - "./mongodbData:/data/db"
   mongoexpress:
     image: mongo-express
     restart: always

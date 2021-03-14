@@ -83,7 +83,7 @@ class PlayWithRedis {
 
     @Test
     void pushOnlyDocs() {
-        List<OnlyDoc> list = dao.findAllByTextReturnListJPA(sparksql);
+        List<OnlyDoc> list = dao.findAllByText(sparksql);
         System.out.println(list.size());
         cache.soRedisTemplate.opsForValue().set(sparksql, list);
         cache.soRedisTemplate.expire(sparksql, Duration.ofSeconds(10));

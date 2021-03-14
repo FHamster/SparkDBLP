@@ -13,7 +13,8 @@ db.onlyDoc.createIndex({year: -1});
 db.onlyDoc.find({crossref: "conf/southchi/2013chikdd"}).sort({year: -1})
 
 //建立onlyDoc的text索引 使用title作为text索引的分词对象
-db.onlyDoc.createIndex({title: "text", "author._VALUE": "text"});
+-- db.onlyDoc.createIndex({title: "text", "author._VALUE": "text"});
+db.onlyDoc.createIndex({title: "text"});
 //测试onlyDoc的text索引
 db.onlyDoc.find({$text: {$search: "hadoop"}});
 

@@ -30,7 +30,7 @@ public class OnlyDocService {
      */
     @Cacheable(value = "onlyDocTitleCache", key = "#title")
     public List<OnlyDoc> findAllByTitleMatchesTextReturnList(String title) {
-        return dao.findAllByTextReturnListJPA(title);
+        return dao.findAllByText(title);
     }
 
     /**
