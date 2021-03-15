@@ -72,4 +72,17 @@ class RSQLFilterTest {
         Predicate<OnlyDoc> predicate = condition.query(new PredicateVisitor<>());
 
     }
+    @Test
+    void testArrayQuery() {
+        //        Condition<PersonQuery> query = firstName().eq("Paul").or(and(firstName().ne("Richard"), age().gt(22)));
+//        Condition<PersonQuery> q = new PersonQuery().firstName().pattern("Pa*").and().age().eq(23);
+//        Condition<OnlyDoc> q = new PersonQuery().firstName().pattern("/pa*/i");
+//        Condition<PersonQuery> q = new PersonQuery().
+//        System.out.println(q.query(new RSQLVisitor()));
+        Condition<GeneralQueryBuilder> condition = pipeline.apply("author._VALUE=re=abel", OnlyDoc.class);
+        Criteria query = condition.query(new MongoVisitor());
+        System.out.println(query.getCriteriaObject().toJson());
+        Predicate<OnlyDoc> predicate = condition.query(new PredicateVisitor<>());
+
+    }
 }

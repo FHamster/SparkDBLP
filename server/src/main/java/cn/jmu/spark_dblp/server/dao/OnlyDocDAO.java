@@ -54,7 +54,7 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
      * @param title 匹配关键字
      * @return 满足匹配条件的列表
      */
-//    @Meta(allowDiskUse = true)
+//    @Meta(cursorBatchSize = 1000)
     @Query(value = "{$text: {$search: ?0}}")
 //    @Query(value = "{$text: {$search: ?0}}", sort = "{ year : -1 }")
     List<OnlyDoc> findAllByText(String title);

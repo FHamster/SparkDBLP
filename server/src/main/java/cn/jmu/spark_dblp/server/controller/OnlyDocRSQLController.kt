@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
-import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -38,18 +37,17 @@ class OnlyDocRSQLController {
         //对service的结果流化
         val parallelStream: List<OnlyDoc> = service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
+            .sorted { o1: OnlyDoc, o2: OnlyDoc -> Math.toIntExact(o2.yearOption.orElse(0L) - o1.yearOption.orElse(0L)) }
             .collect(Collectors.toList())
 
         //初始化聚合结果list
-        val onlyDocList = parallelStream
-            .sortedWith { o1: OnlyDoc, o2: OnlyDoc -> Math.toIntExact(o2.yearOption.orElse(0L) - o1.yearOption.orElse(0L)) }
         val onlyDocPage: Page<OnlyDoc> = PageImpl(
-            onlyDocList.stream()
+            parallelStream.stream()
                 .skip(pageable.offset)
                 .limit(pageable.pageSize.toLong())
                 .collect(Collectors.toList()),
             pageable,
-            onlyDocList.size.toLong()
+            parallelStream.size.toLong()
         )
 //        val a:CollectionModel<*> = CollectionModel.of()
         val model: PagedModel<*> = assembler.toModel(onlyDocPage)
@@ -66,8 +64,8 @@ class OnlyDocRSQLController {
         //对service的结果流化
         return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
-            .collect(Collectors.toList())
             .map { it.authorOption.orElse(ArrayList()) }
+            .collect(Collectors.toList())
             .flatten()
             .groupingBy { it._VALUE }
             .eachCount()
