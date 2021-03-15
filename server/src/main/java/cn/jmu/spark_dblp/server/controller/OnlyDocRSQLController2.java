@@ -27,6 +27,9 @@ import java.util.stream.Stream;
 //@RequestMapping(value = "/onlyDocs/search")
 //@RequestMapping(value = "/onlyDoc")
 
+/**
+ * @deprecated 使用kotlin实现
+ */
 public class OnlyDocRSQLController2 {
     @Autowired
     OnlyDocService service;
