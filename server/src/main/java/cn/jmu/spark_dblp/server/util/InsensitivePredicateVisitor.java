@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
 
@@ -106,7 +107,7 @@ public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
     private boolean recurseSingle(Object root, String field, ComparisonNode node, BiPredicate<Object, Object> func) {
         //root的空检查
         if (root == null) {
-            return false;
+            return Stream.empty().anyMatch(t -> resolveSingleField(t, field, node, func));
         }
         if (root.getClass().isArray()) {
             return Arrays.stream((Object[]) root).anyMatch(t -> resolveSingleField(t, field, node, func));

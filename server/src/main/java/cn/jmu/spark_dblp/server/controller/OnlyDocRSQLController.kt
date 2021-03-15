@@ -3,6 +3,7 @@ package cn.jmu.spark_dblp.server.controller
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
 import cn.jmu.spark_dblp.server.service.OnlyDocService
 import cn.jmu.spark_dblp.server.util.InsensitivePredicateVisitor
+import com.github.rutledgepaulv.qbuilders.visitors.PredicateVisitor
 import com.github.rutledgepaulv.rqe.pipes.QueryConversionPipeline
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -32,6 +33,7 @@ class OnlyDocRSQLController {
         pageable: Pageable,
         assembler: PagedResourcesAssembler<OnlyDoc>
     ): ResponseEntity<*> {
+        println(filter)
         val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
@@ -133,7 +135,9 @@ class OnlyDocRSQLController {
 
     private fun parse2Predicate(filter: String?): Predicate<OnlyDoc> {
         return if (filter != null) {
-            QueryConversionPipeline.defaultPipeline().apply(filter, OnlyDoc::class.java)
+            QueryConversionPipeline.defaultPipeline()
+                .apply(filter, OnlyDoc::class.java)
+//                .query(PredicateVisitor())
                 .query(InsensitivePredicateVisitor())
         } else Predicate { true }
     }
