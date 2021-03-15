@@ -20,12 +20,12 @@ public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
 
         ComparisonOperator operator = node.getOperator();
 
-        if(ComparisonOperator.EQ.equals(operator)) {
+        if (ComparisonOperator.EQ.equals(operator)) {
             return single(node, this::equality);
-        } else if(ComparisonOperator.NE.equals(operator)) {
+        } else if (ComparisonOperator.NE.equals(operator)) {
             return single(node, this::inequality);
         } else if (ComparisonOperator.EX.equals(operator)) {
-            return ((Boolean)node.getValues().iterator().next()) ? exists(node) : doesNotExist(node);
+            return ((Boolean) node.getValues().iterator().next()) ? exists(node) : doesNotExist(node);
         } else if (ComparisonOperator.GT.equals(operator)) {
             return single(node, this::greaterThan);
         } else if (ComparisonOperator.LT.equals(operator)) {
@@ -54,7 +54,7 @@ public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
 
         if (query instanceof String) {
             String queryRegex = (String) query;
-            test = Pattern.compile(queryRegex,Pattern.CASE_INSENSITIVE).asPredicate();
+            test = Pattern.compile(queryRegex, Pattern.CASE_INSENSITIVE).asPredicate();
         } else {
             return false;
         }
@@ -90,12 +90,12 @@ public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
     }
 
     private boolean resolveSingleField(Object root, String field, ComparisonNode node, BiPredicate<Object, Object> func) {
-        if(root == null || node.getField() == null) {
+        if (root == null || node.getField() == null) {
             return func.test(null, node.getValues().iterator().next());
         } else {
             String[] splitField = field.split("\\.", 2);
             Object currentField = getFieldValueFromString(root, splitField[0]);
-            if(splitField.length == 1) {
+            if (splitField.length == 1) {
                 return func.test(currentField, node.getValues().iterator().next());
             } else {
                 return recurseSingle(currentField, splitField[1], node, func);
@@ -104,25 +104,28 @@ public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
     }
 
     private boolean recurseSingle(Object root, String field, ComparisonNode node, BiPredicate<Object, Object> func) {
-
-        if(root.getClass().isArray()) {
-            return Arrays.stream((Object[])root).anyMatch(t -> resolveSingleField(t, field, node, func));
+        //root的空检查
+        if (root == null) {
+            return false;
+        }
+        if (root.getClass().isArray()) {
+            return Arrays.stream((Object[]) root).anyMatch(t -> resolveSingleField(t, field, node, func));
         }
 
-        if(root instanceof Collection) {
-            return ((Collection<Object>)root).stream().anyMatch(t -> resolveSingleField(t, field, node, func));
+        if (root instanceof Collection) {
+            return ((Collection<Object>) root).stream().anyMatch(t -> resolveSingleField(t, field, node, func));
         }
 
         return resolveSingleField(root, field, node, func);
     }
 
     private boolean resolveMultiField(Object root, String field, ComparisonNode node, BiPredicate<Object, Collection<?>> func) {
-        if(root == null || node.getField() == null) {
+        if (root == null || node.getField() == null) {
             return func.test(null, node.getValues());
         } else {
             String[] splitField = field.split("\\.", 2);
             Object currentField = getFieldValueFromString(root, splitField[0]);
-            if(splitField.length == 1) {
+            if (splitField.length == 1) {
                 return func.test(currentField, node.getValues());
             } else {
                 return recurseMulti(currentField, splitField[1], node, func);
@@ -132,19 +135,19 @@ public class InsensitivePredicateVisitor<T> extends PredicateVisitor<T> {
 
     private boolean recurseMulti(Object root, String field, ComparisonNode node, BiPredicate<Object, Collection<?>> func) {
 
-        if(root.getClass().isArray()) {
-            return Arrays.stream((Object[])root).anyMatch(t -> resolveMultiField(t, field, node, func));
+        if (root.getClass().isArray()) {
+            return Arrays.stream((Object[]) root).anyMatch(t -> resolveMultiField(t, field, node, func));
         }
 
-        if(root instanceof Collection) {
-            return ((Collection<Object>)root).stream().anyMatch(t -> resolveMultiField(t, field, node, func));
+        if (root instanceof Collection) {
+            return ((Collection<Object>) root).stream().anyMatch(t -> resolveMultiField(t, field, node, func));
         }
 
         return resolveMultiField(root, field, node, func);
     }
 
     private Object getFieldValueFromString(Object o, String s) {
-        if(o == null) {
+        if (o == null) {
             return null;
         }
         try {
