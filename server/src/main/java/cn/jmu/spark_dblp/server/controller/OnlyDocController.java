@@ -12,9 +12,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,9 +20,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@RestController
-@RequestMapping(value = "/onlyDocs/search")
+//@RestController
+//@RequestMapping(value = "/onlyDocs/search")
 //@RequestMapping(value = "/onlyDoc")
+
+/**
+ * @deprecated 功能由OnlyDocRSQLController实现
+ */
 public class OnlyDocController {
     @Autowired
     OnlyDocService service;
