@@ -86,5 +86,7 @@ public interface OnlyDocDAO extends MongoRepository<OnlyDoc, String> {
      * @return 匹配成功的OnlyDoc分页
      */
     @Query(value = "{'author._VALUE': ?0}")
-    Page<OnlyDoc> findAllByAuthor__VALUE(String author, Pageable pageable);
+    Page<OnlyDoc> findPageByAuthor__VALUE(String author, Pageable pageable);
+    @Query(value = "{'author._VALUE': ?0}")
+    List<OnlyDoc> findAllByAuthor__VALUE(String author);
 }

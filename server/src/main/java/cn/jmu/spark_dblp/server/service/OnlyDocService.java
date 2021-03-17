@@ -33,12 +33,18 @@ public class OnlyDocService {
         return dao.findAllByText(title);
     }
 
+    @Cacheable(value = "onlyDocAuthorCache", key = "#author")
+    public List<OnlyDoc> findAllByAuthor__VALUE(String author) {
+        return dao.findAllByAuthor__VALUE(author);
+    }
+
     /**
      * 根据year字段使用流过滤
      *
      * @param stream    输入流
      * @param yearArray 条件集合
      * @return 符合过滤条件的流
+     * @deprecated
      */
     public Stream<OnlyDoc> filterByYear(Stream<OnlyDoc> stream, String[] yearArray) {
         return stream.filter(onlyDoc -> {
@@ -54,6 +60,7 @@ public class OnlyDocService {
      * @param stream     输入流
      * @param venueArray 条件集合
      * @return 符合过滤条件的流
+     * @deprecated
      */
     public Stream<OnlyDoc> filterByVenue(Stream<OnlyDoc> stream, String[] venueArray) {
         return stream.filter(onlyDoc -> {
@@ -69,6 +76,7 @@ public class OnlyDocService {
      * @param stream    输入流
      * @param typeArray 条件集合
      * @return 符合过滤条件的流
+     * @deprecated
      */
     public Stream<OnlyDoc> filterByType(Stream<OnlyDoc> stream, String[] typeArray) {
         return stream.filter(onlyDoc -> {
