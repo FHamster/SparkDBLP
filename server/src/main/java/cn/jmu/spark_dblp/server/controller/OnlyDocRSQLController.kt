@@ -81,13 +81,13 @@ class OnlyDocRSQLController {
 
     @GetMapping(value = ["/findPrefix2RefineByRSQL"])
     fun findPrefix2RefineByRSQL(
-        @RequestParam author: String?,
+        @RequestParam title: String?,
         @RequestParam(required = false) filter: String?
     ): List<Pair<String, Pair<String, Int>>> {
         val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        return service.findAllByTitleMatchesTextReturnList(author).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
             .groupingBy { it.prefix2 }
@@ -105,13 +105,13 @@ class OnlyDocRSQLController {
 
     @GetMapping(value = ["/findYearRefineByRSQL"])
     fun findYearRefineByRSQL(
-        @RequestParam author: String?,
+        @RequestParam title: String?,
         @RequestParam(required = false) filter: String?
     ): List<Pair<Long, Int>> {
         val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        return service.findAllByTitleMatchesTextReturnList(author).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
             .groupingBy { it.year }
@@ -122,13 +122,13 @@ class OnlyDocRSQLController {
 
     @GetMapping(value = ["/findTypeRefineByRSQL"])
     fun findTypeRefineByRSQL(
-        @RequestParam author: String?,
+        @RequestParam title: String?,
         @RequestParam(required = false) filter: String?
     ): List<Pair<String, Int>> {
         val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        return service.findAllByTitleMatchesTextReturnList(author).parallelStream()
+        return service.findAllByTitleMatchesTextReturnList(title).parallelStream()
             .filter(p)
             .collect(Collectors.toList())
             .groupingBy { it.type }
