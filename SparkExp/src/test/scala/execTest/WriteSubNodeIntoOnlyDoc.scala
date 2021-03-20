@@ -4,6 +4,7 @@ import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{DataType, StringType}
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 import property.PropertiesObj
@@ -16,10 +17,13 @@ class WriteSubNodeIntoOnlyDoc extends AnyFunSuite {
   val prefixRegex2 = "^(\\S*?)/(\\S*?)/"
   val prefixRegex1 = "^(\\S*?)/"
   val indexPattern = "[\\s(),.]"
+
   import util.UDFObject
 
-  val initDblpType: UserDefinedFunction = udf(UDFObject.dblpType _)
-  val paren2tag: UserDefinedFunction = udf(UDFObject.rtoaAarse _)
+//  val initDblpType: UserDefinedFunction = udf((_publType: String, type_xml: String, prefix1: String) => "S")
+    val initDblpType: UserDefinedFunction = udf(UDFObject.dblpType)
+//  val paren2tag: UserDefinedFunction = udf(_:St => "S")
+    val paren2tag: UserDefinedFunction = udf(UDFObject.rtoaAarse)
   val ipAddress: String = PropertiesObj.ipAddress
   val dataBaseName: String = PropertiesObj.dataBaseName
   test("article") {
@@ -32,6 +36,8 @@ class WriteSubNodeIntoOnlyDoc extends AnyFunSuite {
       .config("spark.mongodb.output.uri", s"mongodb://$ipAddress/$dataBaseName.$onlyDoc")
       .getOrCreate()
 
+    ss.udf.register("initDblpType", initDblpType)
+    ss.udf.register("paren2tag", paren2tag)
     val opt = ss.read
       .option("rootTag", "dblp")
       .option("rowTag", subnode)
@@ -52,7 +58,6 @@ class WriteSubNodeIntoOnlyDoc extends AnyFunSuite {
     MongoSpark.save(opt.write.mode(SaveMode.Append))
     ss.stop()
   }
-
   test("inproceedings") {
     import ss.implicits.StringToColumn
     val subnode = "inproceedings"
