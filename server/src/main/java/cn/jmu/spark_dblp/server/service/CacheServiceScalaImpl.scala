@@ -91,8 +91,8 @@ class CacheServiceScalaImpl extends CacheService {
     }
     //递归开始
     get(
-      RSQLFilter(classOf[OnlyDoc], toScalaList(RSQLContext)),
-      RSQLFilter.apply(classOf[OnlyDoc])
+      RSQLFilter(classOf[OnlyDoc])(toScalaList(RSQLContext)),
+      RSQLFilter.apply(classOf[OnlyDoc])(Nil)
     )
   }
 

@@ -1,6 +1,5 @@
 package cn.jmu.spark_dblp.server.util.ADT
 
-import cn.jmu.spark_dblp.server.entity.OnlyDoc
 import cn.jmu.spark_dblp.server.util.{InsensitiveMongoVisitor, InsensitivePredicateVisitor}
 import com.github.rutledgepaulv.qbuilders.visitors.{MongoVisitor, PredicateVisitor, RSQLVisitor}
 import com.github.rutledgepaulv.rqe.pipes.QueryConversionPipeline
@@ -8,7 +7,6 @@ import org.springframework.data.mongodb.core.query.Criteria
 
 import java.util
 import java.util.function.Predicate
-import scala.annotation.tailrec
 
 /**
  * RSQL过滤器
@@ -17,7 +15,7 @@ import scala.annotation.tailrec
  * @param c 查询对象的Class
  * @tparam A 查询对象
  */
-class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extends Monoid[RSQLFilter[A]] {
+class RSQLFilter[A](private val l: Seq[String], private val c: Class[A]) extends Monoid[RSQLFilter[A]] {
   /**
    * 代数系统单位元
    */
@@ -51,7 +49,7 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
 
   def reverse: RSQLFilter[A] = new RSQLFilter(l.reverse, c)
 
-  def timeLineL: List[String] = l
+  def timeLineL: Seq[String] = l
 
   /**
    * 自然偏序的比较器
@@ -64,7 +62,7 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
   /**
    * 字典序的RSQL序列
    */
-  def lexOrderL: List[String] = l.sortWith(lt)
+  def lexOrderL: Seq[String] = l.sortWith(lt)
 
   override def toString: String = this.lexOrderL.toString()
 
@@ -99,7 +97,7 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
     val string2M: String => Criteria = (l: String) => QueryConversionPipeline.defaultPipeline.apply(l, c)
       .query(mVisitor)
 
-    def toJL[A]: List[A] => util.List[A] = l => {
+    def toJL[A]: Seq[A] => util.List[A] = l => {
       scala
         .collection
         .JavaConverters
@@ -111,32 +109,43 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
 }
 
 object RSQLFilter {
-//  def apply[A](c:Class[A])(rsql: String*):RSQLFilter[A]={}
+  //  def apply[A](c:Class[A])(rsql: String*):RSQLFilter[A]={}
 
-  def apply[A](c: Class[A], rsql: String): RSQLFilter[A] = {
-    QueryConversionPipeline.defaultPipeline()(rsql, c).query(new RSQLVisitor())
-    new RSQLFilter(List(rsql), c)
-  }
+  /*  def apply[A](c: Class[A], rsql: String): RSQLFilter[A] = {
+      QueryConversionPipeline.defaultPipeline()(rsql, c).query(new RSQLVisitor())
+      new RSQLFilter(List(rsql), c)
+    }*/
+  /*
 
-  def apply[A](c: Class[A], rsql: String*): RSQLFilter[A] = {
-    @tailrec
-    def check(rsql: String*): Unit =
-      if (rsql.isEmpty) Unit
-      else {
-        QueryConversionPipeline.defaultPipeline()(rsql.head, c).query(new RSQLVisitor())
-        check(rsql.tail: _*)
-      }
+    def apply[A](c: Class[A], rsql: String*): RSQLFilter[A] = {
+      @tailrec
+      def check(rsql: String*): Unit =
+        if (rsql.isEmpty) Unit
+        else {
+          QueryConversionPipeline.defaultPipeline()(rsql.head, c).query(new RSQLVisitor())
+          check(rsql.tail: _*)
+        }
 
-    check(rsql: _*)
-    new RSQLFilter(rsql.toList, c)
-  }
+      check(rsql: _*)
+      new RSQLFilter(rsql.toList, c)
+    }
 
-  def apply[A](c: Class[A], rsql: List[String]): RSQLFilter[A] = {
+  */
+  def apply[A](c: Class[A]): Seq[String] => RSQLFilter[A]
+  = (rsql: Seq[String]) => {
     rsql.foreach(QueryConversionPipeline.defaultPipeline()(_, c).query(new RSQLVisitor()))
     new RSQLFilter(rsql, c)
   }
 
-  def apply[A](c: Class[A]): RSQLFilter[A] = {
-    new RSQLFilter[A](scala.collection.immutable.Nil, c)
-  }
+
+  /*
+
+    def apply[A](c: Class[A]): RSQLFilter[A] = {
+      new RSQLFilter[A](scala.collection.immutable.Nil, c)
+    }
+  */
 }
+
+//object RSQLFilterAbstractFactory {
+//  def apply(): RSQLFilterAbstractFactory = new RSQLFilterAbstractFactory()
+//}

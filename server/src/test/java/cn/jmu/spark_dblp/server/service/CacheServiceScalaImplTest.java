@@ -1,6 +1,5 @@
 package cn.jmu.spark_dblp.server.service;
 
-import cn.jmu.spark_dblp.server.dao.OnlyDocDAO;
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -24,9 +23,6 @@ class CacheServiceScalaImplTest {
 
     @Autowired
     CacheServiceScalaImpl cache;
-    @Autowired
-    OnlyDocDAO dao;
-
     //缓存可继承性测试
     @Test
     void pushTest() {
@@ -68,7 +64,7 @@ class CacheServiceScalaImplTest {
             System.out.println("size = " + cache.getOnlyDocListCache(it).size());
             long endTime = System.currentTimeMillis();
             System.out.println(Arrays.toString(it.toArray()));
-            System.out.println(Duration.ofMillis(endTime-startTime).toString());
+            System.out.println(Duration.ofMillis(endTime - startTime).toString());
         });
     }
 

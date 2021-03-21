@@ -3,11 +3,12 @@ package cn.jmu.spark_dblp.server.util.ADT
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
 
 object Main extends App {
-  val a1: RSQLFilter[OnlyDoc] = RSQLFilter(classOf[OnlyDoc], "year==2010","title=re=hadoop")
-  val a2: RSQLFilter[OnlyDoc] = RSQLFilter(classOf[OnlyDoc],
+  val con = RSQLFilter(classOf[OnlyDoc])
+  val a1: RSQLFilter[OnlyDoc] = con(List("year==2010", "title=re=hadoop"))
+  val a2: RSQLFilter[OnlyDoc] = con(List(
     "year==2010",
-    "year==2012")
-  val a3: RSQLFilter[OnlyDoc] = RSQLFilter(classOf[OnlyDoc], List(
+    "year==2012"))
+  val a3: RSQLFilter[OnlyDoc] = con(List(
     "year==2012",
     "year==2010"
   ))
