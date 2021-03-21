@@ -150,7 +150,7 @@ class OnlyDocRSQLController {
         val p: Predicate<OnlyDoc> = parse2Predicate(filter)
 
         //对service的结果流化
-        val parallelStream: List<OnlyDoc> = service.findAllByTitleMatchesTextReturnList(author).parallelStream()
+        val parallelStream: List<OnlyDoc> = service.findAllByAuthor__VALUE(author).parallelStream()
             .filter(p)
             .sorted { o1: OnlyDoc, o2: OnlyDoc -> Math.toIntExact(o2.yearOption.orElse(0L) - o1.yearOption.orElse(0L)) }
             .collect(Collectors.toList())

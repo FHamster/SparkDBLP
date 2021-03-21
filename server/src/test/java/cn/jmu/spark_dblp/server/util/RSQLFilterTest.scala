@@ -39,4 +39,5 @@ class RSQLFilterTest extends AnyFunSuite {
   test("monoid e ") {
     assert((e * rsql1) equal (rsql1 * e))
   }
+
 }

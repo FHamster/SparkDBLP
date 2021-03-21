@@ -2,51 +2,56 @@ package script
 
 import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
+import com.mongodb.spark.config.ReadConfig
+import com.mongodb.spark.sql.toSparkSessionFunctions
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import property.PropertiesObj
+import script.AuthorScript.DistinctAuthor
 
 /**
  * 导入数据的执行脚本
  */
 object ExecScript {
+  val onlyDoc = "onlyDoc"
   val prefixRegex2 = "^(\\S*?)/(\\S*?)/"
   val prefixRegex1 = "^(\\S*?)/"
-  val onlyDoc = "onlyDoc"
-  val DistinctAuthor = "DistinctAuthor"
-  val venue = "venue"
-  //  val AuthorTemp = "AuthorTemp"
+  val indexPattern = "[\\s(),.]"
 
   import util.UDFObject
 
-  val writeNotNull: UserDefinedFunction = udf(UDFObject.writeNotNull _)
-  val initDblpType: UserDefinedFunction = udf(UDFObject.dblpType _)
-  val paren2tag: UserDefinedFunction = udf(UDFObject.rtoaAarse _)
-
+  //  val initDblpType: UserDefinedFunction = udf((_publType: String, type_xml: String, prefix1: String) => "S")
+  val initDblpType: UserDefinedFunction = udf(UDFObject.dblpType)
+  //  val paren2tag: UserDefinedFunction = udf((_:String) => "S")
+  val paren2tag: UserDefinedFunction = udf(UDFObject.rtoaAarse)
+  val ipAddress: String = PropertiesObj.ipAddress
+  val dataBaseName: String = PropertiesObj.dataBaseName
 
   def main(args: Array[String]): Unit = {
     Logger.getRootLogger.setLevel(Level.INFO)
-//    writeOnlydoc()
-//    writeVenue()
+    writeOnlydoc()
+    //    writeVenue()
     writeAuthor()
   }
 
   def writeOnlydoc(): Unit = {
     //写入所有子节点到多个集合
     SparkSession.builder()
-    PropertiesObj.subNode.foreach(subnode => {
-      import ss.implicits.StringToColumn
-      val ss: SparkSession = SparkSession
-        .builder
-        .appName(s"writeIntoOnlydoc_$subnode")
-        .master("local[*]")
-        .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
-        .getOrCreate()
-        .newSession()
 
-      val opt = ss.read
+    val subnode = "article"
+    val spark: SparkSession = SparkSession
+      .builder
+      .appName(s"writeIntoOnlydoc_$subnode")
+      .master("local[*]")
+      .config("spark.mongodb.output.uri", s"mongodb://$ipAddress/$dataBaseName.$onlyDoc")
+      .getOrCreate()
+    import spark.implicits.StringToColumn
+    PropertiesObj.subNode.foreach(subnode => {
+
+
+      val onlyDoc = spark.read
         .option("rootTag", "dblp")
         .option("rowTag", subnode)
         .schema(PropertiesObj.articleSchema)
@@ -58,29 +63,30 @@ object ExecScript {
         .withColumn("cvtTitle", paren2tag($"title"))
         .drop($"title")
         .withColumnRenamed("cvtTitle", "title")
+        .withColumn("prefixIndex", split($"title", indexPattern))
 
-      MongoSpark.save(opt.write.mode(SaveMode.Append))
-      Logger.getLogger("UserLogger").info(s"write $subnode into mongodb")
-      ss.stop()
+      println(s"write $subnode into mongodb")
+      //      opt.show()
+      //      opt.printSchema()
+      MongoSpark.save(onlyDoc.write.option("collection", "onlyDoc").mode(SaveMode.Append))
+
+      //      MongoSpark.save(onlyDoc.write.mode(SaveMode.Append))
     })
 
   }
 
   def writeAuthor(): Unit = {
-    //对author去重，并存入DistinctAuthor集合
-    SparkSession.clearActiveSession()
-    val sparkSession: SparkSession = SparkSession
+    val spark: SparkSession = SparkSession
       .builder
       .appName("write author")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$DistinctAuthor")
-      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
+      //      .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
+      //      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$DistinctAuthor")
       .getOrCreate()
-      .newSession()
-    import sparkSession.implicits._
-
-    val mongoDF: DataFrame = MongoSpark
-      .load(sparkSession)
+    import spark.implicits._
+    val mongoDF: DataFrame = spark.loadFromMongoDB(ReadConfig(
+      Map("uri" -> s"mongodb://$ipAddress/$dataBaseName.$onlyDoc")
+    ))
       .select($"author")
       .filter($"author" isNotNull)
       .select(explode($"author") as "author")
@@ -101,16 +107,17 @@ object ExecScript {
     val joinedRow = orcidNull
       .join(orcidNotNull, $"_VALUE" === $"noUseVALUE", "leftouter")
       .select($"_VALUE", $"_orcid")
+      .withColumn("prefixIndex", split($"_VALUE", indexPattern))
     //      .select($"_VALUE", $"_orcid", $"_aux")
     //      .cache()
     //    joinedRow.show()
     //    joinedRow.printSchema()
     //    joinedRow.filter($"_orcid".isNotNull).show(300)
-    MongoSpark.save(joinedRow.write.mode(SaveMode.Overwrite))
-    Logger.getLogger("UserLogger").info(s"writing author into mongodb")
+
+    MongoSpark.save(joinedRow.write.option("collection", s"$DistinctAuthor").mode(SaveMode.Overwrite))
   }
 
-  def writeVenue(): Unit = {
+/*  def writeVenue(): Unit = {
     //venue group
 
     SparkSession.clearActiveSession()
@@ -118,7 +125,7 @@ object ExecScript {
       .builder
       .appName("venue group")
       .master("local[*]")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$venue")
+//      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$venue")
       .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/SparkDBLPTest.$onlyDoc")
       .getOrCreate()
       .newSession()
@@ -151,5 +158,5 @@ object ExecScript {
     )
     MongoSpark.save(crossReffed.write.mode(SaveMode.Overwrite))
     Logger.getLogger("UserLogger").info(s"writing venue into mongodb")
-  }
+  }*/
 }

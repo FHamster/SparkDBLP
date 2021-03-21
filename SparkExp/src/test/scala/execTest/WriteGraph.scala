@@ -79,7 +79,7 @@ class WriteGraph extends AnyFunSuite {
           .foreach(println(_))*/
 
     //194289476
-    println(edges.count())
+//    println(edges.count())
 
     MongoSpark.save(edges.write.mode(SaveMode.Overwrite))
   }
@@ -89,7 +89,7 @@ class WriteGraph extends AnyFunSuite {
       .appName("write graph")
       .master("local[*]")
       .config("spark.mongodb.input.uri", s"mongodb://127.0.0.1/$dataBaseName.$onlyDoc")
-      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.vertex")
+      //      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.vertex")
       //      .config("spark.mongodb.output.uri", s"mongodb://127.0.0.1/$dataBaseName.$graphDB")
       .getOrCreate()
 
@@ -107,7 +107,10 @@ class WriteGraph extends AnyFunSuite {
     //194289476
     println(vertexes.count())
 
-    MongoSpark.save(vertexes.write.mode(SaveMode.Overwrite))
+    MongoSpark.save(vertexes.write
+        .option("uri", s"mongodb://127.0.0.1/$dataBaseName.vertex")
+        .mode(SaveMode.Overwrite)
+    )
   }
 
   test("write graph") {
@@ -138,7 +141,7 @@ class WriteGraph extends AnyFunSuite {
 
   test("1") {
     val ranks: VertexRDD[Double] = GraphScript.graph
-      .pageRank(0.001)
+      .pageRank(0.0001)
       .vertices
 
     val spark: SparkSession = SparkSession
@@ -147,16 +150,21 @@ class WriteGraph extends AnyFunSuite {
       .config("spark.executor.memory", "8g")
       .master("local[*]")
       .getOrCreate()
-//    ranks.sample(withReplacement = true, 0.1, 123)
-//      .foreach(it => println((it._1, it._2)))
+    //    ranks.sample(withReplacement = true, 0.1, 123)
+    //      .foreach(it => println((it._1, it._2)))
     val dfRDD = spark.createDataFrame(ranks).toDF("id", "rank")
 
     //      .map(it => Row(it._1:Long, it._2:Double))
     //      .toDF()
     //      .
-    MongoSpark.save(dfRDD.write.option("collection", "rank").mode(SaveMode.Overwrite))
+    //    spark.mongodb.output.uri
+    MongoSpark.save(
+      dfRDD.write
+        .option("uri", s"mongodb://127.0.0.1/$dataBaseName.pageRankVertex")
+        .mode(SaveMode.Overwrite)
+    )
 
-//    MongoSpark.save(dfRDD.write.mode(SaveMode.Overwrite))
+    //    MongoSpark.save(dfRDD.write.mode(SaveMode.Overwrite))
     //    println("Reading from the 'hundredClub' collection:")
     //    MongoSpark.load[Character](sparkSession, ReadConfig(Map("collection" -> "hundredClub"), Some(ReadConfig(sparkSession)))).show()
   }

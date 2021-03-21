@@ -111,6 +111,8 @@ class RSQLFilter[A](private val l: List[String], private val c: Class[A]) extend
 }
 
 object RSQLFilter {
+//  def apply[A](c:Class[A])(rsql: String*):RSQLFilter[A]={}
+
   def apply[A](c: Class[A], rsql: String): RSQLFilter[A] = {
     QueryConversionPipeline.defaultPipeline()(rsql, c).query(new RSQLVisitor())
     new RSQLFilter(List(rsql), c)
