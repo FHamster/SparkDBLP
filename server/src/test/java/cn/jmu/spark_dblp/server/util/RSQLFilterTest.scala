@@ -42,6 +42,7 @@ class RSQLFilterTest extends AnyFlatSpec {
   }
   it should "have a identity e" in {
     assert((e * rsql1) equal (rsql1 * e))
+    assert((rsql1 * e) equal rsql1)
   }
 
   it can "be translated to String" in {
