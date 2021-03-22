@@ -39,10 +39,9 @@ class WriteGraph extends AnyFunSuite {
       .filter($"author" isNotNull)
       .select($"author", $"title")
     //      .cache()
-    val vertexes = onlyDocRDD
-      .select(explode($"author._VALUE") as "AuthorName")
-      .distinct()
-      .withColumn("id", monotonically_increasing_id())
+    val vertexes = sparkSession.loadFromMongoDB(ReadConfig(
+      Map("uri" -> s"mongodb://localhost/SparkDBLP.vertex")
+    ))
 
 
     val nodeAndEdges = onlyDocRDD.select(explode($"author._VALUE") as "author", $"title")
@@ -139,7 +138,7 @@ class WriteGraph extends AnyFunSuite {
     //    graph.
   }
 
-  test("1") {
+  test("pagerank") {
     val ranks: VertexRDD[Double] = GraphScript.graph
       .pageRank(0.0001)
       .vertices
