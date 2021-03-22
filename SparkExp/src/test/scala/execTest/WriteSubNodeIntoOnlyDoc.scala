@@ -4,7 +4,6 @@ import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{DataType, StringType}
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.scalatest.funsuite.AnyFunSuite
 import property.PropertiesObj

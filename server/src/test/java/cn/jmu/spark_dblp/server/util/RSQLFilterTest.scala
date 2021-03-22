@@ -2,10 +2,13 @@ package cn.jmu.spark_dblp.server.util
 
 import cn.jmu.spark_dblp.server.entity.OnlyDoc
 import cn.jmu.spark_dblp.server.util.ADT.RSQLFilter
-import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.flatspec.AnyFlatSpec
+import org.springframework.data.mongodb.core.query.Criteria
+
+import java.util.function.Predicate
 
 
-class RSQLFilterTest extends AnyFunSuite {
+class RSQLFilterTest extends AnyFlatSpec {
   val con: Seq[String] => RSQLFilter[OnlyDoc] = RSQLFilter(classOf[OnlyDoc])
 
   val rsql1: RSQLFilter[OnlyDoc] = con(List(
@@ -27,19 +30,33 @@ class RSQLFilterTest extends AnyFunSuite {
     "title<=2020"
   ))
 
-  val e: RSQLFilter[OnlyDoc] = con(List.empty)
+  val e: RSQLFilter[OnlyDoc] = con(Nil)
 
-  test("Commutative Monoid multiplication commutativity") {
+  "A RSQLFilter Commutative Monoid" should "satisfy multiplication commutativity" in {
     assert(rsql2 equal rsql1)
   }
-  test("monoid multiplication associativity") {
+  it should "satisfy multiplication associativity" in {
     assert(
       ((rsql3 * rsql4) * rsql5) equal (rsql3 * (rsql4 * rsql5))
     )
   }
-  test("monoid e ") {
+  it should "have a identity e" in {
     assert((e * rsql1) equal (rsql1 * e))
   }
 
+  it can "be translated to String" in {
+    assume(rsql1.toString.isInstanceOf[String])
+  }
 
+  it can "be translated to Java Predicate" in {
+    assume(rsql1.toStreamPredicate.isInstanceOf[Predicate[OnlyDoc]])
+  }
+
+  it can "be translated to MongoDB Criteria" in {
+    assume(rsql1.toMongo.isInstanceOf[Criteria])
+  }
+
+  it can "be translated to Cache Key" in {
+    assume(rsql1.toString.isInstanceOf[String])
+  }
 }

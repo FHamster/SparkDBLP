@@ -9,7 +9,7 @@ trait Monoid[A] {
    * 代数系统的单位元e
    * 应满足 x*e = e*x = x
    */
-  def zero: A
+  def e: A
 
   /**
    * 代数系统的操作

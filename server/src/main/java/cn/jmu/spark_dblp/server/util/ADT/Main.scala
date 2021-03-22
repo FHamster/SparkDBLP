@@ -15,7 +15,7 @@ object Main extends App {
 
   println(a2 * a3)
   println(a2 equal a3)
-  println((a1.zero * a1) equal (a1 * a1.zero))
+  println((a1.e * a1) equal (a1 * a1.e))
 
 
   val af = a1.toStreamPredicate

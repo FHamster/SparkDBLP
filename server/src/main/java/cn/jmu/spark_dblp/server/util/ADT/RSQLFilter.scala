@@ -19,7 +19,7 @@ class RSQLFilter[A](private val l: Seq[String], private val c: Class[A]) extends
   /**
    * 代数系统单位元
    */
-  override final def zero: RSQLFilter[A] = new RSQLFilter[A](scala.collection.immutable.Nil, c)
+  def e: RSQLFilter[A] = new RSQLFilter[A](scala.collection.immutable.Nil, c)
 
   /**
    * 代数系统的运算
@@ -29,7 +29,7 @@ class RSQLFilter[A](private val l: Seq[String], private val c: Class[A]) extends
   /**
    * RSQLRSQLFilter[A]除了满足幺半群的特性以外还满足交换性
    * 事实上，这是一个交换幺半群
-   * 为了实现交换性在进行比较时统一以自然偏序进行比较
+   * 为了实现交换性在进行相等运算时时以统一顺序进行比较
    *
    * @return 两个代数元素是否相等
    */
@@ -109,43 +109,11 @@ class RSQLFilter[A](private val l: Seq[String], private val c: Class[A]) extends
 }
 
 object RSQLFilter {
-  //  def apply[A](c:Class[A])(rsql: String*):RSQLFilter[A]={}
-
-  /*  def apply[A](c: Class[A], rsql: String): RSQLFilter[A] = {
-      QueryConversionPipeline.defaultPipeline()(rsql, c).query(new RSQLVisitor())
-      new RSQLFilter(List(rsql), c)
-    }*/
-  /*
-
-    def apply[A](c: Class[A], rsql: String*): RSQLFilter[A] = {
-      @tailrec
-      def check(rsql: String*): Unit =
-        if (rsql.isEmpty) Unit
-        else {
-          QueryConversionPipeline.defaultPipeline()(rsql.head, c).query(new RSQLVisitor())
-          check(rsql.tail: _*)
-        }
-
-      check(rsql: _*)
-      new RSQLFilter(rsql.toList, c)
-    }
-
-  */
   def apply[A](c: Class[A]): Seq[String] => RSQLFilter[A]
   = (rsql: Seq[String]) => {
     rsql.foreach(QueryConversionPipeline.defaultPipeline()(_, c).query(new RSQLVisitor()))
     new RSQLFilter(rsql, c)
   }
 
-
-  /*
-
-    def apply[A](c: Class[A]): RSQLFilter[A] = {
-      new RSQLFilter[A](scala.collection.immutable.Nil, c)
-    }
-  */
+  def gete[A](c: Class[A]) = new RSQLFilter[A](scala.collection.immutable.Nil, c)
 }
-
-//object RSQLFilterAbstractFactory {
-//  def apply(): RSQLFilterAbstractFactory = new RSQLFilterAbstractFactory()
-//}
