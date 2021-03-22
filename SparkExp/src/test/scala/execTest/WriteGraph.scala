@@ -112,32 +112,6 @@ class WriteGraph extends AnyFunSuite {
     )
   }
 
-  test("write graph") {
-    val sparkSession: SparkSession = SparkSession
-      .builder
-      .appName("write graph")
-      .config("spark.executor.memory", "4g")
-      .master("local[*]")
-      .getOrCreate()
-
-    import sparkSession.implicits._
-
-    val vertices = sparkSession.loadFromMongoDB(ReadConfig(
-      Map("uri" -> s"mongodb://localhost/$dataBaseName.vertex")
-    )).select($"id", $"AuthorName")
-      .rdd
-      .map(it => (it.getLong(0), it.getString(1)))
-
-    val edges = sparkSession.loadFromMongoDB(ReadConfig(
-      Map("uri" -> s"mongodb://localhost/$dataBaseName.edges")
-    )).select($"fromId", $"toId", $"title")
-      .rdd
-      .map(it => Edge(it.getLong(0), it.getLong(1), it.getString(2)))
-
-    val graph = Graph(vertices = vertices, edges = edges)
-    //    graph.
-  }
-
   test("pagerank") {
     val ranks: VertexRDD[Double] = GraphScript.graph
       .pageRank(0.0001)
