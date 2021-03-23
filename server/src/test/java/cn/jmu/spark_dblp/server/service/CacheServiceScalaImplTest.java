@@ -58,6 +58,7 @@ class CacheServiceScalaImplTest {
         l.add(Arrays.asList("title=re=spark", "type_xml==inproceedings"));
         l.add(Arrays.asList("title=re=spark", "year>2015", "type_xml==inproceedings"));
         l.add(Arrays.asList("title=re=spark", "type_xml==inproceedings", "year>2015"));
+        l.add(Arrays.asList( "year>2015", "type_xml==inproceedings","title=re=spark"));
 
         l.forEach(it -> {
             long startTime = System.currentTimeMillis();
