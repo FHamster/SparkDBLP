@@ -32,7 +32,7 @@ class RSQLFilterTest extends AnyFlatSpec {
 
   val e: RSQLFilter[OnlyDoc] = con(Nil)
 
-  "A RSQLFilter Commutative Monoid" should "satisfy multiplication commutativity" in {
+  "A RSQLFilter Commutative Monoid" should "unsorted" in {
     assert(rsql2 equal rsql1)
   }
   it should "satisfy multiplication associativity" in {
