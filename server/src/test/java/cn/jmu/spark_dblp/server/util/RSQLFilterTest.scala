@@ -35,11 +35,13 @@ class RSQLFilterTest extends AnyFlatSpec {
   "A RSQLFilter Commutative Monoid" should "unsorted" in {
     assert(rsql2 equal rsql1)
   }
+
   it should "satisfy multiplication associativity" in {
     assert(
       ((rsql3 * rsql4) * rsql5) equal (rsql3 * (rsql4 * rsql5))
     )
   }
+
   it should "have a identity e" in {
     assert((e * rsql1) equal (rsql1 * e))
     assert((rsql1 * e) equal rsql1)
