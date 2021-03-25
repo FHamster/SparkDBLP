@@ -12,7 +12,7 @@ import java.util.stream.Collectors
 import scala.annotation.tailrec
 
 
-//@Service
+@Service
 class CacheServiceScalaPlainImpl extends CacheService {
   /**
    * 通过RSQL的上下文环境获取结果集
@@ -23,34 +23,51 @@ class CacheServiceScalaPlainImpl extends CacheService {
   override def getOnlyDocListCache(RSQLContext: util.List[String]): util.List[OnlyDoc] = {
     // 缓存格式
     // 字典序context=>结果集
-    def get(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] =
+    def get(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
+      //将timeline顺序的rsql序列序列化以后 parse
+
+      //为了保证上下文环境序列在映射缓存结果集的可交换性
+      //这里要求使用字典序的字符串形式（关键是顺序要统一）
+      //因为如果把集合作为key映射的时候由于集合无序性一个value会被多个key映射
+      //会很麻烦
+      val result: util.List[OnlyDoc] =
       if (context.nonEmpty) {
         //上下文环境非空的时候
         //尝试查缓存获取结果集
+        readCache(context)
         /*soRedisTemplate
           .opsForValue()
           .get(context.toCacheKey)
-          .asInstanceOf[util.List[OnlyDoc]]*/
-        readCache(context)
+          .asInstanceOf[util.List[OnlyDoc]]
+        */
       } else {
+        //此时上下文结果为空
+        null
+      }
+
+
+      if (result != null) {
+        //此时缓存命中
+        //根据缓存和buffer进行过滤
+        result
+      } else  {
         //context没有断言的时候查MongoDB
         val restContext = context
         //MongoDB的操作抽象
-
-        val temp = readDB(restContext)
-        /*
-        val c: Criteria = restContext.toMongo
+        /*val c: Criteria = restContext.toMongo
         val temp = mongoOps.find(query(c), classOf[OnlyDoc])
-*/
+        */
+        val temp = readDB(restContext)
+
         //存入缓存
-        writeCache(restContext, temp)
+        writeCache(restContext,temp)
         /*soRedisTemplate.opsForValue().set(
           restContext toCacheKey,
           temp
         )*/
         temp
       }
-
+    }
     get(RSQLFilter(classOf[OnlyDoc])(toScalaList(RSQLContext)))
 
   }
@@ -63,14 +80,19 @@ class CacheServiceScalaPlainImpl extends CacheService {
     )
   }
 
-   def readCache(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
-    soRedisTemplate
+  def readCache(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
+    val temp = soRedisTemplate
       .opsForValue()
       .get(context.toCacheKey)
       .asInstanceOf[util.List[OnlyDoc]]
+    if (temp != null) {
+      println("cache hit")
+    }
+    temp
   }
 
-   def readDB(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
+  def readDB(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
+    println("cache miss")
     val c: Criteria = context.toMongo
     mongoOps.find(query(c), classOf[OnlyDoc])
   }
