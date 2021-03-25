@@ -1,24 +1,22 @@
 package cn.jmu.spark_dblp.server.service;
 
 import cn.jmu.spark_dblp.server.dao.WordCountDAO;
-import cn.jmu.spark_dblp.server.entity.Authors;
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import cn.jmu.spark_dblp.server.entity.WordCount;
 import cn.jmu.spark_dblp.server.entity.sub.Author;
-import cn.jmu.spark_dblp.server.rsqlcache.ConditionGenerator;
+import cn.jmu.spark_dblp.server.rsqlcache.TimingMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 class CacheServiceScalaImplTest {
 
     @Autowired
+//    CacheServiceScalaPlainImpl cache;
     CacheServiceScalaImpl cache;
     @Autowired
     WordCountDAO wcDao;
@@ -97,76 +96,83 @@ class CacheServiceScalaImplTest {
         List<String> keyWordList = wcDao.findAll().stream()
                 .sorted((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()))
                 .map(WordCount::getWord)
-                .skip(1000)
+                .skip(10000)
                 .limit(100)
                 .collect(Collectors.toList());
+
+        Function<List<String>, List<OnlyDoc>> c = (list) -> cache.getOnlyDocListCache(list);
+        TimingMap<List<String>, List<OnlyDoc>> t1 = new TimingMap<>(c);
         for (String it : keyWordList) {
-            for (int i = 0; i < random.nextInt(8); i++) {
+            int repeat = 1 + random.nextInt(3);
+            for (int i = 0; i < repeat; i++) {
                 try {
                     //添加title字段
                     RSQLList.add("title=re=" + it);
-                    RSQLList.toArray();
-                    long startTime = System.currentTimeMillis();
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
-                    long endTime = System.currentTimeMillis();
-                    System.out.println(Duration.ofMillis(endTime - startTime).toString());
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
+                    if (onlyDocList.size() <= 1) throw new Exception();
 
                     //添加prefix1
                     String prefix1 = onlyDocList.get(random.nextInt(onlyDocList.size())).getPrefix1();
                     RSQLList.add("prefix1==" + prefix1);
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     //添加type
                     String type = onlyDocList.get(random.nextInt(onlyDocList.size())).getType();
                     RSQLList.add(String.format("type==\"%s\"", type));
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     //添加year1字段 下限
                     String year1 = onlyDocList.get(random.nextInt(onlyDocList.size())).getYear().toString();
                     RSQLList.add("year>=" + year1);
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     //添加year1字段 上限
                     String year2 = onlyDocList.get(random.nextInt(onlyDocList.size())).getYear().toString();
                     RSQLList.add("year<=" + year2);
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     //添加prefix2
                     String prefix2 = onlyDocList.get(random.nextInt(onlyDocList.size())).getPrefix2();
                     RSQLList.add("prefix2==" + prefix2);
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     //添加author
                     List<Author> authorList;
                     authorList = onlyDocList.get(random.nextInt(onlyDocList.size())).getAuthorOption().orElse(new ArrayList<>());
                     RSQLList.add(String.format("author._VALUE==\"%s\"", authorList.get(random.nextInt(authorList.size())).get_VALUE()));
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     authorList = onlyDocList.get(random.nextInt(onlyDocList.size())).getAuthorOption().orElse(new ArrayList<>());
                     RSQLList.add(String.format("author._VALUE==\"%s\"", authorList.get(random.nextInt(authorList.size())).get_VALUE()));
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
 
                     authorList = onlyDocList.get(random.nextInt(onlyDocList.size())).getAuthorOption().orElse(new ArrayList<>());
                     RSQLList.add(String.format("author._VALUE==\"%s\"", authorList.get(random.nextInt(authorList.size())).get_VALUE()));
-                    onlyDocList = cache.getOnlyDocListCache(RSQLList);
+                    onlyDocList = t1.accept(RSQLList);
+                    System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
-
-
-//                System.out.println(i);
-//                System.out.println(RSQLList);
-
 
                 } catch (Exception ignored) {
-                    statisticRSQLListLength.add(RSQLList.size());
-                    System.err.println(RSQLList.size());
+//                    System.err.println("返回结果集<=1");
                 }
+                statisticRSQLListLength.add(RSQLList.size());
+                System.out.printf("最长继承链长度%d\n", RSQLList.size());
+                System.out.printf("当前的同根重复查询次数%d\n", i);
                 RSQLList = new ArrayList<>();
             }
         }
