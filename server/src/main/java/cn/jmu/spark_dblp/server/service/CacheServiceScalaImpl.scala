@@ -41,10 +41,12 @@ class CacheServiceScalaImpl extends CacheService {
       if (context.nonEmpty) {
         //上下文环境非空的时候
         //尝试查缓存获取结果集
-        soRedisTemplate
+        readCache(context)
+        /*soRedisTemplate
           .opsForValue()
           .get(context.toCacheKey)
           .asInstanceOf[util.List[OnlyDoc]]
+        */
       } else {
         //此时上下文结果为空
         null
@@ -60,24 +62,28 @@ class CacheServiceScalaImpl extends CacheService {
           .collect(Collectors.toList[OnlyDoc])
 
         //加入缓存
-        soRedisTemplate.opsForValue().set(
+        writeCache(restContext, temp)
+        /*soRedisTemplate.opsForValue().set(
           restContext.toCacheKey,
           temp
-        )
+        )*/
         temp
       } else if (context.isEmpty) {
         //context没有断言的时候查MongoDB
+
         val restContext = context * contextBuffer.reverse
         //MongoDB的操作抽象
-        val c: Criteria = restContext.toMongo
-
+        /*val c: Criteria = restContext.toMongo
         val temp = mongoOps.find(query(c), classOf[OnlyDoc])
+        */
+        val temp = readDB(restContext)
 
         //存入缓存
-        soRedisTemplate.opsForValue().set(
+        writeCache(restContext, temp)
+        /*soRedisTemplate.opsForValue().set(
           restContext toCacheKey,
           temp
-        )
+        )*/
         temp
       } else {
         //context中至少一个断言时递归查找
@@ -96,10 +102,35 @@ class CacheServiceScalaImpl extends CacheService {
     )
   }
 
+  def writeCache(context: RSQLFilter[OnlyDoc], list: util.List[OnlyDoc]): Unit = {
+    soRedisTemplate.opsForValue().set(
+      context toCacheKey,
+      list
+    )
+  }
+
+  def readCache(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
+    val temp = soRedisTemplate
+      .opsForValue()
+      .get(context.toCacheKey)
+      .asInstanceOf[util.List[OnlyDoc]]
+    if (temp != null) {
+      println("cache hit")
+    }
+    temp
+  }
+
+  def readDB(context: RSQLFilter[OnlyDoc]): util.List[OnlyDoc] = {
+    println("cache miss")
+    val c: Criteria = context.toMongo
+    mongoOps.find(query(c), classOf[OnlyDoc])
+  }
+
   def pushContext(key: String, context: util.List[String]): Unit = {
     soRedisTemplate.opsForValue.set(generateContextKey(key), context)
     template.expire(key, Duration.ofHours(2))
   }
+
 
   /**
    * @param key 作为获取
