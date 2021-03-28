@@ -1,6 +1,8 @@
 package cn.jmu.spark_dblp.server.service;
 
+import cn.jmu.spark_dblp.server.dao.CacheTestRecordDAO;
 import cn.jmu.spark_dblp.server.dao.WordCountDAO;
+import cn.jmu.spark_dblp.server.entity.CacheTestRecord;
 import cn.jmu.spark_dblp.server.entity.OnlyDoc;
 import cn.jmu.spark_dblp.server.entity.WordCount;
 import cn.jmu.spark_dblp.server.entity.sub.Author;
@@ -29,6 +31,8 @@ class CacheServiceScalaImplTest {
     CacheServiceScalaImpl cache;
     @Autowired
     WordCountDAO wcDao;
+    @Autowired
+    CacheTestRecordDAO ctDAO;
 
     //缓存可继承性测试
     @Test
@@ -82,28 +86,20 @@ class CacheServiceScalaImplTest {
     @Test
     void LargeScaleTest() {
         Random random = new Random();
-/*        ConditionGenerator yearGenerator = new ConditionGenerator(
-                "year",
-                Arrays.asList("<=", "=", "=>"),
-                Arrays.asList("2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018")
-        );*/
-
-        //=================================================================================
-
         List<String> RSQLList = new ArrayList<>();
         List<OnlyDoc> onlyDocList;
         List<Integer> statisticRSQLListLength = new LinkedList<>();
         List<String> keyWordList = wcDao.findAll().stream()
                 .sorted((o1, o2) -> Math.toIntExact(o2.getCount() - o1.getCount()))
                 .map(WordCount::getWord)
-                .skip(10000)
+                .skip(2000)
                 .limit(100)
                 .collect(Collectors.toList());
 
         Function<List<String>, List<OnlyDoc>> c = (list) -> cache.getOnlyDocListCache(list);
         TimingMap<List<String>, List<OnlyDoc>> t1 = new TimingMap<>(c);
         for (String it : keyWordList) {
-            int repeat = 1 + random.nextInt(3);
+            int repeat = 10;
             for (int i = 0; i < repeat; i++) {
                 try {
                     //添加title字段
@@ -111,6 +107,7 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     //添加prefix1
                     String prefix1 = onlyDocList.get(random.nextInt(onlyDocList.size())).getPrefix1();
@@ -118,6 +115,7 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     //添加type
                     String type = onlyDocList.get(random.nextInt(onlyDocList.size())).getType();
@@ -125,6 +123,7 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     //添加year1字段 下限
                     String year1 = onlyDocList.get(random.nextInt(onlyDocList.size())).getYear().toString();
@@ -132,6 +131,7 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     //添加year1字段 上限
                     String year2 = onlyDocList.get(random.nextInt(onlyDocList.size())).getYear().toString();
@@ -139,6 +139,7 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     //添加prefix2
                     String prefix2 = onlyDocList.get(random.nextInt(onlyDocList.size())).getPrefix2();
@@ -146,6 +147,7 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     //添加author
                     List<Author> authorList;
@@ -154,19 +156,21 @@ class CacheServiceScalaImplTest {
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     authorList = onlyDocList.get(random.nextInt(onlyDocList.size())).getAuthorOption().orElse(new ArrayList<>());
                     RSQLList.add(String.format("author._VALUE==\"%s\"", authorList.get(random.nextInt(authorList.size())).get_VALUE()));
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
 
                     authorList = onlyDocList.get(random.nextInt(onlyDocList.size())).getAuthorOption().orElse(new ArrayList<>());
                     RSQLList.add(String.format("author._VALUE==\"%s\"", authorList.get(random.nextInt(authorList.size())).get_VALUE()));
                     onlyDocList = t1.accept(RSQLList);
                     System.out.printf("%s,返回结果集大小%d\n", Duration.ofMillis(t1.get()).toString(), onlyDocList.size());
                     if (onlyDocList.size() <= 1) throw new Exception();
-
+                    ctDAO.save(new CacheTestRecord(it, RSQLList.toString(), RSQLList.size(), i, true, t1.get()));
                 } catch (Exception ignored) {
 //                    System.err.println("返回结果集<=1");
                 }
@@ -178,13 +182,6 @@ class CacheServiceScalaImplTest {
         }
         double avg = statisticRSQLListLength.stream().mapToInt(Integer::intValue).average().getAsDouble();
         System.out.println(avg);
-/*        l.forEach(it -> {
-            long startTime = System.currentTimeMillis();
-            System.out.println("size = " + cache.getOnlyDocListCache(it).size());
-            long endTime = System.currentTimeMillis();
-            System.out.println(Arrays.toString(it.toArray()));
-            System.out.println(Duration.ofMillis(endTime - startTime).toString());
-        });*/
     }
 
     @Test
