@@ -1,15 +1,14 @@
 #!/bin/bash
-# problem
-if [ ! -d "whole" ]; then
-        mkdir whole
-fi
 
 echo "Download dblp.xml.gz? [Y/n]"
 read -r d_flag
 case $d_flag in
     [yY][eE][sS]|[yY])
 		echo "Yes"
-        cd whole || exit
+        if [ ! -d "whole" ]; then
+                mkdir whole
+        fi
+        cd whole || exit 1
         curl -O https://dblp.uni-trier.de/xml/dblp.xml.gz.md5
         curl -O https://dblp.uni-trier.de/xml/dblp.xml.gz
         md5sum -c dblp.xml.gz.md5
@@ -19,7 +18,7 @@ case $d_flag in
 
     [nN][oO]|[nN])
 		echo "No"
-       	;;
+    ;;
 
     *)
 	echo "Invalid input..."
