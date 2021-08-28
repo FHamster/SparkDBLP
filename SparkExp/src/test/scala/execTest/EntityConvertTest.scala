@@ -1,13 +1,12 @@
 package execTest
 
-import java.io.File
-
-import property.PropertiesObj
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.scalatest.funsuite.AnyFunSuite
+import property.PropertiesObj
 import util.{ReplaceEntityUtil, ReplaceTagUtil}
 
+import java.io.File
 /**
  * 对dblp进行实体转换的测试
  */
@@ -37,9 +36,10 @@ final class EntityConvertTest extends AnyFunSuite {
 
     // 检查是否已经有转换后的文件
     // 如果有就删掉
-    val testFile: File = new File(PropertiesObj.wholeDBLP_cvt)
+    val testFile: File = new File(PropertiesObj.wholeDBLP_cvtSparkPath)
     if (testFile.exists()) {
       println("delete " + testFile.delete())
+      testFile.delete()
     }
 
     val spark = SparkSession

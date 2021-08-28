@@ -4,7 +4,6 @@ import com.databricks.spark.xml.XmlDataFrameReader
 import com.mongodb.spark.MongoSpark
 import com.mongodb.spark.config.ReadConfig
 import com.mongodb.spark.sql.toSparkSessionFunctions
-import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
@@ -30,7 +29,6 @@ object ExecScript {
   val dataBaseName: String = PropertiesObj.dataBaseName
 
   def main(args: Array[String]): Unit = {
-    Logger.getRootLogger.setLevel(Level.INFO)
     writeOnlydoc()
     //    writeVenue()
     writeAuthor()

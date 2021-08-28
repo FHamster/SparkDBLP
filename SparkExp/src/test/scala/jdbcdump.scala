@@ -19,7 +19,7 @@ final class jdbcdump extends AnyFunSuite with BeforeAndAfterAll {
       .getOrCreate()
   }
 
-  private lazy val conPro: Properties = {
+/*  private lazy val conPro: Properties = {
     import scala.collection.JavaConverters._
     val conPro = Map(
       "user" -> "root",
@@ -29,7 +29,7 @@ final class jdbcdump extends AnyFunSuite with BeforeAndAfterAll {
     val a: Properties = new Properties()
     a.putAll(mapAsJavaMapConverter[String, String](conPro).asJava)
     a
-  }
+  }*/
 
 
   override protected def beforeAll(): Unit = {

@@ -40,7 +40,7 @@ clone代码到本地
 
 运行下载脚本（下载过程比较慢，得自己想办法加快速的。下载完后需要自行解压为dblp.xml）
 ```bash
-  bash downloadScript.sh
+  bash script.sh
 ```
 
 部署mongodb

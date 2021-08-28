@@ -5,11 +5,10 @@ import org.apache.spark.sql.types._
 object PropertiesObj {
   lazy val pwd: String = System.getProperty("user.dir")
   lazy val wholeDBLP = "/whole/dblp.xml"
-  lazy val wholeDBLP_cvt = "/whole/dblp_cvt.xml"
+  lazy val wholeDBLP_cvt = "/whole/dblp_cvt"
   lazy val wholeDBLP_cvtSparkPath: String = s"file://${pwd + wholeDBLP_cvt}"
   lazy val wholeDBLP_SparkPath: String = s"file://${pwd + wholeDBLP}"
   lazy val dataBaseName:String = "SparkDBLP"
-//  lazy val ipAddress = "localhost"
 //  lazy val ipAddress = "192.168.101.19:27017"
   lazy val ipAddress = "localhost"
   lazy val subNode = Seq(
