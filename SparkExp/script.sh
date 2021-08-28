@@ -9,7 +9,7 @@ read -r d_flag
 case $d_flag in
     [yY][eE][sS]|[yY])
 		echo "Yes"
-        cd whole
+        cd whole || exit
         curl -O https://dblp.uni-trier.de/xml/dblp.xml.gz.md5
         curl -O https://dblp.uni-trier.de/xml/dblp.xml.gz
         md5sum -c dblp.xml.gz.md5
@@ -28,10 +28,8 @@ case $d_flag in
 esac
 if [ -d "./whole/dblp_cvt/" ];then
         rm -rf "./whole/dblp_cvt"
-        sbt "runMain script.ConvertXml"
-else
-        sbt "runMain script.ConvertXml"
 fi
 
+sbt "runMain script.ConvertXml"
 sbt "runMain script.Import2MongoDB"
 sbt "runMain script.TitleWordCount"
