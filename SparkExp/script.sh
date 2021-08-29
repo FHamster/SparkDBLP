@@ -25,10 +25,8 @@ case $d_flag in
 	exit 1
 	;;
 esac
-if [ -d "./whole/dblp_cvt/" ];then
-        rm -rf "./whole/dblp_cvt"
-fi
 
-sbt "runMain script.ConvertXml"
-sbt "runMain script.Import2MongoDB"
-sbt "runMain script.TitleWordCount"
+rm -rf whole/dblp_cvt
+sbt "runMain script.ConvertXml">ConvertXml.log
+sbt "runMain script.Import2MongoDB">Import2MongoDB.log
+sbt "runMain script.TitleWordCount">TitleWordCount.log
